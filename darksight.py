@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets as qtw
 import cv2
 import numpy as np
 import image_utils as imut
-import my_utils
+import my_utils as mut
 from capture_panel_class import CapturePanel
 from darksight_designer import Ui_FormMain
 
@@ -56,20 +56,50 @@ class MainWindow(qtw.QWidget):
 
     @qtc.pyqtSlot(np.ndarray)
     def __display_capture(self, img):
-        qimg = qtg.QImage(img.data, img.shape[1], img.shape[0],
-                          img.strides[0], qtg.QImage.Format_RGB888)
-        qpix = qtg.QPixmap.fromImage(qimg)
-        width = qpix.width()
-        height = qpix.height()
-
+        h, w, c = img.shape
+        self.ui.ledit_camera_resolution.setText("W: " + str(w) + ", H: " + str(h) + ", C: " + str(c))
         for n in range(self.ui.layout_grid_frme_capture_panels.count()):
-            if n == 0:
-                display_lbl = self.ui.frme_capture_panels.findChild(qtw.QLabel,
-                                                                                "lbl_capture_display_pixmap")
-            else:
-                display_lbl = self.ui.frme_capture_panels.findChild(qtw.QLabel,
-                                                                                "lbl_capture_display_pixmap_" + str(n))
-            display_lbl.setPixmap(qpix)
+            s = str(n)
+            chbx_freeze = self.ui.frme_capture_panels.findChild(qtw.QCheckBox, "chbx_freeze_frame_" + s)
+            if not chbx_freeze.isChecked():
+                lbl_display = self.ui.frme_capture_panels.findChild(qtw.QLabel, "lbl_capture_display_pixmap_" + s)
+                sbar_hrz = self.ui.frme_capture_panels.findChild(qtw.QScrollBar, "sbar_hzt_capture_display_" + s)
+                sbar_vrt = self.ui.frme_capture_panels.findChild(qtw.QScrollBar, "sbar_vrt_capture_display_" + s)
+                dbsp_zoom = self.ui.frme_capture_panels.findChild(qtw.QDoubleSpinBox, "spbx_dbl_zoom_" + s)
+
+                window_w = lbl_display.width()
+                window_h = lbl_display.height()
+                zoom = dbsp_zoom.value()  # float
+
+                temp_window_w = int(window_w / zoom)
+                temp_window_h = int(window_h / zoom)
+
+                new_sbar_max = max(0, w - temp_window_w)
+                sbar_max = sbar_hrz.maximum()
+                sbar_max_no_zero = max(1, sbar_max)
+                sbar_hrz_percent = sbar_hrz.value() / sbar_max_no_zero  # float
+                if new_sbar_max != sbar_max:
+                    sbar_hrz.setMaximum(new_sbar_max)
+                    sbar_hrz.setValue(int(new_sbar_max * sbar_hrz_percent))
+
+                new_sbar_max = max(0, h - temp_window_h)
+                sbar_max = sbar_vrt.maximum()
+                sbar_max_no_zero = max(1, sbar_max)
+                sbar_vrt_percent = sbar_vrt.value() / sbar_max_no_zero  # float
+                if new_sbar_max != sbar_max:
+                    sbar_vrt.setMaximum(new_sbar_max)
+                    sbar_vrt.setValue(int(new_sbar_max * sbar_vrt_percent))
+
+                x1, = mut.min_max_clamp(0, w - temp_window_w, sbar_hrz.value())
+                x2 = min(w, x1 + temp_window_w)
+                y1, = mut.min_max_clamp(0, h - temp_window_h, sbar_vrt.value())
+                y2 = min(h, y1 + temp_window_h)
+
+                view = img[y1:y2, x1:x2].copy()
+                qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
+                qimg = qimg.scaledToWidth(window_w)  # aspect ratio is preserved
+                qpix = qtg.QPixmap.fromImage(qimg)
+                lbl_display.setPixmap(qpix)
 
         # if not self.ui.chbx_freeze_frame.isChecked():
         #     scale = self.ui.spbx_dbl_zoom.value()
@@ -121,7 +151,7 @@ class CaptureFeed(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.focus = 300
+        self.focus = float(300.0)
         self.thread_active = True
 
     @qtc.pyqtSlot(int)
@@ -130,23 +160,20 @@ class CaptureFeed(qtc.QObject):
         cap = cv2.VideoCapture(cam_index, cv2.CAP_DSHOW)
         # 16MP camera = 4672x3504
         # 8MP 3264x2448
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4672)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 3504)
-        # cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 5000)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 4000)
+        cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)  # 0 = autofocus off, 1 = autofocus on
         cap.set(cv2.CAP_PROP_FOCUS, self.focus)
-        focus = self.focus
         while cap.isOpened() & self.thread_active:
             ret, frame = cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                cv2.putText(frame_rgb, "Focus:" + str(focus), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1,
-                            cv2.LINE_AA)
-                # qimg = qtg.QImage(frame_rgb.data, frame_rgb.shape[1], frame_rgb.shape[0],
-                #                  frame_rgb.strides[0], qtg.QImage.Format_RGB888)
+                true_focus = cap.get(cv2.CAP_PROP_FOCUS)
+                cv2.putText(frame_rgb, "Focus:" + str(true_focus), (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
                 self.frame_captured.emit(frame_rgb)
-                if focus != self.focus:
-                    focus = self.focus
-                    cap.set(cv2.CAP_PROP_FOCUS, focus)
+                if abs(true_focus - self.focus) >= 1:
+                    cap.set(cv2.CAP_PROP_FOCUS, self.focus)
             else:
                 self.stop()
 

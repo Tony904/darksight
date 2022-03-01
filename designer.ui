@@ -44,7 +44,7 @@
    </property>
    <layout class="QGridLayout" name="layout_grid_frme_capture_panels">
     <item row="0" column="0">
-     <widget class="QFrame" name="frme_capture_panel">
+     <widget class="QFrame" name="frme_capture_panel_0">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -54,12 +54,12 @@
       <property name="lineWidth">
        <number>1</number>
       </property>
-      <layout class="QHBoxLayout" name="layout_hrz_frme_capture_panel">
+      <layout class="QHBoxLayout" name="layout_hrz_frme_capture_panel_0">
        <property name="spacing">
         <number>0</number>
        </property>
        <item>
-        <widget class="QFrame" name="frme_capture_panel_controls">
+        <widget class="QFrame" name="frme_capture_panel_controls_0">
          <property name="maximumSize">
           <size>
            <width>50</width>
@@ -72,7 +72,7 @@
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <layout class="QVBoxLayout" name="layout_vrt_frme_capture_panel_controls">
+         <layout class="QVBoxLayout" name="layout_vrt_frme_capture_panel_controls_0">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -89,14 +89,14 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frme_zoom_panel">
+           <widget class="QFrame" name="frme_zoom_panel_0">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Plain</enum>
             </property>
-            <layout class="QVBoxLayout" name="layout_vrt_frme_zoom_panel">
+            <layout class="QVBoxLayout" name="layout_vrt_frme_zoom_panel_0">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -113,7 +113,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="lbl_static_zoom">
+              <widget class="QLabel" name="lbl_static_zoom_0">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -140,7 +140,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="spbx_dbl_zoom">
+              <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_0">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -180,14 +180,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frme_freeze_frame_panel">
+           <widget class="QFrame" name="frme_freeze_frame_panel_0">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Plain</enum>
             </property>
-            <layout class="QVBoxLayout" name="layout_vert_frme_freeze_frame_panel">
+            <layout class="QVBoxLayout" name="layout_vert_frme_freeze_frame_panel_0">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -204,7 +204,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="lbl_static_freeze_frame">
+              <widget class="QLabel" name="lbl_static_freeze_frame_0">
                <property name="text">
                 <string>Freeze Frame</string>
                </property>
@@ -217,14 +217,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="frme_freeze_frame_checkbox">
+              <widget class="QFrame" name="frme_freeze_frame_checkbox_0">
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
                </property>
                <property name="frameShadow">
                 <enum>QFrame::Plain</enum>
                </property>
-               <layout class="QHBoxLayout" name="layout_hrz_frme_freeze_frame_checkbox">
+               <layout class="QHBoxLayout" name="layout_hrz_frme_freeze_frame_checkbox_0">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -241,7 +241,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <spacer name="spacer_hz_freeze_frame_checkbox_left">
+                 <spacer name="spacer_hz_freeze_frame_checkbox_left_0">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -257,7 +257,7 @@
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="chbx_freeze_frame">
+                 <widget class="QCheckBox" name="chbx_freeze_frame_0">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -282,7 +282,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="spacer_hz_freeze_frame_checkbox_right">
+                 <spacer name="spacer_hz_freeze_frame_checkbox_right_0">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -304,7 +304,7 @@
            </widget>
           </item>
           <item>
-           <spacer name="spacer_vt_controls_panel">
+           <spacer name="spacer_vt_controls_panel_0">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -323,14 +323,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QFrame" name="frme_capture_display_panel">
+        <widget class="QFrame" name="frme_capture_display_panel_0">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <layout class="QGridLayout" name="layout_grid_frme_capture_display_panel">
+         <layout class="QGridLayout" name="layout_grid_frme_capture_display_panel_0">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -347,7 +347,7 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="lbl_capture_display_pixmap">
+           <widget class="QLabel" name="lbl_capture_display_pixmap_0">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -369,7 +369,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QScrollBar" name="sbar_vrt_capture_display">
+           <widget class="QScrollBar" name="sbar_vrt_capture_display_0">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -388,7 +388,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QScrollBar" name="sbar_hzt_capture_display">
+           <widget class="QScrollBar" name="sbar_hzt_capture_display_0">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -576,22 +576,30 @@ Camera View</string>
 Camera View</string>
    </property>
   </widget>
-  <widget class="QFrame" name="frame">
+  <widget class="QGroupBox" name="gbox_camera_settings">
    <property name="geometry">
     <rect>
-     <x>940</x>
-     <y>280</y>
-     <width>211</width>
-     <height>201</height>
+     <x>900</x>
+     <y>230</y>
+     <width>251</width>
+     <height>53</height>
     </rect>
    </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
+   <property name="title">
+    <string>Camera Settings</string>
    </property>
-   <property name="frameShadow">
-    <enum>QFrame::Plain</enum>
-   </property>
-   <layout class="QGridLayout" name="gridLayout"/>
+   <layout class="QGridLayout" name="layout_grid_camera_settings">
+    <item row="0" column="0">
+     <widget class="QLabel" name="lbl_camera_resolution">
+      <property name="text">
+       <string>Resolution</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="ledit_camera_resolution"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

@@ -1,6 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+import numpy
 
 
 class CapturePanel(QtWidgets.QFrame):
@@ -52,7 +53,7 @@ class CapturePanel(QtWidgets.QFrame):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.spbx_dbl_zoom.sizePolicy().hasHeightForWidth())
         self.spbx_dbl_zoom.setSizePolicy(sizePolicy)
-        self.spbx_dbl_zoom.setMaximumSize(QtCore.QSize(1000, 0))
+        self.spbx_dbl_zoom.setMaximumSize(QtCore.QSize(1000, 20))
         self.spbx_dbl_zoom.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.spbx_dbl_zoom.setAlignment(QtCore.Qt.AlignCenter)
         self.spbx_dbl_zoom.setDecimals(2)
@@ -124,6 +125,11 @@ class CapturePanel(QtWidgets.QFrame):
         self.lbl_capture_display_pixmap.setText("")
         self.lbl_capture_display_pixmap.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.lbl_capture_display_pixmap.setObjectName("lbl_capture_display_pixmap" + suffix)
+        blank_img = numpy.zeros((500, 500, 1), numpy.int)
+        blank_qimg = QtGui.QImage(blank_img.data, blank_img.shape[1], blank_img.shape[0], blank_img.strides[0],
+                                  QtGui.QImage.Format_RGB888)
+        blank_qpix = QtGui.QPixmap.fromImage(blank_qimg)
+        self.lbl_capture_display_pixmap.setPixmap(QtGui.QPixmap(blank_qpix))
         self.layout_grid_frme_capture_display_panel.addWidget(self.lbl_capture_display_pixmap, 0, 0, 1, 1)
         self.sbar_vrt_capture_display = QtWidgets.QScrollBar(self.frme_capture_display_panel)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
@@ -157,6 +163,7 @@ class CapturePanel(QtWidgets.QFrame):
     def __set_text(self):
         self.lbl_static_zoom.setText("Zoom")
         self.lbl_static_freeze_frame.setText("Freeze Frame")
+
 
     @staticmethod
     def __get_row_col(Frame):
