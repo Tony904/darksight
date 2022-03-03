@@ -66,6 +66,7 @@ class MainWindow(qtw.QWidget):
                 sbar_hrz = self.ui.frme_capture_panels.findChild(qtw.QScrollBar, "sbar_hzt_capture_display_" + s)
                 sbar_vrt = self.ui.frme_capture_panels.findChild(qtw.QScrollBar, "sbar_vrt_capture_display_" + s)
                 dbsp_zoom = self.ui.frme_capture_panels.findChild(qtw.QDoubleSpinBox, "spbx_dbl_zoom_" + s)
+                spbx_rotate = self.ui.frme_capture_panels.findChild(qtw.QSpinBox, "spbx_rotate_image_" + s)
 
                 window_w = lbl_display.width()
                 window_h = lbl_display.height()
@@ -90,22 +91,39 @@ class MainWindow(qtw.QWidget):
                     sbar_vrt.setMaximum(new_sbar_max)
                     sbar_vrt.setValue(int(new_sbar_max * sbar_vrt_percent))
 
-                x1, = mut.min_max_clamp(0, w - temp_window_w, sbar_hrz.value())
+                sbar_hrz_val = sbar_hrz.value()
+                sbar_vrt_val = sbar_vrt.value()
+                x1, = mut.min_max_clamp(0, w - temp_window_w, sbar_hrz_val)
                 x2 = min(w, x1 + temp_window_w)
-                y1, = mut.min_max_clamp(0, h - temp_window_h, sbar_vrt.value())
+                y1, = mut.min_max_clamp(0, h - temp_window_h, sbar_vrt_val)
                 y2 = min(h, y1 + temp_window_h)
 
-                view = img[y1:y2, x1:x2].copy()
+                degrees = spbx_rotate.value()
+                if degrees:
+                    view_w = x2 - x1
+                    view_h = y2 - y1
+                    view_cx = x1 + view_w // 2
+                    view_cy = y1 + view_h // 2
+                    if degrees == 90 or degrees == 270:
+                        x1, = mut.min_max_clamp(0, w, view_cx - view_h // 2)
+                        x2 = min(w, x1 + view_h)
+                        y1, = mut.min_max_clamp(0, h, view_cy - view_w // 2)
+                        y2 = min(h, y1 + view_w)
+                        view = img[y1:y2, x1:x2].copy()
+                        if degrees == 90:
+                            view = cv2.rotate(view, cv2.ROTATE_90_CLOCKWISE)
+                        else:
+                            view = cv2.rotate(view, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                    else:  # degrees == 180
+                        view = img[y1:y2, x1:x2].copy()
+                        view = cv2.rotate(view, cv2.ROTATE_180)
+                else:
+                    view = img[y1:y2, x1:x2].copy()
+
                 qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
-                qimg = qimg.scaledToWidth(window_w)  # aspect ratio is preserved
+                qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
                 qpix = qtg.QPixmap.fromImage(qimg)
                 lbl_display.setPixmap(qpix)
-
-        # if not self.ui.chbx_freeze_frame.isChecked():
-        #     scale = self.ui.spbx_dbl_zoom.value()
-        #     w, _ = my_utils.scaled_image_dimensions(width, height, scale)
-        #     qpix1 = qpix.scaledToWidth(w)
-        #     self.ui.lbl_capture_display_pixmap.setPixmap(qpix1)
 
     @qtc.pyqtSlot()
     def __send_focus_update_request(self):

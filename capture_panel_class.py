@@ -103,6 +103,29 @@ class CapturePanel(QtWidgets.QFrame):
         self.layout_hrz_frme_freeze_frame_checkbox.addItem(spacerItem1)
         self.layout_vert_frme_freeze_frame_panel.addWidget(self.frme_freeze_frame_checkbox)
         self.layout_vrt_frme_capture_panel_controls.addWidget(self.frme_freeze_frame_panel)
+        self.frme_rotate_image_panel = QtWidgets.QFrame(self.frme_capture_panel_controls)
+        self.frme_rotate_image_panel.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frme_rotate_image_panel.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.frme_rotate_image_panel.setObjectName("frme_rotate_image_panel" + suffix)
+        self.layout_vrt_frme_rotate_image_panel = QtWidgets.QVBoxLayout(self.frme_rotate_image_panel)
+        self.layout_vrt_frme_rotate_image_panel.setContentsMargins(0, 0, 0, 0)
+        self.layout_vrt_frme_rotate_image_panel.setSpacing(0)
+        self.layout_vrt_frme_rotate_image_panel.setObjectName("layout_vrt_frme_rotate_image_panel" + suffix)
+        self.lbl_rotate_image = QtWidgets.QLabel(self.frme_rotate_image_panel)
+        self.lbl_rotate_image.setObjectName("lbl_rotate_image" + suffix)
+        self.layout_vrt_frme_rotate_image_panel.addWidget(self.lbl_rotate_image)
+        self.spbx_rotate_image = QtWidgets.QSpinBox(self.frme_rotate_image_panel)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.spbx_rotate_image.sizePolicy().hasHeightForWidth())
+        self.spbx_rotate_image.setSizePolicy(sizePolicy)
+        self.spbx_rotate_image.setMaximum(270)
+        self.spbx_rotate_image.setSingleStep(90)
+        self.spbx_rotate_image.setProperty("value", 0)
+        self.spbx_rotate_image.setObjectName("spbx_rotate_image" + suffix)
+        self.layout_vrt_frme_rotate_image_panel.addWidget(self.spbx_rotate_image)
+        self.layout_vrt_frme_capture_panel_controls.addWidget(self.frme_rotate_image_panel)
         spacerItem2 = QtWidgets.QSpacerItem(45, 507, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         self.layout_vrt_frme_capture_panel_controls.addItem(spacerItem2)
         self.layout_hrz_frme_capture_panel.addWidget(self.frme_capture_panel_controls)
@@ -163,7 +186,7 @@ class CapturePanel(QtWidgets.QFrame):
     def __set_text(self):
         self.lbl_static_zoom.setText("Zoom")
         self.lbl_static_freeze_frame.setText("Freeze Frame")
-
+        self.lbl_rotate_image.setText("Rotate")
 
     @staticmethod
     def __get_row_col(Frame):
