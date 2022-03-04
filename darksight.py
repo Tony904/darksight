@@ -19,6 +19,11 @@ class MainApp(qtw.QApplication):
         self.mw = MainWindow()
         self.mw.show()
 
+def if_cap_active(func):
+    def wrapper(widget):
+        if widget.capture_active:
+            func(widget)
+    return wrapper
 
 class MainWindow(qtw.QWidget):
     camera_capture_requested = qtc.pyqtSignal(int)
@@ -30,28 +35,88 @@ class MainWindow(qtw.QWidget):
         self.ui = Ui_FormMain()
         self.ui.setupUi(self)
 
-        # self.ui.frme_camera_focus_panel.findChild(qtw.QLabel, "lbl_static_focus").setText("hi")
+        self.capture_active = False
 
         self.ui.btn_add_capture_panel.clicked.connect(self.__add_capture_panel)
         self.ui.btn_remove_capture_panel.clicked.connect(self.__remove_capture_panel)
 
+        self.ui.sbar_vrt_camera_focus_0.valueChanged.connect(self.__send_focus_update_request)
+        self.ui.spbx_cap_backlight_0.valueChanged.connect(self.__send_backlight_update_request)
+        self.ui.spbx_cap_brightness_0.valueChanged.connect(self.__send_brightness_update_request)
+        self.ui.spbx_cap_contrast_0.valueChanged.connect(self.__send_contrast_update_request)
+        self.ui.spbx_cap_exposure_0.valueChanged.connect(self.__send_exposure_update_request)
+        self.ui.spbx_cap_gain_0.valueChanged.connect(self.__send_gain_update_request)
+        self.ui.spbx_cap_gamma_0.valueChanged.connect(self.__send_gamma_update_request)
+        self.ui.spbx_cap_hue_0.valueChanged.connect(self.__send_hue_update_request)
+        self.ui.spbx_cap_saturation_0.valueChanged.connect(self.__send_saturation_update_request)
+        self.ui.spbx_cap_sharpness_0.valueChanged.connect(self.__send_sharpness_update_request)
+        self.ui.spbx_cap_white_0.valueChanged.connect(self.__send_white_update_request)
+
         self.ui.btn_start_capture.clicked.connect(self.__send_capture_request)
-        self.ui.sbar_vrt_camera_focus.valueChanged.connect(self.__update_focus_label)
+        self.ui.btn_stop_capture.clicked.connect(self.__stop_capture)
 
         self.cap_feed = CaptureFeed()
         self.cap_thread = qtc.QThread()
         self.cap_feed.moveToThread(self.cap_thread)
         self.cap_thread.start()
 
-        self.cap_feed.frame_captured.connect(self.__display_capture)
         self.camera_capture_requested.connect(self.cap_feed.run)
-        self.ui.btn_stop_capture.clicked.connect(self.__stop_capture)
+        self.cap_feed.frame_captured.connect(self.__display_capture)
 
         self.showMaximized()
 
     @qtc.pyqtSlot()
+    @if_cap_active
+    def __send_focus_update_request(self):
+        focus = self.ui.sbar_vrt_camera_focus_0.value()
+        self.ui.lbl_camera_focus_value_0.setText(str(focus))
+        if self.capture_active:
+            self.cap_feed.update_focus(focus)
+
+    def __send_backlight_update_request(self):
+        backlight = self.ui.spbx_cap_backlight_0.value()
+        if self.capture_active:
+            self.cap_feed.update_backlight_comp(backlight)
+
+    def __send_brightness_update_request(self):
+        brightness = self.ui.spbx_cap_brightness_0.value()
+        pass
+
+    def __send_contrast_update_request(self):
+        pass
+
+    def __send_exposure_update_request(self):
+        pass
+
+    def __send_gain_update_request(self):
+        pass
+
+    def __send_gamma_update_request(self):
+        pass
+
+    def __send_hue_update_request(self):
+        pass
+
+    def __send_saturation_update_request(self):
+        pass
+
+    def __send_sharpness_update_request(self):
+        pass
+
+    def __send_white_update_request(self):
+        pass
+
+    @qtc.pyqtSlot()
+    def __send_capture_request(self):
+        if not self.capture_active:
+            self.capture_active = True
+            camera_index = 1
+            self.camera_capture_requested.emit(camera_index)
+
+    @qtc.pyqtSlot()
+    @if_cap_active
     def __stop_capture(self):
-        self.ui.sbar_vrt_camera_focus.valueChanged.disconnect(self.__send_focus_update_request)
+        self.capture_active = False
         self.cap_feed.stop()
 
     @qtc.pyqtSlot(np.ndarray)
@@ -125,21 +190,7 @@ class MainWindow(qtw.QWidget):
                 qpix = qtg.QPixmap.fromImage(qimg)
                 lbl_display.setPixmap(qpix)
 
-    @qtc.pyqtSlot()
-    def __send_focus_update_request(self):
-        focus = self.ui.sbar_vrt_camera_focus.value()
-        self.cap_feed.update_focus(focus)
 
-    @qtc.pyqtSlot()
-    def __send_capture_request(self):
-        self.ui.sbar_vrt_camera_focus.valueChanged.connect(self.__send_focus_update_request)
-        camera_index = 1
-        self.camera_capture_requested.emit(camera_index)
-
-    @qtc.pyqtSlot()
-    def __update_focus_label(self):
-        focus = self.ui.sbar_vrt_camera_focus.value()
-        self.ui.lbl_camera_focus_value.setText(str(focus))
 
     @qtc.pyqtSlot()
     def __add_capture_panel(self):
@@ -164,12 +215,37 @@ class MainWindow(qtw.QWidget):
             print(str(self.ui.layout_grid_frme_capture_panels.itemAt(n).widget().objectName()))
 
 
+
 class CaptureFeed(qtc.QObject):
     frame_captured = qtc.pyqtSignal(np.ndarray)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.focus = float(300.0)
+        self.width = 5000
+        self.height = 4000
+        self.focus = 300.
+        self.auto_focus = False
+        self.brightness = 1
+        self.auto_brightness = False
+        self.contrast = 1
+        self.auto_contrast = False
+        self.hue = 1
+        self.auto_hue = False
+        self.saturation = 1
+        self.auto_saturation = False
+        self.sharpness = 1
+        self.auto_sharpness = False
+        self.gamma = 1
+        self.auto_gamma = False
+        self.white_balance = 1
+        self.auto_white_balance = True
+        self.backlight_comp = 0
+        self.auto_backlight_comp = False
+        self.gain = 1
+        self.auto_gain = False
+        self.exposure = 1
+        self.auto_exposure = True
+
         self.thread_active = True
 
     @qtc.pyqtSlot(int)
@@ -178,30 +254,167 @@ class CaptureFeed(qtc.QObject):
         cap = cv2.VideoCapture(cam_index, cv2.CAP_DSHOW)
         # 16MP camera = 4672x3504
         # 8MP 3264x2448
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 5000)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 4000)
-        cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)  # 0 = autofocus off, 1 = autofocus on
-        cap.set(cv2.CAP_PROP_FOCUS, self.focus)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        focus = self.focus
+        auto_focus = self.auto_focus
+        brightness = self.brightness
+        contrast = self.contrast
+        hue = self.hue
+        saturation = self.saturation
+        sharpness = self.sharpness
+        gamma = self.gamma
+        white_balance = self.white_balance
+        auto_white_balance = self.auto_white_balance
+        backlight_comp = self.backlight_comp
+        gain = self.gain
+        exposure = self.exposure
+        auto_exposure = self.auto_exposure
+
+        cap.set(cv2.CAP_PROP_AUTOFOCUS, auto_focus)
+        if not auto_focus:
+            cap.set(cv2.CAP_PROP_FOCUS, focus)
+        cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
+        cap.set(cv2.CAP_PROP_CONTRAST, contrast)
+        cap.set(cv2.CAP_PROP_HUE, hue)
+        cap.set(cv2.CAP_PROP_SATURATION, saturation)
+        cap.set(cv2.CAP_PROP_GAMMA, gamma)
+        cap.set(cv2.CAP_PROP_AUTO_WB, auto_white_balance)
+        if not auto_white_balance:
+            cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, white_balance)
+            cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, white_balance)
+        cap.set(cv2.CAP_PROP_BACKLIGHT, backlight_comp)
+        cap.set(cv2.CAP_PROP_GAIN, gain)
+        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, auto_exposure)
+        if not auto_exposure:
+            cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
+
         while cap.isOpened() & self.thread_active:
             ret, frame = cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                true_focus = cap.get(cv2.CAP_PROP_FOCUS)
-                cv2.putText(frame_rgb, "Focus:" + str(true_focus), (10, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
                 self.frame_captured.emit(frame_rgb)
-                if abs(true_focus - self.focus) >= 1:
-                    cap.set(cv2.CAP_PROP_FOCUS, self.focus)
+                if not auto_focus == self.auto_focus:
+                    auto_focus = self.auto_focus
+                    cap.set(cv2.CAP_PROP_AUTOFOCUS, auto_focus)
+                elif abs(focus - self.focus) >= 1:
+                    focus = self.focus
+                    if not auto_focus:
+                        cap.set(cv2.CAP_PROP_FOCUS, focus)
+                elif not auto_white_balance == self.auto_white_balance:
+                    auto_white_balance = self.auto_white_balance
+                    cap.set(cv2.CAP_PROP_AUTO_WB, auto_white_balance)
+                elif abs(white_balance - self.white_balance) >= 1:
+                    white_balance = self.white_balance
+                    if not auto_white_balance:
+                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, self.white_balance)
+                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, self.white_balance)
+                elif not auto_exposure == self.auto_exposure:
+                    auto_exposure = self.auto_exposure
+                    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, auto_exposure)
+                elif abs(exposure - self.exposure) >= 1:
+                    exposure = self.exposure
+                    if not auto_exposure:
+                        cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
+                elif abs(gain - self.gain) >= 1:
+                    gain = self.gain
+                    cap.set(cv2.CAP_PROP_GAIN, gain)
+                elif abs(gamma - self.gamma) >= 1:
+                    gamma = self.gamma
+                    cap.set(cv2.CAP_PROP_GAMMA, self.gamma)
+                elif abs(brightness - self.brightness) >= 1:
+                    brightness = self.brightness
+                    cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
+                elif abs(contrast - self.contrast) >= 1:
+                    contrast = self.contrast
+                    cap.set(cv2.CAP_PROP_CONTRAST, contrast)
+                elif abs(sharpness - self.sharpness) >= 1:
+                    sharpness = self.sharpness
+                    cap.set(cv2.CAP_PROP_SHARPNESS, self.sharpness)
+                elif abs(saturation - self.saturation) >= 1:
+                    saturation = self.saturation
+                    cap.set(cv2.CAP_PROP_SATURATION, self.saturation)
+                elif abs(hue - self.hue) >= 1:
+                    hue = self.hue
+                    cap.set(cv2.CAP_PROP_HUE, self.hue)
+                elif abs(backlight_comp - self.backlight_comp) >= 1:
+                    backlight_comp = self.backlight_comp
+                    cap.set(cv2.CAP_PROP_BACKLIGHT, backlight_comp)
             else:
                 self.stop()
+                print("Capture read unsuccessful. Cam index: " + str(cam_index))
 
         cap.release()
+        print("Capture stopped. Cam index: " + str(cam_index))
 
     def stop(self):
         self.thread_active = False
 
     def update_focus(self, focus):
         self.focus = focus
+
+    def update_auto_focus(self, auto):
+        self.auto_focus = auto
+
+    def update_brightness(self, brightness):
+        self.brightness = brightness
+
+    def update_auto_brightness(self, auto):
+        self.auto_brightness = auto
+
+    def update_contrast(self, contrast):
+        self.contrast = contrast
+
+    def update_auto_contrast(self, auto):
+        self.auto_contrast = auto
+
+    def update_hue(self, hue):
+        self.hue = hue
+
+    def update_auto_hue(self, auto):
+        self.auto_hue = auto
+
+    def update_saturation(self, saturation):
+        self.saturation = saturation
+
+    def update_auto_saturation(self, auto):
+        self.auto_saturation = auto
+
+    def update_sharpness(self, sharpness):
+        self.sharpness = sharpness
+
+    def update_auto_sharpness(self, auto):
+        self.auto_sharpness = auto
+
+    def update_gamma(self, gamma):
+        self.gamma = gamma
+
+    def update_auto_gamma(self, auto):
+        self.auto_gamma = auto
+
+    def update_white_balance(self, white_balance):
+        self.white_balance = white_balance
+
+    def update_auto_white_balance(self, auto):
+        self.auto_white_balance = auto
+
+    def update_backlight_comp(self, backlight_comp):
+        self.backlight_comp = backlight_comp
+
+    def update_auto_backlight_comp(self, auto):
+        self.auto_backlight_comp = auto
+
+    def update_gain(self, gain):
+        self.gain = gain
+
+    def update_auto_gain(self, auto):
+        self.auto_gain = auto
+
+    def update_exposure(self, exposure):
+        self.exposure = exposure
+
+    def update_auto_exposure(self, auto):
+        self.auto_exposure = auto
 
 
 if __name__ == "__main__":
