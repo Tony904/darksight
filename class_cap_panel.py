@@ -27,9 +27,10 @@ class CapturePanel(qtw.QFrame):
         return wrapper
 
     def setupUi(self, qframe):
+        self.qframe = qframe
         row, col, space_available = self._get_row_col(qframe)
-        suffix = "_" + str(2 * col + row)
-
+        self.i = 2 * col + row
+        suffix = "_" + str(self.i)
         self.frme_cap_panel_0 = qtw.QFrame(qframe)
         self.frme_cap_panel_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_cap_panel_0.setFrameShadow(qtw.QFrame.Plain)
@@ -652,11 +653,12 @@ class CapturePanel(qtw.QFrame):
         self.layout_hrz_frme_start_stop_cap_0.setSpacing(0)
         self.layout_hrz_frme_start_stop_cap_0.setObjectName("layout_hrz_frme_start_stop_cap" + suffix)
         self.btn_start_cap_0 = qtw.QPushButton(self.frme_start_stop_cap_0)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Ignored, qtw.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_start_cap_0.sizePolicy().hasHeightForWidth())
         self.btn_start_cap_0.setSizePolicy(sizePolicy)
+        self.btn_start_cap_0.setMinimumSize(qtc.QSize(35, 0))
         self.btn_start_cap_0.setObjectName("btn_start_cap" + suffix)
         self.layout_hrz_frme_start_stop_cap_0.addWidget(self.btn_start_cap_0)
         self.btn_stop_cap_0 = qtw.QPushButton(self.frme_start_stop_cap_0)
@@ -735,7 +737,6 @@ class CapturePanel(qtw.QFrame):
             print('Max number of capture display panels reached.')
 
         print("cap_panel setup complete")
-
 
     @qtc.pyqtSlot(np.ndarray)
     def _display_capture(self, img):
@@ -843,7 +844,7 @@ class CapturePanel(qtw.QFrame):
         self.lbl_static_c_resolution_0.setText("C")
         self.lbl_static_cam_index_0.setText("Cam Index")
         self.btn_start_cap_0.setText("Start")
-        self.btn_stop_cap_0.setText("Stop")
+        self.btn_stop_cap_0.setText("Delete")
 
     def _connect_signals_to_slots(self):
         self.btn_start_cap_0.clicked.connect(self._send_capture_request)
@@ -863,6 +864,57 @@ class CapturePanel(qtw.QFrame):
         self.chbx_cap_autoexposure_0.stateChanged.connect(self._send_auto_exposure_update_request)
         self.chbx_cap_autofocus_0.stateChanged.connect(self._send_auto_focus_update_request)
         self.chbx_cap_autowhite_0.stateChanged.connect(self._send_auto_white_update_request)
+
+    @qtc.pyqtSlot()
+    @_if_cap_not_active
+    def _send_capture_request(self):
+        s = self.ledit_cam_index_0.text()
+        if s:
+            c = int(s)
+            index_open = self.cap_index_is_open(c)
+            print("index_open: " + str(index_open))
+            if index_open:
+                camera_index = int(self.ledit_cam_index_0.text())
+                print("cam_index: " + str(camera_index))
+                self.capture_active = True
+                self._send_auto_focus_update_request(int(self.chbx_cap_autofocus_0.isChecked()))
+                self._send_auto_exposure_update_request(int(self.chbx_cap_autoexposure_0.isChecked()))
+                self._send_auto_white_update_request(int(self.chbx_cap_autowhite_0.isChecked()))
+                self._send_focus_update_request(self.spbx_cap_focus_0.value())
+                self._send_brightness_update_request(self.spbx_cap_brightness_0.value())
+                self._send_contrast_update_request(self.spbx_cap_contrast_0.value())
+                self._send_hue_update_request(self.spbx_cap_hue_0.value())
+                self._send_saturation_update_request(self.spbx_cap_saturation_0.value())
+                self._send_sharpness_update_request(self.spbx_cap_sharpness_0.value())
+                self._send_gamma_update_request(self.spbx_cap_gamma_0.value())
+                self._send_white_update_request(self.spbx_cap_white_0.value())
+                self._send_backlight_update_request(self.spbx_cap_backlight_0.value())
+                self._send_gain_update_request(self.spbx_cap_gain_0.value())
+                self._send_exposure_update_request(self.spbx_cap_exposure_0.value())
+                print("Emitting camera_capture_requested signal.")
+                # self.camera_capture_requested.emit(camera_index)
+                self.btn_stop_cap_0.setText("Stop")
+
+    @qtc.pyqtSlot()
+    @_if_cap_active
+    def _stop_capture(self):
+        self.capture_active = False
+        self.btn_stop_cap_0.SetText("Delete")
+        self.cap_stream.stop()
+
+    def cap_index_is_open(self, c):
+        cstr = str(c)
+        for n in range(self.qframe.layout().count()):
+            s = str(n)
+            widget = self.qframe.findChild(qtw.QLineEdit, "ledit_cam_index_" + s)
+            widget_cap_index = widget.text()
+            print("c: " + cstr)
+            if not n == self.i:
+                if cstr == widget_cap_index:
+                    print("def cap_index_is_open returning False. c=" + cstr + " widget_c=" + widget_cap_index)
+                    return False
+        print("def cap_index_is_open returning True.")
+        return True
 
     @_if_cap_active
     def _send_auto_focus_update_request(self, newval):
@@ -919,35 +971,6 @@ class CapturePanel(qtw.QFrame):
     @_if_cap_active
     def _send_white_update_request(self, newval):
         self.cap_stream.update_white_balance(newval)
-
-    @qtc.pyqtSlot()
-    @_if_cap_not_active
-    def _send_capture_request(self):
-        self.capture_active = True
-        # camera_index = int(self.ledit_cam_index_0.text())
-        camera_index = 1
-        self._send_auto_focus_update_request(int(self.chbx_cap_autofocus_0.isChecked()))
-        self._send_auto_exposure_update_request(int(self.chbx_cap_autoexposure_0.isChecked()))
-        self._send_auto_white_update_request(int(self.chbx_cap_autowhite_0.isChecked()))
-        self._send_focus_update_request(self.spbx_cap_focus_0.value())
-        self._send_brightness_update_request(self.spbx_cap_brightness_0.value())
-        self._send_contrast_update_request(self.spbx_cap_contrast_0.value())
-        self._send_hue_update_request(self.spbx_cap_hue_0.value())
-        self._send_saturation_update_request(self.spbx_cap_saturation_0.value())
-        self._send_sharpness_update_request(self.spbx_cap_sharpness_0.value())
-        self._send_gamma_update_request(self.spbx_cap_gamma_0.value())
-        self._send_white_update_request(self.spbx_cap_white_0.value())
-        self._send_backlight_update_request(self.spbx_cap_backlight_0.value())
-        self._send_gain_update_request(self.spbx_cap_gain_0.value())
-        self._send_exposure_update_request(self.spbx_cap_exposure_0.value())
-        print("emitting camera_capture_requested signal.")
-        self.camera_capture_requested.emit(camera_index)
-
-    @qtc.pyqtSlot()
-    @_if_cap_active
-    def _stop_capture(self):
-        self.capture_active = False
-        self.cap_stream.stop()
 
     @staticmethod
     def _get_row_col(qframe):

@@ -11,6 +11,7 @@ from class_cap_panel import CapturePanel
 from darksight_designer import Ui_FormMain
 
 
+
 class MainApp(qtw.QApplication):
 
     def __init__(self, argv):
@@ -29,6 +30,8 @@ class MainWindow(qtw.QWidget):
         self.ui = Ui_FormMain()
         self.ui.setupUi(self)
 
+        self.panels_list = []
+
         self.ui.btn_add_capture_panel.clicked.connect(self._add_capture_panel)
         self.ui.btn_remove_capture_panel.clicked.connect(self._remove_capture_panel)
 
@@ -36,8 +39,9 @@ class MainWindow(qtw.QWidget):
 
     @qtc.pyqtSlot()
     def _add_capture_panel(self):
-        self.capture_panel = CapturePanel()
-        self.capture_panel.setupUi(self.ui.frme_cap_panels)
+        capture_panel = CapturePanel()
+        capture_panel.setupUi(self.ui.frme_cap_panels)
+        self.panels_list.append(capture_panel)
         i = self.ui.layout_grid_frme_cap_panels.count()
         obj_name = self.ui.layout_grid_frme_cap_panels.itemAt(i - 1).widget().objectName()
         print("Added capture panel: " + obj_name)
@@ -50,6 +54,8 @@ class MainWindow(qtw.QWidget):
             print("Removing capture panel: " + widget.objectName())
             self.ui.layout_grid_frme_cap_panels.removeWidget(widget)
             widget.deleteLater()
+            if len(self.panels_list):
+                self.panels_list.pop()
         else:
             print("Cannot delete last frame." + " (count = " + str(i) + ")")
         print('Panels: ')

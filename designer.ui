@@ -19,8 +19,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>851</width>
-     <height>601</height>
+     <width>921</width>
+     <height>641</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -1316,7 +1316,7 @@
               <number>0</number>
              </property>
              <property name="leftMargin">
-              <number>1</number>
+              <number>2</number>
              </property>
              <property name="topMargin">
               <number>0</number>
@@ -1356,9 +1356,6 @@
              <enum>QFrame::Plain</enum>
             </property>
             <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_0">
-             <property name="spacing">
-              <number>0</number>
-             </property>
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -1374,10 +1371,16 @@
              <item>
               <widget class="QPushButton" name="btn_start_cap_0">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>35</width>
+                 <height>0</height>
+                </size>
                </property>
                <property name="text">
                 <string>Start</string>
