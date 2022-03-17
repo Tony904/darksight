@@ -10,28 +10,50 @@ import my_utils as mut
 
 
 class CapturePanel(qtw.QFrame):
-    camera_capture_requested = qtc.pyqtSignal(int)
+    capture_requested = qtc.pyqtSignal(int, int)
+    stop_capture_requested = qtc.pyqtSignal(int)
+    update_autowhite_requested = qtc.pyqtSignal(int, int)
+    update_autofocus_requested = qtc.pyqtSignal(int, int)
+    update_autoexposure_requested = qtc.pyqtSignal(int, int)
+    update_white_requested = qtc.pyqtSignal(int, int)
+    update_focus_requested = qtc.pyqtSignal(int, int)
+    update_exposure_requested = qtc.pyqtSignal(int, int)
+    update_backlight_requested = qtc.pyqtSignal(int, int)
+    update_brightness_requested = qtc.pyqtSignal(int, int)
+    update_contrast_requested = qtc.pyqtSignal(int, int)
+    update_gain_requested = qtc.pyqtSignal(int, int)
+    update_gamma_requested = qtc.pyqtSignal(int, int)
+    update_hue_requested = qtc.pyqtSignal(int, int)
+    update_saturation_requested = qtc.pyqtSignal(int, int)
+    update_sharpness_requested = qtc.pyqtSignal(int, int)
 
     def _if_cap_active(func):
         @functools.wraps(func)
         def wrapper(*args):
-            if args[0].capture_active:
+            if args[0].cap_active:
                 return func(*args)
         return wrapper
 
     def _if_cap_not_active(func):
         @functools.wraps(func)
         def wrapper(*args):
-            if not args[0].capture_active:
+            if not args[0].cap_active:
                 return func(*args)
         return wrapper
 
     def setupUi(self, qframe):
+        self.c = -1  # camera index
+        self.s = -1  # MainWindow.streams index of the linked stream
         self.qframe = qframe
         row, col, space_available = self._get_row_col(qframe)
-        self.i = 2 * col + row
-        suffix = "_" + str(self.i)
+        self.p = 2 * col + row
+        suffix = "_" + str(self.p)
         self.frme_cap_panel_0 = qtw.QFrame(qframe)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frme_cap_panel_0.sizePolicy().hasHeightForWidth())
+        self.frme_cap_panel_0.setSizePolicy(sizePolicy)
         self.frme_cap_panel_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_cap_panel_0.setFrameShadow(qtw.QFrame.Plain)
         self.frme_cap_panel_0.setLineWidth(1)
@@ -41,6 +63,7 @@ class CapturePanel(qtw.QFrame):
         self.layout_hrz_frme_cap_panel_0.setSpacing(0)
         self.layout_hrz_frme_cap_panel_0.setObjectName("layout_hrz_frme_cap_panel" + suffix)
         self.frme_cap_controls_0 = qtw.QFrame(self.frme_cap_panel_0)
+        self.frme_cap_controls_0.setMinimumSize(qtc.QSize(0, 300))
         self.frme_cap_controls_0.setMaximumSize(qtc.QSize(80, 16777215))
         self.frme_cap_controls_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_cap_controls_0.setFrameShadow(qtw.QFrame.Plain)
@@ -673,7 +696,7 @@ class CapturePanel(qtw.QFrame):
 
         self.layout_hrz_frme_cap_panel_0.addWidget(self.frme_cap_controls_0)
         self.frme_cap_display_0 = qtw.QFrame(self.frme_cap_panel_0)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Preferred)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frme_cap_display_0.sizePolicy().hasHeightForWidth())
@@ -727,8 +750,7 @@ class CapturePanel(qtw.QFrame):
 
         self._set_text()
 
-        self.capture_active = False
-        self._create_capture_stream()
+        self.cap_active = False
         self._connect_signals_to_slots()
 
         if space_available:
@@ -738,12 +760,158 @@ class CapturePanel(qtw.QFrame):
 
         print("cap_panel setup complete")
 
+    def _set_text(self):
+        self.lbl_static_zoom_0.setText("Zoom")
+        self.chbx_pause_0.setText("Pause")
+        self.lbl_static_rotate_0.setText("Rotate (90)")
+        self.lbl_static_focus_0.setText("Focus")
+        self.chbx_cap_autofocus_0.setText("Auto")
+        self.lbl_static_exposure_0.setText("Exposure")
+        self.chbx_cap_autoexposure_0.setText("Auto")
+        self.lbl_static_backlight_0.setText("Backlight")
+        self.lbl_static_sharpness_0.setText("Sharpness")
+        self.lbl_static_gamma_0.setText("Gamma")
+        self.lbl_static_gain_0.setText("Gain")
+        self.lbl_static_contrast_0.setText("Contrast")
+        self.lbl_static_saturation_0.setText("Saturation")
+        self.lbl_static_brightness_0.setText("Brightness")
+        self.lbl_static_hue_0.setText("Hue")
+        self.lbl_static_white_0.setText("White Bal.")
+        self.chbx_cap_autowhite_0.setText("Auto")
+        self.lbl_static_resolution_0.setText("Resolution")
+        self.lbl_static_w_resolution_0.setText("W")
+        self.ledit_cap_width_0.setText("5000")
+        self.lbl_static_h_resolution_0.setText("H")
+        self.ledit_cap_height_0.setText("4000")
+        self.lbl_static_c_resolution_0.setText("C")
+        self.lbl_static_cam_index_0.setText("Cam Index")
+        self.btn_start_cap_0.setText("Start")
+        self.btn_stop_cap_0.setText("Stop")
+
+    def _connect_signals_to_slots(self):
+        self.btn_start_cap_0.clicked.connect(self._send_capture_request)
+        self.btn_stop_cap_0.clicked.connect(self._send_stop_cap_request)
+        self.chbx_cap_autowhite_0.stateChanged.connect(self._send_update_autowhite_request)
+        self.chbx_cap_autofocus_0.stateChanged.connect(self._send_update_autofocus_request)
+        self.chbx_cap_autoexposure_0.stateChanged.connect(self._send_update_autoexposure_request)
+        self.spbx_cap_white_0.valueChanged.connect(self._send_update_white_request)
+        self.spbx_cap_focus_0.valueChanged.connect(self._send_update_focus_request)
+        self.spbx_cap_exposure_0.valueChanged.connect(self._send_update_exposure_request)
+        self.spbx_cap_backlight_0.valueChanged.connect(self._send_update_backlight_request)
+        self.spbx_cap_brightness_0.valueChanged.connect(self._send_update_brightness_request)
+        self.spbx_cap_contrast_0.valueChanged.connect(self._send_update_contrast_request)
+        self.spbx_cap_gain_0.valueChanged.connect(self._send_update_gain_request)
+        self.spbx_cap_gamma_0.valueChanged.connect(self._send_update_gamma_request)
+        self.spbx_cap_hue_0.valueChanged.connect(self._send_update_hue_request)
+        self.spbx_cap_saturation_0.valueChanged.connect(self._send_update_saturation_request)
+        self.spbx_cap_sharpness_0.valueChanged.connect(self._send_update_sharpness_request)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_autowhite_request(self, x):
+        print("Emitting update_autowhite_requested. p:" + str(self.p))
+        self.update_autowhite_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_autofocus_request(self, x):
+        print("Emitting update_autofocus_requested. p:" + str(self.p))
+        self.update_autofocus_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_autoexposure_request(self, x):
+        print("Emitting update_autoexposure_requested. p:" + str(self.p))
+        self.update_autoexposure_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_white_request(self, x):
+        print("Emitting update_white_requested. p:" + str(self.p))
+        self.update_white_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_focus_request(self, x):
+        print("Emitting update_focus_requested. p:" + str(self.p))
+        self.update_focus_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_exposure_request(self, x):
+        print("Emitting update_exposure_requested. p:" + str(self.p))
+        self.update_exposure_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_backlight_request(self, x):
+        print("Emitting update_backlight_requested. p:" + str(self.p))
+        self.update_backlight_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_brightness_request(self, x):
+        print("Emitting update_brightness_requested. p:" + str(self.p))
+        self.update_brightness_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_contrast_request(self, x):
+        print("Emitting update_contrast_requested. p:" + str(self.p))
+        self.update_contrast_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_gain_request(self, x):
+        print("Emitting update_gain_requested. p:" + str(self.p))
+        self.update_gain_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_gamma_request(self, x):
+        print("Emitting update_gamma_requested. p:" + str(self.p))
+        self.update_gamma_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_hue_request(self, x):
+        print("Emitting update_hue_requested. p:" + str(self.p))
+        self.update_hue_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_saturation_request(self, x):
+        print("Emitting update_saturation_requested. p:" + str(self.p))
+        self.update_saturation_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot(int)
+    @_if_cap_active
+    def _send_update_sharpness_request(self, x):
+        print("Emitting update_sharpness_requested. p:" + str(self.p))
+        self.update_sharpness_requested.emit(self.p, x)
+
+    @qtc.pyqtSlot()
+    @_if_cap_not_active
+    def _send_capture_request(self):
+        s = self.ledit_cam_index_0.text()
+        if s:
+            print("Emitting capture_requested. p:" + str(self.p))
+            self.cap_active = True
+            self.capture_requested.emit(self.p, int(s))
+
+    @qtc.pyqtSlot()
+    @_if_cap_active
+    def _send_stop_cap_request(self):
+        print("Emitting stop_capture_requested. p:" + str(self.p))
+        self.cap_active = False
+        self.stop_capture_requested.emit(self.p)
+
     @qtc.pyqtSlot(np.ndarray)
-    def _display_capture(self, img):
-        h, w, c = img.shape
+    def display_capture(self, img):
+        h, w, ch = img.shape
         self.ledit_cap_width_0.setText(str(w))
         self.ledit_cap_height_0.setText(str(h))
-        self.ledit_cap_channels_0.setText(str(c))
+        self.ledit_cap_channels_0.setText(str(ch))
         chbx_pause = self.chbx_pause_0
         if not chbx_pause.isChecked():
             lbl_display = self.lbl_cap_display_pixmap_0
@@ -809,169 +977,6 @@ class CapturePanel(qtw.QFrame):
             qpix = qtg.QPixmap.fromImage(qimg)
             lbl_display.setPixmap(qpix)
 
-    def _create_capture_stream(self):
-        self.cap_stream = CaptureStream()
-        self.cap_thread = qtc.QThread()
-        self.cap_stream.moveToThread(self.cap_thread)
-        self.cap_thread.start()
-        print("capture stream created.")
-        self.camera_capture_requested.connect(self.cap_stream.run)
-        self.cap_stream.frame_captured.connect(self._display_capture)
-
-    def _set_text(self):
-        self.lbl_static_zoom_0.setText("Zoom")
-        self.chbx_pause_0.setText("Pause")
-        self.lbl_static_rotate_0.setText("Rotate (90)")
-        self.lbl_static_focus_0.setText("Focus")
-        self.chbx_cap_autofocus_0.setText("Auto")
-        self.lbl_static_exposure_0.setText("Exposure")
-        self.chbx_cap_autoexposure_0.setText("Auto")
-        self.lbl_static_backlight_0.setText("Backlight")
-        self.lbl_static_sharpness_0.setText("Sharpness")
-        self.lbl_static_gamma_0.setText("Gamma")
-        self.lbl_static_gain_0.setText("Gain")
-        self.lbl_static_contrast_0.setText("Contrast")
-        self.lbl_static_saturation_0.setText("Saturation")
-        self.lbl_static_brightness_0.setText("Brightness")
-        self.lbl_static_hue_0.setText("Hue")
-        self.lbl_static_white_0.setText("White Bal.")
-        self.chbx_cap_autowhite_0.setText("Auto")
-        self.lbl_static_resolution_0.setText("Resolution")
-        self.lbl_static_w_resolution_0.setText("W")
-        self.ledit_cap_width_0.setText("5000")
-        self.lbl_static_h_resolution_0.setText("H")
-        self.ledit_cap_height_0.setText("4000")
-        self.lbl_static_c_resolution_0.setText("C")
-        self.lbl_static_cam_index_0.setText("Cam Index")
-        self.btn_start_cap_0.setText("Start")
-        self.btn_stop_cap_0.setText("Delete")
-
-    def _connect_signals_to_slots(self):
-        self.btn_start_cap_0.clicked.connect(self._send_capture_request)
-        self.btn_stop_cap_0.clicked.connect(self._stop_capture)
-        self.spbx_cap_focus_0.valueChanged.connect(self._send_focus_update_request)
-        self.spbx_cap_backlight_0.valueChanged.connect(self._send_backlight_update_request)
-        self.spbx_cap_brightness_0.valueChanged.connect(self._send_brightness_update_request)
-        self.spbx_cap_contrast_0.valueChanged.connect(self._send_contrast_update_request)
-        self.spbx_cap_exposure_0.valueChanged.connect(self._send_exposure_update_request)
-        self.spbx_cap_gain_0.valueChanged.connect(self._send_gain_update_request)
-        self.spbx_cap_gamma_0.valueChanged.connect(self._send_gamma_update_request)
-        self.spbx_cap_hue_0.valueChanged.connect(self._send_hue_update_request)
-        self.spbx_cap_saturation_0.valueChanged.connect(self._send_saturation_update_request)
-        self.spbx_cap_sharpness_0.valueChanged.connect(self._send_sharpness_update_request)
-        self.spbx_cap_white_0.valueChanged.connect(self._send_white_update_request)
-
-        self.chbx_cap_autoexposure_0.stateChanged.connect(self._send_auto_exposure_update_request)
-        self.chbx_cap_autofocus_0.stateChanged.connect(self._send_auto_focus_update_request)
-        self.chbx_cap_autowhite_0.stateChanged.connect(self._send_auto_white_update_request)
-
-    @qtc.pyqtSlot()
-    @_if_cap_not_active
-    def _send_capture_request(self):
-        s = self.ledit_cam_index_0.text()
-        if s:
-            c = int(s)
-            index_open = self.cap_index_is_open(c)
-            print("index_open: " + str(index_open))
-            if index_open:
-                camera_index = int(self.ledit_cam_index_0.text())
-                print("cam_index: " + str(camera_index))
-                self.capture_active = True
-                self._send_auto_focus_update_request(int(self.chbx_cap_autofocus_0.isChecked()))
-                self._send_auto_exposure_update_request(int(self.chbx_cap_autoexposure_0.isChecked()))
-                self._send_auto_white_update_request(int(self.chbx_cap_autowhite_0.isChecked()))
-                self._send_focus_update_request(self.spbx_cap_focus_0.value())
-                self._send_brightness_update_request(self.spbx_cap_brightness_0.value())
-                self._send_contrast_update_request(self.spbx_cap_contrast_0.value())
-                self._send_hue_update_request(self.spbx_cap_hue_0.value())
-                self._send_saturation_update_request(self.spbx_cap_saturation_0.value())
-                self._send_sharpness_update_request(self.spbx_cap_sharpness_0.value())
-                self._send_gamma_update_request(self.spbx_cap_gamma_0.value())
-                self._send_white_update_request(self.spbx_cap_white_0.value())
-                self._send_backlight_update_request(self.spbx_cap_backlight_0.value())
-                self._send_gain_update_request(self.spbx_cap_gain_0.value())
-                self._send_exposure_update_request(self.spbx_cap_exposure_0.value())
-                print("Emitting camera_capture_requested signal.")
-                # self.camera_capture_requested.emit(camera_index)
-                self.btn_stop_cap_0.setText("Stop")
-
-    @qtc.pyqtSlot()
-    @_if_cap_active
-    def _stop_capture(self):
-        self.capture_active = False
-        self.btn_stop_cap_0.SetText("Delete")
-        self.cap_stream.stop()
-
-    def cap_index_is_open(self, c):
-        cstr = str(c)
-        for n in range(self.qframe.layout().count()):
-            s = str(n)
-            widget = self.qframe.findChild(qtw.QLineEdit, "ledit_cam_index_" + s)
-            widget_cap_index = widget.text()
-            print("c: " + cstr)
-            if not n == self.i:
-                if cstr == widget_cap_index:
-                    print("def cap_index_is_open returning False. c=" + cstr + " widget_c=" + widget_cap_index)
-                    return False
-        print("def cap_index_is_open returning True.")
-        return True
-
-    @_if_cap_active
-    def _send_auto_focus_update_request(self, newval):
-        self.cap_stream.update_auto_focus(newval)
-
-    @_if_cap_active
-    def _send_auto_exposure_update_request(self, newval):
-        self.cap_stream.update_auto_exposure(newval)
-
-    @_if_cap_active
-    def _send_auto_white_update_request(self, newval):
-        self.cap_stream.update_auto_white_balance(newval)
-
-    @_if_cap_active
-    def _send_focus_update_request(self, newval):
-        self.cap_stream.update_focus(newval)
-
-    @_if_cap_active
-    def _send_backlight_update_request(self, newval):
-        self.cap_stream.update_backlight_comp(newval)
-
-    @_if_cap_active
-    def _send_brightness_update_request(self, newval):
-        self.cap_stream.update_brightness(newval)
-
-    @_if_cap_active
-    def _send_contrast_update_request(self, newval):
-        self.cap_stream.update_contrast(newval)
-
-    @_if_cap_active
-    def _send_exposure_update_request(self, newval):
-        self.cap_stream.update_exposure(newval)
-
-    @_if_cap_active
-    def _send_gain_update_request(self, newval):
-        self.cap_stream.update_gain(newval)
-
-    @_if_cap_active
-    def _send_gamma_update_request(self, newval):
-        self.cap_stream.update_gamma(newval)
-
-    @_if_cap_active
-    def _send_hue_update_request(self, newval):
-        self.cap_stream.update_hue(newval)
-
-    @_if_cap_active
-    def _send_saturation_update_request(self, newval):
-        self.cap_stream.update_saturation(newval)
-
-    @_if_cap_active
-    def _send_sharpness_update_request(self, newval):
-        self.cap_stream.update_sharpness(newval)
-
-    @_if_cap_active
-    def _send_white_update_request(self, newval):
-        self.cap_stream.update_white_balance(newval)
-
     @staticmethod
     def _get_row_col(qframe):
         i = qframe.layout().count()
@@ -993,197 +998,3 @@ class CapturePanel(qtw.QFrame):
             col = 2
             space_available = False
         return row, col, space_available
-
-
-class CaptureStream(qtc.QObject):
-    frame_captured = qtc.pyqtSignal(np.ndarray)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.thread_active = False
-        self.width = 5000
-        self.height = 4000
-        self.focus = 300.
-        self.auto_focus = 0
-        self.brightness = 0
-        self.contrast = 32
-        self.hue = 0
-        self.saturation = 64
-        self.sharpness = 3
-        self.gamma = 100
-        self.white_balance = 4600
-        self.auto_white_balance = 1
-        self.backlight_comp = 1
-        self.gain = 0
-        self.exposure = -6
-        self.auto_exposure = 1  # if disabled, must be re-enabled in AMcap software
-
-    @qtc.pyqtSlot(int)
-    def run(self, cam_index):
-        print("capture stream run()")
-        self.thread_active = True
-        cap = cv2.VideoCapture(cam_index, cv2.CAP_DSHOW)
-        # 16MP camera = 4672x3504
-        # 8MP 3264x2448
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
-        focus = self.focus
-        auto_focus = self.auto_focus
-        brightness = self.brightness
-        contrast = self.contrast
-        hue = self.hue
-        saturation = self.saturation
-        sharpness = self.sharpness
-        gamma = self.gamma
-        white_balance = self.white_balance
-        auto_white_balance = self.auto_white_balance
-        backlight_comp = self.backlight_comp
-        gain = self.gain
-        exposure = self.exposure
-        auto_exposure = self.auto_exposure
-
-        # cap.set(cv2.CAP_PROP_AUTOFOCUS, auto_focus)
-        if not auto_focus:
-            cap.set(cv2.CAP_PROP_FOCUS, focus)
-        cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
-        cap.set(cv2.CAP_PROP_CONTRAST, contrast)
-        cap.set(cv2.CAP_PROP_HUE, hue)
-        cap.set(cv2.CAP_PROP_SATURATION, saturation)
-        cap.set(cv2.CAP_PROP_GAMMA, gamma)
-        cap.set(cv2.CAP_PROP_AUTO_WB, auto_white_balance)
-        if not auto_white_balance:
-            cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, white_balance)
-            cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, white_balance)
-        cap.set(cv2.CAP_PROP_BACKLIGHT, backlight_comp)
-        cap.set(cv2.CAP_PROP_GAIN, gain)
-        cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, auto_exposure)
-        if not auto_exposure:
-            cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
-        count = 0
-        while cap.isOpened() and self.thread_active:
-            ret, frame = cap.read()
-            count = count + 1
-            if ret:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.frame_captured.emit(frame_rgb)
-                if not auto_focus == self.auto_focus:
-                    auto_focus = self.auto_focus
-                    cap.set(cv2.CAP_PROP_AUTOFOCUS, auto_focus)
-                    print("Auto-focus set to: " + str(auto_focus))
-                    print("Auto-focus is: " + str(cap.get(cv2.CAP_PROP_AUTOFOCUS)))
-                elif abs(focus - self.focus) >= 1:
-                    focus = self.focus
-                    if not auto_focus:
-                        cap.set(cv2.CAP_PROP_FOCUS, focus)
-                        print("Focus set to: " + str(focus))
-                        print("Focus is: " + str(cap.get(cv2.CAP_PROP_FOCUS)))
-                elif not auto_white_balance == self.auto_white_balance:
-                    auto_white_balance = self.auto_white_balance
-                    cap.set(cv2.CAP_PROP_AUTO_WB, auto_white_balance)
-                elif abs(white_balance - self.white_balance) >= 1:
-                    white_balance = self.white_balance
-                    if not auto_white_balance:
-                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, self.white_balance)
-                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, self.white_balance)
-                elif not auto_exposure == self.auto_exposure:
-                    auto_exposure = self.auto_exposure
-                    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, auto_exposure)
-                elif abs(exposure - self.exposure) >= 1:
-                    exposure = self.exposure
-                    if not auto_exposure:
-                        cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
-                        print("Exposure set to: " + str(exposure))
-                        print("Exposure is: " + str(cap.get(cv2.CAP_PROP_EXPOSURE)))
-                    else:
-                        print("auto exposure = 1. no change.")
-                elif abs(gain - self.gain) >= 1:
-                    gain = self.gain
-                    cap.set(cv2.CAP_PROP_GAIN, gain)
-                    print("Gain set to: " + str(gain))
-                    print("Gain is: " + str(cap.get(cv2.CAP_PROP_GAIN)))
-                elif abs(gamma - self.gamma) >= 1:
-                    gamma = self.gamma
-                    cap.set(cv2.CAP_PROP_GAMMA, gamma)
-                    print("Gamma set to: " + str(gamma))
-                    print("Gamma is: " + str(cap.get(cv2.CAP_PROP_GAMMA)))
-                elif abs(brightness - self.brightness) >= 1:
-                    brightness = self.brightness
-                    cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
-                    print("Brightness set to: " + str(brightness))
-                    print("Brightness is: " + str(cap.get(cv2.CAP_PROP_BRIGHTNESS)))
-                elif abs(contrast - self.contrast) >= 1:
-                    contrast = self.contrast
-                    cap.set(cv2.CAP_PROP_CONTRAST, contrast)
-                    print("Contrast set to: " + str(contrast))
-                    print("Contrast is: " + str(cap.get(cv2.CAP_PROP_CONTRAST)))
-                elif abs(sharpness - self.sharpness) >= 1:
-                    sharpness = self.sharpness
-                    cap.set(cv2.CAP_PROP_SHARPNESS, sharpness)
-                    print("Sharpness set to: " + str(sharpness))
-                    print("Sharpness is: " + str(cap.get(cv2.CAP_PROP_SHARPNESS)))
-                elif abs(saturation - self.saturation) >= 1:
-                    saturation = self.saturation
-                    cap.set(cv2.CAP_PROP_SATURATION, saturation)
-                    print("Saturation set to: " + str(saturation))
-                    print("Saturation is: " + str(cap.get(cv2.CAP_PROP_SATURATION)))
-                elif abs(hue - self.hue) >= 1:
-                    hue = self.hue
-                    cap.set(cv2.CAP_PROP_HUE, hue)
-                    print("Hue set to: " + str(hue))
-                    print("Hue is: " + str(cap.get(cv2.CAP_PROP_HUE)))
-                elif abs(backlight_comp - self.backlight_comp) >= 1:
-                    backlight_comp = self.backlight_comp
-                    cap.set(cv2.CAP_PROP_BACKLIGHT, backlight_comp)
-                    print("Backlight comp set to: " + str(backlight_comp))
-                    print("Backlight comp is: " + str(cap.get(cv2.CAP_PROP_BACKLIGHT)))
-            else:
-                self.stop()
-                print("Capture read unsuccessful. Cam index: " + str(cam_index))
-
-        cap.release()
-        print("Capture stopped. Cam index: " + str(cam_index))
-
-    def stop(self):
-        self.thread_active = False
-
-    def update_focus(self, focus):
-        self.focus = focus
-
-    def update_auto_focus(self, auto):
-        self.auto_focus = auto
-
-    def update_brightness(self, brightness):
-        self.brightness = brightness
-
-    def update_contrast(self, contrast):
-        self.contrast = contrast
-
-    def update_hue(self, hue):
-        self.hue = hue
-
-    def update_saturation(self, saturation):
-        self.saturation = saturation
-
-    def update_sharpness(self, sharpness):
-        self.sharpness = sharpness
-
-    def update_gamma(self, gamma):
-        self.gamma = gamma
-
-    def update_white_balance(self, white_balance):
-        self.white_balance = white_balance
-
-    def update_auto_white_balance(self, auto):
-        self.auto_white_balance = auto
-
-    def update_backlight_comp(self, backlight_comp):
-        self.backlight_comp = backlight_comp
-
-    def update_gain(self, gain):
-        self.gain = gain
-
-    def update_exposure(self, exposure):
-        self.exposure = exposure
-
-    def update_auto_exposure(self, auto):
-        self.auto_exposure = auto

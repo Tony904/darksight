@@ -47,6 +47,12 @@
     </property>
     <item row="0" column="0">
      <widget class="QFrame" name="frme_cap_panel_0">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -74,6 +80,12 @@
        </property>
        <item>
         <widget class="QFrame" name="frme_cap_controls_0">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>300</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>80</width>
@@ -1509,8 +1521,8 @@
     <rect>
      <x>960</x>
      <y>10</y>
-     <width>95</width>
-     <height>94</height>
+     <width>121</width>
+     <height>121</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -1537,7 +1549,7 @@ Camera View</string>
     <item>
      <widget class="QPushButton" name="btn_remove_capture_panel">
       <property name="text">
-       <string>Remove
+       <string>Remove Last
 Camera View</string>
       </property>
      </widget>
