@@ -4,6 +4,7 @@ import time
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
+import darknet
 import cv2
 import numpy as np
 import functools
@@ -18,7 +19,6 @@ class MainApp(qtw.QApplication):
     def __init__(self, argv):
         super().__init__(argv)
 
-        # create main window
         self.mw = MainWindow()
         self.mw.show()
 
@@ -31,7 +31,6 @@ class MainWindow(qtw.QWidget):
 
         self.ui = Ui_FormMain()
         self.ui.setupUi(self)
-
         self.panels = []
         self.streams = []
         self.qthreads = []
@@ -40,6 +39,43 @@ class MainWindow(qtw.QWidget):
         self.ui.btn_remove_capture_panel.clicked.connect(self._remove_capture_panel)
 
         self.showMaximized()
+
+    def load_darknet(self):
+        cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp.cfg"
+        data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
+        weights_file = "D:/yolo_v4/darknet/build/darknet/x64/training_backup/yolov4-csp_last.weights"
+        batch_size = 1
+        global network, class_names, class_colors, darknet_w, darknet_h
+        network, class_names, class_colors = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
+        darknet_w = darknet.network_width(network)
+        darknet_h = darknet.network_height(network)
+
+        self.inference = Inference()
+        self.inference_qthread = qtc.QThread()
+        self.inference.moveToThread(self.inference_qthread)
+        self.inference_qthread.start()
+        self.inference.predicted.connect(self.relay_detections)
+        self.draw_detections = DrawDetections()
+        self.draw_detections_qthread = qtc.QThread()
+        self.draw_detections.moveToThread(self.draw_detections_qthread)
+        self.draw_detections_qthread.start()
+        self.draw_detections.detections_drawn.connect(self.relay_predicted_image)
+
+    def relay_detections(self, detections):
+        self.draw_detections.update_detections(detections)
+
+    def relay_input_image(self, img):
+        self.inference.update_image(img)
+
+    def relay_predicted_image(self, img):
+        pass
+
+    def _if_cap_active(func):
+        @functools.wraps(func)
+        def wrapper(*args):
+            if args[0].panels[args[1]].s > -1:
+                return func(*args)
+        return wrapper
 
     @qtc.pyqtSlot()
     def _add_capture_panel(self):
@@ -71,6 +107,8 @@ class MainWindow(qtw.QWidget):
     @qtc.pyqtSlot(int, int)
     def setup_capture(self, p, c):
         print("Setting up capture. p=" + str(p) + " c=" + str(c))
+        if self.panels[p].s > -1:
+            self.stop_stream(p)
         c_open = True
         s = -1
         for n in range(len(self.streams)):
@@ -78,8 +116,6 @@ class MainWindow(qtw.QWidget):
                 c_open = False
                 s = n
                 break
-        print("s: " + str(s))
-        print("c_open: " + str(c_open))
         if c_open:
             cap_stream = CaptureStream()
             cap_thread = qtc.QThread()
@@ -94,85 +130,97 @@ class MainWindow(qtw.QWidget):
             self.run_stream.connect(cap_stream.run)
             self.run_stream.emit(c)
             self.run_stream.disconnect(cap_stream.run)
-            print("end of setup_capture: " + str(cap_stream))
         else:
-            if s > -1:
-                self.streams[s].frame_captured.connect(self.panels[p].display_capture)
-                self.panels[p].c = c
-                self.panels[p].s = s
-            else:
-                print("Something is wrong in: def setup_capture. This code should never be reached.")
+            self.streams[s].frame_captured.connect(self.panels[p].display_capture)
+            self.streams[s].connected_panels.append(p)
+            self.panels[p].c = c
+            self.panels[p].s = s
 
-    @qtc.pyqtSlot(int)
+    @_if_cap_active
     def stop_stream(self, p):
         s = self.panels[p].s
         self.streams[s].frame_captured.disconnect(self.panels[p].display_capture)
         self.panels[p].c = -1
         self.panels[p].s = -1
-        del self.streams[s].connected_panels[p]
-        if not len(self.streams):
+        self.streams[s].connected_panels.remove(p)
+        if not len(self.streams[s].connected_panels):
             self.streams[s].stop()
             del self.streams[s]
             self.qthreads[s].quit()
             del self.qthreads[s]
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_autofocus(self, p, x):
         self.streams[self.panels[p].s].update_autofocus(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_autoexposure(self, p, x):
         self.streams[self.panels[p].s].update_autoexposure(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_autowhite(self, p, x):
         self.streams[self.panels[p].s].update_autowhite(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_focus(self, p, x):
         self.streams[self.panels[p].s].update_focus(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_brightness(self, p, x):
         self.streams[self.panels[p].s].update_brightness(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_contrast(self, p, x):
         self.streams[self.panels[p].s].update_contrast(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_hue(self, p, x):
         self.streams[self.panels[p].s].update_hue(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_saturation(self, p, x):
         self.streams[self.panels[p].s].update_saturation(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_sharpness(self, p, x):
         self.streams[self.panels[p].s].update_sharpness(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_gamma(self, p, x):
         self.streams[self.panels[p].s].update_gamma(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_white(self, p, x):
         self.streams[self.panels[p].s].update_white(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_backlight(self, p, x):
         self.streams[self.panels[p].s].update_backlight(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_gain(self, p, x):
         self.streams[self.panels[p].s].update_gain(x)
 
     @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _update_exposure(self, p, x):
         self.streams[self.panels[p].s].update_exposure(x)
 
-    @qtc.pyqtSlot()
+    @qtc.pyqtSlot(int, int)
+    @_if_cap_active
     def _remove_capture_panel(self):
         i = self.ui.layout_grid_frme_cap_panels.count()
         if i > 0:
@@ -214,6 +262,8 @@ class CaptureStream(qtc.QObject):
         self.exposure = -6
         self.autoexposure = 1  # if disabled, must be re-enabled in AMcap software
 
+        self.darknet_img = None
+
     @qtc.pyqtSlot(int)
     def run(self, cam_index):
         self.c = cam_index
@@ -238,7 +288,7 @@ class CaptureStream(qtc.QObject):
         exposure = self.exposure
         autoexposure = self.autoexposure
 
-        # cap.set(cv2.CAP_PROP_AUTOFOCUS, autofocus)
+        cap.set(cv2.CAP_PROP_AUTOFOCUS, autofocus)
         if not autofocus:
             cap.set(cv2.CAP_PROP_FOCUS, focus)
         cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
@@ -255,10 +305,8 @@ class CaptureStream(qtc.QObject):
         cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, autoexposure)
         if not autoexposure:
             cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
-        count = 0
         while cap.isOpened() and self.cap_active:
             ret, frame = cap.read()
-            count = count + 1
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.frame_captured.emit(frame_rgb, cam_index)
@@ -279,8 +327,8 @@ class CaptureStream(qtc.QObject):
                 elif abs(white - self.white) >= 1:
                     white = self.white
                     if not autowhite:
-                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, self.white)
-                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, self.white)
+                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, white)
+                        cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, white)
                 elif not autoexposure == self.autoexposure:
                     autoexposure = self.autoexposure
                     cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, autoexposure)
@@ -385,6 +433,63 @@ class CaptureStream(qtc.QObject):
         self.autoexposure = auto
 
 
+class Inference(qtc.QObject):
+    predicted = qtc.pyqtSignal(list)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.darknet_image = None
+        self.thresh = 0.5
+        self.active = False
+
+    def run(self):
+        self.active = True
+        while self.active:
+            img = self.darknet_image.copy()
+            detections = darknet.detect_image(network, class_names, img, self.thresh)
+            self.predicted.emit(detections)
+            darknet.free_image(img)
+
+    def update_image(self, img):
+        self.darknet_image = img
+
+    def update_thresh(self, thresh):
+        self.thresh = thresh
+
+
+class DrawDetections(qtc.QObject):
+    detections_drawn = qtc.pyqtSignal(np.ndarray)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.img = None
+        self.detections = []
+        self.thresh = 0.5
+        self.active = False
+
+    def run(self):
+        self.active = True
+        while self.active:
+            if self.img:
+                img = self.img.copy()
+                detections = self.detections.copy()
+                for label, confidence, bbox in detections:
+                    print("label: " + str(label) + " confidence: " + str(confidence) + " bbox: " + str(bbox))
+                    # draw bboxes on img
+                self.detections_drawn.emit(img)
+
+    def update_image(self, img):
+        self.img = img.copy()
+
+    def update_detections(self, detections):
+        self.detections = detections.copy()
+
+
 if __name__ == "__main__":
     app = MainApp(sys.argv)
+    network = None
+    class_names = None
+    class_colors = None
+    darknet_w = None
+    darknet_h = None
     sys.exit(app.exec_())

@@ -893,11 +893,13 @@ class CapturePanel(qtw.QFrame):
     @qtc.pyqtSlot()
     @_if_cap_not_active
     def _send_capture_request(self):
-        s = self.ledit_cam_index_0.text()
-        if s:
-            print("Emitting capture_requested. p:" + str(self.p))
-            self.cap_active = True
-            self.capture_requested.emit(self.p, int(s))
+        st = self.ledit_cam_index_0.text()
+        if st:
+            s = int(st)
+            if s > -1:
+                print("Emitting capture_requested. p:" + str(self.p))
+                self.cap_active = True
+                self.capture_requested.emit(self.p, int(s))
 
     @qtc.pyqtSlot()
     @_if_cap_active
