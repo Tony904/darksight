@@ -1,8 +1,8 @@
 import sys
-import argparse
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
+import darknet
 import cv2
 import numpy as np
 import functools
@@ -26,6 +26,7 @@ class CapturePanel(qtw.QFrame):
     update_hue_requested = qtc.pyqtSignal(int, int)
     update_saturation_requested = qtc.pyqtSignal(int, int)
     update_sharpness_requested = qtc.pyqtSignal(int, int)
+    darknet_detection_requested = qtc.pyqtSignal(np.ndarray)
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -42,6 +43,8 @@ class CapturePanel(qtw.QFrame):
         return wrapper
 
     def setupUi(self, qframe):
+        self.darknet_img = None
+        self.obj_detection = True
         self.c = -1  # camera index
         self.s = -1  # MainWindow.streams index of the linked stream
         self.qframe = qframe
@@ -49,7 +52,7 @@ class CapturePanel(qtw.QFrame):
         self.p = 2 * col + row
         suffix = "_" + str(self.p)
         self.frme_cap_panel_0 = qtw.QFrame(qframe)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frme_cap_panel_0.sizePolicy().hasHeightForWidth())
@@ -973,7 +976,8 @@ class CapturePanel(qtw.QFrame):
                     view = cv2.rotate(view, cv2.ROTATE_180)
             else:
                 view = img[y1:y2, x1:x2].copy()
-
+            if self.obj_detection:
+                self.darknet_detection_requested.emit(view)
             qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
             qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
             qpix = qtg.QPixmap.fromImage(qimg)

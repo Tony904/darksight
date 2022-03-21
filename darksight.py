@@ -1,6 +1,5 @@
 import sys
 import time
-
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
@@ -37,10 +36,11 @@ class MainWindow(qtw.QWidget):
 
         self.ui.btn_add_capture_panel.clicked.connect(self._add_capture_panel)
         self.ui.btn_remove_capture_panel.clicked.connect(self._remove_capture_panel)
+        self.ui.btn_load_darknet.clicked.connect(self._load_darknet)
 
         self.showMaximized()
 
-    def load_darknet(self):
+    def _load_darknet(self):
         cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp.cfg"
         data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
         weights_file = "D:/yolo_v4/darknet/build/darknet/x64/training_backup/yolov4-csp_last.weights"
@@ -61,13 +61,19 @@ class MainWindow(qtw.QWidget):
         self.draw_detections_qthread.start()
         self.draw_detections.detections_drawn.connect(self.relay_predicted_image)
 
-    def relay_detections(self, detections):
-        self.draw_detections.update_detections(detections)
+    def relay_input_image(self, img_ndarr):
+        self.inference.run(img_ndarr)
 
-    def relay_input_image(self, img):
-        self.inference.update_image(img)
+    def relay_detections(self, detections, img):
+        self.draw_detections.run(detections, img)
 
     def relay_predicted_image(self, img):
+        self._display_predicted_image(img)
+
+    def _display_predicted_image(self, img):
+        cv2.imshow('predicted image', img)
+
+    def _build_darknet_input_image(self, img, s):
         pass
 
     def _if_cap_active(func):
@@ -100,6 +106,9 @@ class MainWindow(qtw.QWidget):
 
         self.panels.append(panel)
 
+        if panel.p == 0:
+            panel.darknet_detection_requested.connect(self.relay_input_image)
+
         i = self.ui.layout_grid_frme_cap_panels.count()
         obj_name = self.ui.layout_grid_frme_cap_panels.itemAt(i - 1).widget().objectName()
         print("Added capture panel: " + obj_name)
@@ -127,6 +136,9 @@ class MainWindow(qtw.QWidget):
             cap_stream.connected_panels.append(p)
             self.panels[p].c = c
             self.panels[p].s = len(self.streams) - 1
+            if p == 0:
+                cap_stream.frame_captured.connect(self.relay_input_image)
+
             self.run_stream.connect(cap_stream.run)
             self.run_stream.emit(c)
             self.run_stream.disconnect(cap_stream.run)
@@ -219,8 +231,7 @@ class MainWindow(qtw.QWidget):
     def _update_exposure(self, p, x):
         self.streams[self.panels[p].s].update_exposure(x)
 
-    @qtc.pyqtSlot(int, int)
-    @_if_cap_active
+    @qtc.pyqtSlot()
     def _remove_capture_panel(self):
         i = self.ui.layout_grid_frme_cap_panels.count()
         if i > 0:
@@ -309,6 +320,7 @@ class CaptureStream(qtc.QObject):
             ret, frame = cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                print("Emitting signal: frame_captured")
                 self.frame_captured.emit(frame_rgb, cam_index)
                 if not autofocus == self.autofocus:
                     autofocus = self.autofocus
@@ -434,24 +446,21 @@ class CaptureStream(qtc.QObject):
 
 
 class Inference(qtc.QObject):
-    predicted = qtc.pyqtSignal(list)
+    predicted = qtc.pyqtSignal(list, np.ndarray)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.darknet_image = None
         self.thresh = 0.5
-        self.active = False
 
-    def run(self):
-        self.active = True
-        while self.active:
-            img = self.darknet_image.copy()
-            detections = darknet.detect_image(network, class_names, img, self.thresh)
-            self.predicted.emit(detections)
-            darknet.free_image(img)
-
-    def update_image(self, img):
-        self.darknet_image = img
+    def run(self, img_ndarr):
+        resized = cv2.resize(img_ndarr, (darknet_w, darknet_h), interpolation=cv2.INTER_LINEAR)
+        img = darknet.make_image(darknet_w, darknet_h, 3)
+        darknet.copy_image_from_bytes(img, resized.tobytes())
+        print("Performing object detection. (darknet.detect_image())")
+        detections = darknet.detect_image(network, class_names, img, self.thresh)
+        print("Emitting signal: predicted")
+        self.predicted.emit(detections, resized)
+        darknet.free_image(img)
 
     def update_thresh(self, thresh):
         self.thresh = thresh
@@ -462,27 +471,15 @@ class DrawDetections(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.img = None
-        self.detections = []
         self.thresh = 0.5
-        self.active = False
 
-    def run(self):
-        self.active = True
-        while self.active:
-            if self.img:
-                img = self.img.copy()
-                detections = self.detections.copy()
-                for label, confidence, bbox in detections:
-                    print("label: " + str(label) + " confidence: " + str(confidence) + " bbox: " + str(bbox))
-                    # draw bboxes on img
-                self.detections_drawn.emit(img)
-
-    def update_image(self, img):
-        self.img = img.copy()
-
-    def update_detections(self, detections):
-        self.detections = detections.copy()
+    def run(self, detections, img):
+        for label, confidence, bbox in detections:
+            print("label: " + str(label) + " confidence: " + str(confidence))
+            # draw bboxes on img
+        print(len(detections))
+        print("Emitting signal: detections_drawn")
+        self.detections_drawn.emit(img)
 
 
 if __name__ == "__main__":
