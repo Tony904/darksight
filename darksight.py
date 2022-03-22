@@ -9,7 +9,9 @@ import numpy as np
 import functools
 import image_utils as imut
 import my_utils as mut
+from class_emitter import Emitter
 from class_cap_panel import CapturePanel
+from class_inference_manager import InferenceManager
 from darksight_designer import Ui_FormMain
 
 
@@ -24,6 +26,11 @@ class MainApp(qtw.QApplication):
 
 class MainWindow(qtw.QWidget):
     run_stream = qtc.pyqtSignal(int)
+    initiate_inference = qtc.pyqtSignal()
+    send_img_to_manager = qtc.pyqtSignal(int, np.ndarray, Emitter)
+    send_det_to_manager = qtc.pyqtSignal(int, list)
+    send_inf_state_to_manager = qtc.pyqtSignal(bool)
+    send_draw_state_to_manager = qtc.pyqtSignal(bool)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -32,7 +39,11 @@ class MainWindow(qtw.QWidget):
         self.ui.setupUi(self)
         self.panels = []
         self.streams = []
-        self.qthreads = []
+        self.stream_qthreads = []
+        self.drawers = []
+        self.drawer_qthreads = []
+        self.emitters = []
+        self.darknet_loaded = False
 
         self.ui.btn_add_capture_panel.clicked.connect(self._add_capture_panel)
         self.ui.btn_remove_capture_panel.clicked.connect(self._remove_capture_panel)
@@ -50,31 +61,75 @@ class MainWindow(qtw.QWidget):
         darknet_w = darknet.network_width(network)
         darknet_h = darknet.network_height(network)
 
+        # self.draw_detections = DrawDetections()
+        # self.draw_detections_qthread = qtc.QThread()
+        # self.draw_detections.moveToThread(self.draw_detections_qthread)
+        # self.draw_detections_qthread.start()
+
+        for p in range(len(self.panels)):
+            drawer = DrawDetections()
+            drawer_qthread = qtc.QThread()
+            drawer.moveToThread(drawer_qthread)
+            drawer_qthread.start()
+
+            emitter = Emitter()
+            print(emitter)
+
+            emitter.emitter_signal.connect(drawer.run)
+            drawer.detections_drawn.connect(self.panels[p].display_darknet_prediction)
+
+            self.emitters.append(emitter)
+            print(self.emitters[0])
+            self.drawers.append(drawer)
+            self.drawer_qthreads.append(drawer_qthread)
+
         self.inference = Inference()
         self.inference_qthread = qtc.QThread()
         self.inference.moveToThread(self.inference_qthread)
         self.inference_qthread.start()
-        self.inference.predicted.connect(self.relay_detections)
-        self.draw_detections = DrawDetections()
-        self.draw_detections_qthread = qtc.QThread()
-        self.draw_detections.moveToThread(self.draw_detections_qthread)
-        self.draw_detections_qthread.start()
-        self.draw_detections.detections_drawn.connect(self.relay_predicted_image)
 
-    def relay_input_image(self, img_ndarr):
-        self.inference.run(img_ndarr)
+        self.infer_manager = InferenceManager()
+        self.infer_manager.run_inference.connect(self.inference.run)
+        self.infer_manager.emit_inference_list.connect(self.inference.update_list)
+        self.infer_manager.inference_initiation_requested.connect(self.inference.initiate)
+        self.inference.request_inference_list.connect(self.infer_manager.send_inference_list)
+        self.inference.inference_list_received.connect(self.infer_manager.request_inference_start)
+        self.inference.inference_complete.connect(self.infer_manager.inference_completed)
 
-    def relay_detections(self, detections, img):
-        self.draw_detections.run(detections, img)
+        self.send_img_to_manager.connect(self.infer_manager.update_inference_queue)
 
-    def relay_predicted_image(self, img):
-        self._display_predicted_image(img)
+        # self.inference.predicted.connect(self.relay_prediction_to_panel)
+        # self.inference.inference_complete.connect(self.send_inference_list)
+        # self.draw_detections.prediction_drawn.connect(self.relay_predicted_image)
+        # self.draw_detections.drawing_complete.connect(self.drawing_complete_handler)
 
-    def _display_predicted_image(self, img):
-        cv2.imshow('predicted image', img)
+        self.initiate_inference.connect(self.inference.initiate)
+        self.initiate_inference.emit()
+        self.darknet_loaded = True
+        print("darknet loaded.")
 
-    def _build_darknet_input_image(self, img, s):
-        pass
+    @qtc.pyqtSlot(int, np.ndarray)
+    def relay_img_to_manager(self, p, ndarr):
+        print("relay_img_to_manager executing.")
+        if self.darknet_loaded:
+            self.send_img_to_manager.emit(p, ndarr, self.emitters[p])
+            print("Emitted signal: send_img_to_manager")
+
+    # @qtc.pyqtSlot(int, list)
+    # def relay_det_to_manager(self, p, detections):
+    #     self.send_det_to_manager.emit(p, detections)
+
+    # @qtc.pyqtSlot()
+    # def relay_detections(self, detections, img):
+    #     self.draw_detections.run(detections, img)
+
+    # @qtc.pyqtSlot(bool)
+    # def relay_infer_state_to_manager(self, new_state):
+    #     self.send_infer_state_to_manager.emit(new_state)
+
+    # @qtc.pyqtSlot(bool)
+    # def relay_draw_state_to_manager(self, new_state):
+    #     self.send_draw_state_to_manager.emit(new_state)
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -106,8 +161,7 @@ class MainWindow(qtw.QWidget):
 
         self.panels.append(panel)
 
-        if panel.p == 0:
-            panel.darknet_detection_requested.connect(self.relay_input_image)
+        panel.darknet_detection_requested.connect(self.relay_img_to_manager)
 
         i = self.ui.layout_grid_frme_cap_panels.count()
         obj_name = self.ui.layout_grid_frme_cap_panels.itemAt(i - 1).widget().objectName()
@@ -131,13 +185,11 @@ class MainWindow(qtw.QWidget):
             cap_stream.moveToThread(cap_thread)
             cap_thread.start()
             self.streams.append(cap_stream)
-            self.qthreads.append(cap_thread)
+            self.stream_qthreads.append(cap_thread)
             cap_stream.frame_captured.connect(self.panels[p].display_capture)
             cap_stream.connected_panels.append(p)
             self.panels[p].c = c
             self.panels[p].s = len(self.streams) - 1
-            if p == 0:
-                cap_stream.frame_captured.connect(self.relay_input_image)
 
             self.run_stream.connect(cap_stream.run)
             self.run_stream.emit(c)
@@ -158,8 +210,8 @@ class MainWindow(qtw.QWidget):
         if not len(self.streams[s].connected_panels):
             self.streams[s].stop()
             del self.streams[s]
-            self.qthreads[s].quit()
-            del self.qthreads[s]
+            self.stream_qthreads[s].quit()
+            del self.stream_qthreads[s]
 
     @qtc.pyqtSlot(int, int)
     @_if_cap_active
@@ -238,7 +290,9 @@ class MainWindow(qtw.QWidget):
             widget = self.ui.layout_grid_frme_cap_panels.itemAt(i - 1).widget()
             print("Removing capture panel: " + widget.objectName())
             if len(self.panels):
-                self.panels.pop()
+                panel = self.panels.pop()
+                emitter = self.emitters.pop()
+                emitter.emitter_signal.disconnect(panel.display_darknet_prediction)
             self.ui.layout_grid_frme_cap_panels.removeWidget(widget)
             widget.deleteLater()
         else:
@@ -446,40 +500,64 @@ class CaptureStream(qtc.QObject):
 
 
 class Inference(qtc.QObject):
-    predicted = qtc.pyqtSignal(list, np.ndarray)
+    # detected = qtc.pyqtSignal(list, int)
+    inference_complete = qtc.pyqtSignal()
+    request_inference_list = qtc.pyqtSignal()
+    inference_list_received = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.panel_imgs = []
         self.thresh = 0.5
 
-    def run(self, img_ndarr):
-        resized = cv2.resize(img_ndarr, (darknet_w, darknet_h), interpolation=cv2.INTER_LINEAR)
-        img = darknet.make_image(darknet_w, darknet_h, 3)
-        darknet.copy_image_from_bytes(img, resized.tobytes())
-        print("Performing object detection. (darknet.detect_image())")
-        detections = darknet.detect_image(network, class_names, img, self.thresh)
-        print("Emitting signal: predicted")
-        self.predicted.emit(detections, resized)
-        darknet.free_image(img)
+    @qtc.pyqtSlot()
+    def run(self):
+        print("Inference.run() executing.")
+        for p, ndarr, emitter in self.panel_imgs:
+            resized = cv2.resize(ndarr, (darknet_w, darknet_h), interpolation=cv2.INTER_LINEAR)
+            img = darknet.make_image(darknet_w, darknet_h, 3)
+            darknet.copy_image_from_bytes(img, resized.tobytes())
+            print("Performing object detection. p=" + str(p))
+            detections = darknet.detect_image(network, class_names, img, self.thresh)
+            print("detections = " + str(len(detections)))
+            # self.detected.emit(p, detections)
+            emitter.emitter_signal.emit(p, detections)
+            darknet.free_image(img)
+        self.inference_complete.emit()
+        print("Inference complete")
+
+    @qtc.pyqtSlot()
+    def initiate(self):
+        print("Initating inference.")
+        self.request_inference_list.emit()
+
+    @qtc.pyqtSlot(list)
+    def update_list(self, lst):
+        print("Updating inference list")
+        self.panel_imgs = list(lst)
+        self.inference_list_received.emit()
 
     def update_thresh(self, thresh):
         self.thresh = thresh
 
 
 class DrawDetections(qtc.QObject):
-    detections_drawn = qtc.pyqtSignal(np.ndarray)
+    # detections_drawn = qtc.pyqtSignal(np.ndarray)
+    detections_drawn = qtc.pyqtSignal(list)  # temporary
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.thresh = 0.5
 
-    def run(self, detections, img):
-        for label, confidence, bbox in detections:
-            print("label: " + str(label) + " confidence: " + str(confidence))
-            # draw bboxes on img
-        print(len(detections))
+    @qtc.pyqtSlot(int, list)
+    def run(self, p, detections):
+        # for label, confidence, bbox in detections:
+        #     print("label: " + str(label) + " confidence: " + str(confidence))
+        #     # draw bboxes on img
+        print("DrawDetections.run()")
+        print("Num of detections = " + str(len(detections)))
         print("Emitting signal: detections_drawn")
-        self.detections_drawn.emit(img)
+        self.detections_drawn.emit(detections)
 
 
 if __name__ == "__main__":

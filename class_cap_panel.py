@@ -1,8 +1,6 @@
-import sys
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
-import darknet
 import cv2
 import numpy as np
 import functools
@@ -26,7 +24,7 @@ class CapturePanel(qtw.QFrame):
     update_hue_requested = qtc.pyqtSignal(int, int)
     update_saturation_requested = qtc.pyqtSignal(int, int)
     update_sharpness_requested = qtc.pyqtSignal(int, int)
-    darknet_detection_requested = qtc.pyqtSignal(np.ndarray)
+    darknet_detection_requested = qtc.pyqtSignal(int, np.ndarray)
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -43,7 +41,6 @@ class CapturePanel(qtw.QFrame):
         return wrapper
 
     def setupUi(self, qframe):
-        self.darknet_img = None
         self.obj_detection = True
         self.c = -1  # camera index
         self.s = -1  # MainWindow.streams index of the linked stream
@@ -977,11 +974,19 @@ class CapturePanel(qtw.QFrame):
             else:
                 view = img[y1:y2, x1:x2].copy()
             if self.obj_detection:
-                self.darknet_detection_requested.emit(view)
+                self.darknet_detection_requested.emit(self.p, view)
+                print("Panel " + str(self.p) + " emitting signal: darknet_detection_requested")
             qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
             qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
             qpix = qtg.QPixmap.fromImage(qimg)
             lbl_display.setPixmap(qpix)
+
+    def display_darknet_prediction(self, detections):
+        # draw detections
+        for label, confidence, bbox in detections:
+            x, y, w, h = bbox
+            bbox_str = "x:" + str(x) + " y:" + str(y) + " w:" + str(w) + " h:" + str(h)
+            print("panel " + str(self.p) + " - " + label + ", " + str(confidence) + ", " + bbox_str)
 
     @staticmethod
     def _get_row_col(qframe):
