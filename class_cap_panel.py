@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import functools
 import my_utils as mut
+import image_utils as imut
 
 
 class CapturePanel(qtw.QFrame):
@@ -974,19 +975,22 @@ class CapturePanel(qtw.QFrame):
             else:
                 view = img[y1:y2, x1:x2].copy()
             if self.obj_detection:
-                self.darknet_detection_requested.emit(self.p, view)
+                resized = imut.scale_by_largest_dim(view, window_w, window_h)
+                self.darknet_detection_requested.emit(self.p, resized)
                 print("Panel " + str(self.p) + " emitting signal: darknet_detection_requested")
-            qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
-            qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
-            qpix = qtg.QPixmap.fromImage(qimg)
-            lbl_display.setPixmap(qpix)
+            else:
+                qimg = qtg.QImage(view.data, view.shape[1], view.shape[0], view.strides[0], qtg.QImage.Format_RGB888)
+                qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
+                qpix = qtg.QPixmap.fromImage(qimg)
+                lbl_display.setPixmap(qpix)
 
-    def display_darknet_prediction(self, detections):
-        # draw detections
-        for label, confidence, bbox in detections:
-            x, y, w, h = bbox
-            bbox_str = "x:" + str(x) + " y:" + str(y) + " w:" + str(w) + " h:" + str(h)
-            print("panel " + str(self.p) + " - " + label + ", " + str(confidence) + ", " + bbox_str)
+    def display_darknet_prediction(self, ndarr):
+        qimg = qtg.QImage(ndarr.data, ndarr.shape[1], ndarr.shape[0], ndarr.strides[0], qtg.QImage.Format_RGB888)
+        window_w = self.lbl_cap_display_pixmap_0.width()
+        window_h = self.lbl_cap_display_pixmap_0.height()
+        qimg = qimg.scaled(window_w, window_h, qtc.Qt.KeepAspectRatio)
+        qpix = qtg.QPixmap.fromImage(qimg)
+        self.lbl_cap_display_pixmap_0.setPixmap(qpix)
 
     @staticmethod
     def _get_row_col(qframe):

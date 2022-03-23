@@ -56,15 +56,10 @@ class MainWindow(qtw.QWidget):
         data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
         weights_file = "D:/yolo_v4/darknet/build/darknet/x64/training_backup/yolov4-csp_last.weights"
         batch_size = 1
-        global network, class_names, class_colors, darknet_w, darknet_h
-        network, class_names, class_colors = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
+        global network, class_names, darknet_w, darknet_h
+        network, class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
         darknet_w = darknet.network_width(network)
         darknet_h = darknet.network_height(network)
-
-        # self.draw_detections = DrawDetections()
-        # self.draw_detections_qthread = qtc.QThread()
-        # self.draw_detections.moveToThread(self.draw_detections_qthread)
-        # self.draw_detections_qthread.start()
 
         for p in range(len(self.panels)):
             drawer = DrawDetections()
@@ -73,13 +68,11 @@ class MainWindow(qtw.QWidget):
             drawer_qthread.start()
 
             emitter = Emitter()
-            print(emitter)
 
             emitter.emitter_signal.connect(drawer.run)
             drawer.detections_drawn.connect(self.panels[p].display_darknet_prediction)
 
             self.emitters.append(emitter)
-            print(self.emitters[0])
             self.drawers.append(drawer)
             self.drawer_qthreads.append(drawer_qthread)
 
@@ -97,11 +90,6 @@ class MainWindow(qtw.QWidget):
         self.inference.inference_complete.connect(self.infer_manager.inference_completed)
 
         self.send_img_to_manager.connect(self.infer_manager.update_inference_queue)
-
-        # self.inference.predicted.connect(self.relay_prediction_to_panel)
-        # self.inference.inference_complete.connect(self.send_inference_list)
-        # self.draw_detections.prediction_drawn.connect(self.relay_predicted_image)
-        # self.draw_detections.drawing_complete.connect(self.drawing_complete_handler)
 
         self.initiate_inference.connect(self.inference.initiate)
         self.initiate_inference.emit()
@@ -136,6 +124,7 @@ class MainWindow(qtw.QWidget):
         def wrapper(*args):
             if args[0].panels[args[1]].s > -1:
                 return func(*args)
+
         return wrapper
 
     @qtc.pyqtSlot()
@@ -162,6 +151,18 @@ class MainWindow(qtw.QWidget):
         self.panels.append(panel)
 
         panel.darknet_detection_requested.connect(self.relay_img_to_manager)
+
+        if self.darknet_loaded:
+            drawer = DrawDetections()
+            drawer_qthread = qtc.QThread()
+            drawer.moveToThread(drawer_qthread)
+            drawer_qthread.start()
+            emitter = Emitter()
+            emitter.emitter_signal.connect(drawer.run)
+            drawer.detections_drawn.connect(self.panel.display_darknet_prediction)
+            self.emitters.append(emitter)
+            self.drawers.append(drawer)
+            self.drawer_qthreads.append(drawer_qthread)
 
         i = self.ui.layout_grid_frme_cap_panels.count()
         obj_name = self.ui.layout_grid_frme_cap_panels.itemAt(i - 1).widget().objectName()
@@ -291,8 +292,9 @@ class MainWindow(qtw.QWidget):
             print("Removing capture panel: " + widget.objectName())
             if len(self.panels):
                 panel = self.panels.pop()
-                emitter = self.emitters.pop()
-                emitter.emitter_signal.disconnect(panel.display_darknet_prediction)
+                if len(self.emitters):
+                    emitter = self.emitters.pop()
+                    emitter.emitter_signal.disconnect(panel.display_darknet_prediction)
             self.ui.layout_grid_frme_cap_panels.removeWidget(widget)
             widget.deleteLater()
         else:
@@ -514,14 +516,14 @@ class Inference(qtc.QObject):
     def run(self):
         print("Inference.run() executing.")
         for p, ndarr, emitter in self.panel_imgs:
-            resized = cv2.resize(ndarr, (darknet_w, darknet_h), interpolation=cv2.INTER_LINEAR)
+            scaled = imut.scale_by_largest_dim(ndarr, darknet_w, darknet_h)
+            padded, _, _ = imut.pad_image_to_square(scaled)
+            print(str(padded.shape[1]) + " " + str(padded.shape[0]))
             img = darknet.make_image(darknet_w, darknet_h, 3)
-            darknet.copy_image_from_bytes(img, resized.tobytes())
+            darknet.copy_image_from_bytes(img, padded.tobytes())
             print("Performing object detection. p=" + str(p))
             detections = darknet.detect_image(network, class_names, img, self.thresh)
-            print("detections = " + str(len(detections)))
-            # self.detected.emit(p, detections)
-            emitter.emitter_signal.emit(p, detections)
+            emitter.emitter_signal.emit((p, detections, ndarr, scaled))
             darknet.free_image(img)
         self.inference_complete.emit()
         print("Inference complete")
@@ -542,29 +544,45 @@ class Inference(qtc.QObject):
 
 
 class DrawDetections(qtc.QObject):
-    # detections_drawn = qtc.pyqtSignal(np.ndarray)
-    detections_drawn = qtc.pyqtSignal(list)  # temporary
+    detections_drawn = qtc.pyqtSignal(np.ndarray)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.thresh = 0.5
 
-    @qtc.pyqtSlot(int, list)
-    def run(self, p, detections):
-        # for label, confidence, bbox in detections:
-        #     print("label: " + str(label) + " confidence: " + str(confidence))
-        #     # draw bboxes on img
-        print("DrawDetections.run()")
-        print("Num of detections = " + str(len(detections)))
-        print("Emitting signal: detections_drawn")
-        self.detections_drawn.emit(detections)
+    @qtc.pyqtSlot(tuple)
+    def run(self, inference_output):
+        p, detections, src, scaled = inference_output
+        color = (0, 0, 255)
+        for label, confidence, bbox in detections:
+            print(str(label) + ": " + str(confidence))
+            left, top, right, bottom = self._adjust_bbox_for_drawing(bbox, src, scaled)
+            cv2.rectangle(src, (left, top), (right, bottom), color, 1)
+            cv2.putText(src, "{} [{:.0f}]".format(label, float(confidence)), (left, top - 5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        self.detections_drawn.emit(src)
+
+    @staticmethod
+    def _adjust_bbox_for_drawing(bbox, src, scaled):
+        x, y, w, h = bbox
+        scaled_w = scaled.shape[1]
+        scaled_h = scaled.shape[0]
+        src_h, src_w, _ = src.shape
+        x = int((x / scaled_w) * src_w)
+        y = int((y / scaled_h) * src_h)
+        w = int((w / scaled_w) * src_w)
+        h = int((h / scaled_h) * src_h)
+        left = int(round(x - w / 2))
+        top = int(round(y - h / 2))
+        right = int(round(x + w / 2))
+        bottom = int(round(y + h / 2))
+        return left, top, right, bottom
 
 
 if __name__ == "__main__":
     app = MainApp(sys.argv)
     network = None
     class_names = None
-    class_colors = None
     darknet_w = None
     darknet_h = None
     sys.exit(app.exec_())
