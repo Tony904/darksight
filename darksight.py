@@ -3,6 +3,7 @@ import time
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
+import globals as glb
 import darknet
 import cv2
 import numpy as np
@@ -12,6 +13,7 @@ import my_utils as mut
 from class_emitter import Emitter
 from class_cap_panel import CapturePanel
 from class_inference_manager import InferenceManager
+from detection_settings import DetectionSettings
 from darksight_designer import Ui_FormMain
 
 
@@ -43,23 +45,26 @@ class MainWindow(qtw.QWidget):
         self.drawers = []
         self.drawer_qthreads = []
         self.emitters = []
-        self.darknet_loaded = False
 
         self.ui.btn_add_capture_panel.clicked.connect(self._add_capture_panel)
         self.ui.btn_remove_capture_panel.clicked.connect(self._remove_capture_panel)
         self.ui.btn_load_darknet.clicked.connect(self._load_darknet)
+        self.ui.btn_detection_settings.clicked.connect(self._load_detection_settings_window)
 
         self.showMaximized()
+
+    def _load_detection_settings_window(self):
+        self.det_win = DetectionSettingsWindow()
+        self.det_win.show()
 
     def _load_darknet(self):
         cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp.cfg"
         data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
         weights_file = "D:/yolo_v4/darknet/build/darknet/x64/training_backup/yolov4-csp_last.weights"
         batch_size = 1
-        global network, class_names, darknet_w, darknet_h
-        network, class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
-        darknet_w = darknet.network_width(network)
-        darknet_h = darknet.network_height(network)
+        glb.network, glb.class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
+        glb.darknet_w = darknet.network_width(glb.network)
+        glb.darknet_h = darknet.network_height(glb.network)
 
         for p in range(len(self.panels)):
             drawer = DrawDetections()
@@ -93,31 +98,15 @@ class MainWindow(qtw.QWidget):
 
         self.initiate_inference.connect(self.inference.initiate)
         self.initiate_inference.emit()
-        self.darknet_loaded = True
+        glb.darknet_loaded = True
         print("darknet loaded.")
 
     @qtc.pyqtSlot(int, np.ndarray)
     def relay_img_to_manager(self, p, ndarr):
         print("relay_img_to_manager executing.")
-        if self.darknet_loaded:
+        if glb.darknet_loaded:
             self.send_img_to_manager.emit(p, ndarr, self.emitters[p])
             print("Emitted signal: send_img_to_manager")
-
-    # @qtc.pyqtSlot(int, list)
-    # def relay_det_to_manager(self, p, detections):
-    #     self.send_det_to_manager.emit(p, detections)
-
-    # @qtc.pyqtSlot()
-    # def relay_detections(self, detections, img):
-    #     self.draw_detections.run(detections, img)
-
-    # @qtc.pyqtSlot(bool)
-    # def relay_infer_state_to_manager(self, new_state):
-    #     self.send_infer_state_to_manager.emit(new_state)
-
-    # @qtc.pyqtSlot(bool)
-    # def relay_draw_state_to_manager(self, new_state):
-    #     self.send_draw_state_to_manager.emit(new_state)
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -152,7 +141,7 @@ class MainWindow(qtw.QWidget):
 
         panel.darknet_detection_requested.connect(self.relay_img_to_manager)
 
-        if self.darknet_loaded:
+        if glb.darknet_loaded:
             drawer = DrawDetections()
             drawer_qthread = qtc.QThread()
             drawer.moveToThread(drawer_qthread)
@@ -516,13 +505,13 @@ class Inference(qtc.QObject):
     def run(self):
         print("Inference.run() executing.")
         for p, ndarr, emitter in self.panel_imgs:
-            scaled = imut.scale_by_largest_dim(ndarr, darknet_w, darknet_h)
+            scaled = imut.scale_by_largest_dim(ndarr, glb.darknet_w, glb.darknet_h)
             padded, _, _ = imut.pad_image_to_square(scaled)
             print(str(padded.shape[1]) + " " + str(padded.shape[0]))
-            img = darknet.make_image(darknet_w, darknet_h, 3)
+            img = darknet.make_image(glb.darknet_w, glb.darknet_h, 3)
             darknet.copy_image_from_bytes(img, padded.tobytes())
             print("Performing object detection. p=" + str(p))
-            detections = darknet.detect_image(network, class_names, img, self.thresh)
+            detections = darknet.detect_image(glb.network, glb.class_names, img, self.thresh)
             emitter.emitter_signal.emit((p, detections, ndarr, scaled))
             darknet.free_image(img)
         self.inference_complete.emit()
@@ -581,8 +570,4 @@ class DrawDetections(qtc.QObject):
 
 if __name__ == "__main__":
     app = MainApp(sys.argv)
-    network = None
-    class_names = None
-    darknet_w = None
-    darknet_h = None
     sys.exit(app.exec_())

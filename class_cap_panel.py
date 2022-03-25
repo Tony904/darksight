@@ -1,6 +1,7 @@
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
+import globals as glb
 import cv2
 import numpy as np
 import functools
@@ -27,6 +28,12 @@ class CapturePanel(qtw.QFrame):
     update_sharpness_requested = qtc.pyqtSignal(int, int)
     darknet_detection_requested = qtc.pyqtSignal(int, np.ndarray)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.obj_detection = False
+        self.c = -1  # camera index
+        self.s = -1  # MainWindow.streams index of the linked stream
+
     def _if_cap_active(func):
         @functools.wraps(func)
         def wrapper(*args):
@@ -42,10 +49,6 @@ class CapturePanel(qtw.QFrame):
         return wrapper
 
     def setupUi(self, qframe):
-        self.obj_detection = True
-        self.c = -1  # camera index
-        self.s = -1  # MainWindow.streams index of the linked stream
-        self.qframe = qframe
         row, col, space_available = self._get_row_col(qframe)
         self.p = 2 * col + row
         suffix = "_" + str(self.p)
@@ -83,7 +86,7 @@ class CapturePanel(qtw.QFrame):
         self.frme_zoom_0.setFrameShadow(qtw.QFrame.Plain)
         self.frme_zoom_0.setObjectName("frme_zoom" + suffix)
         self.layout_hrz_frme_zoom_0 = qtw.QHBoxLayout(self.frme_zoom_0)
-        self.layout_hrz_frme_zoom_0.setContentsMargins(3, 3, 0, 3)
+        self.layout_hrz_frme_zoom_0.setContentsMargins(3, 1, 0, 1)
         self.layout_hrz_frme_zoom_0.setSpacing(3)
         self.layout_hrz_frme_zoom_0.setObjectName("layout_hrz_frme_zoom" + suffix)
         self.lbl_static_zoom_0 = qtw.QLabel(self.frme_zoom_0)
@@ -121,7 +124,7 @@ class CapturePanel(qtw.QFrame):
         self.frme_pause_0.setFrameShadow(qtw.QFrame.Plain)
         self.frme_pause_0.setObjectName("frme_pause" + suffix)
         self.layout_hrz_frme_pause_0 = qtw.QHBoxLayout(self.frme_pause_0)
-        self.layout_hrz_frme_pause_0.setContentsMargins(0, 3, 0, 3)
+        self.layout_hrz_frme_pause_0.setContentsMargins(0, 0, 0, 0)
         self.layout_hrz_frme_pause_0.setSpacing(0)
         self.layout_hrz_frme_pause_0.setObjectName("layout_hrz_frme_pause" + suffix)
         spacerItem = qtw.QSpacerItem(40, 20, qtw.QSizePolicy.Expanding, qtw.QSizePolicy.Minimum)
@@ -148,19 +151,17 @@ class CapturePanel(qtw.QFrame):
         self.frme_rotate_image_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_rotate_image_0.setFrameShadow(qtw.QFrame.Plain)
         self.frme_rotate_image_0.setObjectName("frme_rotate_image" + suffix)
-        self.layout_vrt_frme_rotate_image_0 = qtw.QVBoxLayout(self.frme_rotate_image_0)
-        self.layout_vrt_frme_rotate_image_0.setContentsMargins(0, 3, 0, 3)
-        self.layout_vrt_frme_rotate_image_0.setSpacing(0)
-        self.layout_vrt_frme_rotate_image_0.setObjectName("layout_vrt_frme_rotate_image" + suffix)
-        self.lbl_static_rotate_0 = qtw.QLabel(self.frme_rotate_image_0)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_static_rotate_0.sizePolicy().hasHeightForWidth())
-        self.lbl_static_rotate_0.setSizePolicy(sizePolicy)
-        self.lbl_static_rotate_0.setAlignment(qtc.Qt.AlignCenter)
-        self.lbl_static_rotate_0.setObjectName("lbl_static_rotate" + suffix)
-        self.layout_vrt_frme_rotate_image_0.addWidget(self.lbl_static_rotate_0)
+        self.layout_hrz_frme_rotate_image_0 = qtw.QHBoxLayout(self.frme_rotate_image_0)
+        self.layout_hrz_frme_rotate_image_0.setContentsMargins(0, 0, 0, 0)
+        self.layout_hrz_frme_rotate_image_0.setSpacing(0)
+        self.layout_hrz_frme_rotate_image_0.setObjectName("layout_hrz_frme_rotate_image" + suffix)
+        self.lbl_static_icon_rotate_0 = qtw.QLabel(self.frme_rotate_image_0)
+        self.lbl_static_icon_rotate_0.setMaximumSize(qtc.QSize(24, 24))
+        self.lbl_static_icon_rotate_0.setText("")
+        self.lbl_static_icon_rotate_0.setPixmap(qtg.QPixmap("Resources/rotate_cw.jpg"))
+        self.lbl_static_icon_rotate_0.setScaledContents(True)
+        self.lbl_static_icon_rotate_0.setObjectName("lbl_static_icon_rotate" + suffix)
+        self.layout_hrz_frme_rotate_image_0.addWidget(self.lbl_static_icon_rotate_0)
         self.spbx_rotate_image_0 = qtw.QSpinBox(self.frme_rotate_image_0)
         sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -171,7 +172,7 @@ class CapturePanel(qtw.QFrame):
         self.spbx_rotate_image_0.setSingleStep(90)
         self.spbx_rotate_image_0.setProperty("value", 0)
         self.spbx_rotate_image_0.setObjectName("spbx_rotate_image" + suffix)
-        self.layout_vrt_frme_rotate_image_0.addWidget(self.spbx_rotate_image_0)
+        self.layout_hrz_frme_rotate_image_0.addWidget(self.spbx_rotate_image_0)
         self.layout_vrt_frme_cap_controls_0.addWidget(self.frme_rotate_image_0)
         self.scar_cap_props_0 = qtw.QScrollArea(self.frme_cap_controls_0)
         sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Ignored, qtw.QSizePolicy.Expanding)
@@ -598,48 +599,19 @@ class CapturePanel(qtw.QFrame):
         self.layout_vrt_scar_con_cap_props_0.addWidget(self.frme_cap_white_0)
         self.scar_cap_props_0.setWidget(self.scar_con_cap_props_0)
         self.layout_vrt_frme_cap_controls_0.addWidget(self.scar_cap_props_0)
+
         self.frme_cap_resolution_0 = qtw.QFrame(self.frme_cap_controls_0)
         self.frme_cap_resolution_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_cap_resolution_0.setFrameShadow(qtw.QFrame.Plain)
         self.frme_cap_resolution_0.setObjectName("frme_cap_resolution" + suffix)
         self.layout_grid_frme_cap_res_0 = qtw.QGridLayout(self.frme_cap_resolution_0)
-        self.layout_grid_frme_cap_res_0.setContentsMargins(3, 0, 3, 1)
+        self.layout_grid_frme_cap_res_0.setContentsMargins(1, 0, 1, 1)
         self.layout_grid_frme_cap_res_0.setSpacing(0)
         self.layout_grid_frme_cap_res_0.setObjectName("layout_grid_frme_cap_res" + suffix)
         self.lbl_static_resolution_0 = qtw.QLabel(self.frme_cap_resolution_0)
         self.lbl_static_resolution_0.setAlignment(qtc.Qt.AlignLeading | qtc.Qt.AlignLeft | qtc.Qt.AlignVCenter)
         self.lbl_static_resolution_0.setObjectName("lbl_static_resolution" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.lbl_static_resolution_0, 0, 1, 1, 1)
-        self.lbl_static_w_resolution_0 = qtw.QLabel(self.frme_cap_resolution_0)
-        self.lbl_static_w_resolution_0.setAlignment(qtc.Qt.AlignCenter)
-        self.lbl_static_w_resolution_0.setObjectName("lbl_static_w_resolution" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.lbl_static_w_resolution_0, 1, 0, 1, 1)
-        self.ledit_cap_width_0 = qtw.QLineEdit(self.frme_cap_resolution_0)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ledit_cap_width_0.sizePolicy().hasHeightForWidth())
-        self.ledit_cap_width_0.setSizePolicy(sizePolicy)
-        self.ledit_cap_width_0.setReadOnly(True)
-        self.ledit_cap_width_0.setObjectName("ledit_cap_width" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.ledit_cap_width_0, 1, 1, 1, 1)
-        self.lbl_static_h_resolution_0 = qtw.QLabel(self.frme_cap_resolution_0)
-        self.lbl_static_h_resolution_0.setAlignment(qtc.Qt.AlignCenter)
-        self.lbl_static_h_resolution_0.setObjectName("lbl_static_h_resolution" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.lbl_static_h_resolution_0, 2, 0, 1, 1)
-        self.ledit_cap_height_0 = qtw.QLineEdit(self.frme_cap_resolution_0)
-        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ledit_cap_height_0.sizePolicy().hasHeightForWidth())
-        self.ledit_cap_height_0.setSizePolicy(sizePolicy)
-        self.ledit_cap_height_0.setReadOnly(True)
-        self.ledit_cap_height_0.setObjectName("ledit_cap_height" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.ledit_cap_height_0, 2, 1, 1, 1)
-        self.lbl_static_c_resolution_0 = qtw.QLabel(self.frme_cap_resolution_0)
-        self.lbl_static_c_resolution_0.setAlignment(qtc.Qt.AlignCenter)
-        self.lbl_static_c_resolution_0.setObjectName("lbl_static_c_resolution" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.lbl_static_c_resolution_0, 3, 0, 1, 1)
+        self.layout_grid_frme_cap_res_0.addWidget(self.lbl_static_resolution_0, 0, 0, 1, 1)
         self.ledit_cap_channels_0 = qtw.QLineEdit(self.frme_cap_resolution_0)
         sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -649,8 +621,44 @@ class CapturePanel(qtw.QFrame):
         self.ledit_cap_channels_0.setText("")
         self.ledit_cap_channels_0.setReadOnly(True)
         self.ledit_cap_channels_0.setObjectName("ledit_cap_channels" + suffix)
-        self.layout_grid_frme_cap_res_0.addWidget(self.ledit_cap_channels_0, 3, 1, 1, 1)
+        self.layout_grid_frme_cap_res_0.addWidget(self.ledit_cap_channels_0, 2, 0, 1, 1)
+        self.frme_width_height_0 = qtw.QFrame(self.frme_cap_resolution_0)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frme_width_height_0.sizePolicy().hasHeightForWidth())
+        self.frme_width_height_0.setSizePolicy(sizePolicy)
+        self.frme_width_height_0.setFrameShape(qtw.QFrame.StyledPanel)
+        self.frme_width_height_0.setFrameShadow(qtw.QFrame.Raised)
+        self.frme_width_height_0.setObjectName("frme_width_height" + suffix)
+        self.layout_hrz_frme_width_height_0 = qtw.QHBoxLayout(self.frme_width_height_0)
+        self.layout_hrz_frme_width_height_0.setContentsMargins(0, 0, 0, 0)
+        self.layout_hrz_frme_width_height_0.setSpacing(0)
+        self.layout_hrz_frme_width_height_0.setObjectName("layout_hrz_frme_width_height" + suffix)
+        self.ledit_cap_width_0 = qtw.QLineEdit(self.frme_width_height_0)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ledit_cap_width_0.sizePolicy().hasHeightForWidth())
+        self.ledit_cap_width_0.setSizePolicy(sizePolicy)
+        self.ledit_cap_width_0.setReadOnly(True)
+        self.ledit_cap_width_0.setObjectName("ledit_cap_width" + suffix)
+        self.layout_hrz_frme_width_height_0.addWidget(self.ledit_cap_width_0)
+        self.lbl_static_x_resolution_0 = qtw.QLabel(self.frme_width_height_0)
+        self.lbl_static_x_resolution_0.setObjectName("lbl_static_x_resolution" + suffix)
+        self.layout_hrz_frme_width_height_0.addWidget(self.lbl_static_x_resolution_0)
+        self.ledit_cap_height_0 = qtw.QLineEdit(self.frme_width_height_0)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ledit_cap_height_0.sizePolicy().hasHeightForWidth())
+        self.ledit_cap_height_0.setSizePolicy(sizePolicy)
+        self.ledit_cap_height_0.setReadOnly(True)
+        self.ledit_cap_height_0.setObjectName("ledit_cap_height" + suffix)
+        self.layout_hrz_frme_width_height_0.addWidget(self.ledit_cap_height_0)
+        self.layout_grid_frme_cap_res_0.addWidget(self.frme_width_height_0, 1, 0, 1, 1)
         self.layout_vrt_frme_cap_controls_0.addWidget(self.frme_cap_resolution_0)
+
         self.frme_cam_index_0 = qtw.QFrame(self.frme_cap_controls_0)
         self.frme_cam_index_0.setFrameShape(qtw.QFrame.StyledPanel)
         self.frme_cam_index_0.setFrameShadow(qtw.QFrame.Plain)
@@ -764,7 +772,6 @@ class CapturePanel(qtw.QFrame):
     def _set_text(self):
         self.lbl_static_zoom_0.setText("Zoom")
         self.chbx_pause_0.setText("Pause")
-        self.lbl_static_rotate_0.setText("Rotate (90)")
         self.lbl_static_focus_0.setText("Focus")
         self.chbx_cap_autofocus_0.setText("Auto")
         self.lbl_static_exposure_0.setText("Exposure")
@@ -780,11 +787,9 @@ class CapturePanel(qtw.QFrame):
         self.lbl_static_white_0.setText("White Bal.")
         self.chbx_cap_autowhite_0.setText("Auto")
         self.lbl_static_resolution_0.setText("Resolution")
-        self.lbl_static_w_resolution_0.setText("W")
+        self.lbl_static_x_resolution_0.setText(" x ")
         self.ledit_cap_width_0.setText("5000")
-        self.lbl_static_h_resolution_0.setText("H")
         self.ledit_cap_height_0.setText("4000")
-        self.lbl_static_c_resolution_0.setText("C")
         self.lbl_static_cam_index_0.setText("Cam Index")
         self.btn_start_cap_0.setText("Start")
         self.btn_stop_cap_0.setText("Stop")
@@ -901,6 +906,10 @@ class CapturePanel(qtw.QFrame):
                 print("Emitting capture_requested. p:" + str(self.p))
                 self.cap_active = True
                 self.capture_requested.emit(self.p, int(s))
+            else:
+                print("Invalid input for camera index. Panel: " + str(self.p))
+        else:
+            print("No camera index set. Panel: " + str(self.p))
 
     @qtc.pyqtSlot()
     @_if_cap_active
@@ -974,7 +983,7 @@ class CapturePanel(qtw.QFrame):
                     view = cv2.rotate(view, cv2.ROTATE_180)
             else:
                 view = img[y1:y2, x1:x2].copy()
-            if self.obj_detection:
+            if self.obj_detection and glb.darknet_loaded:
                 resized = imut.scale_by_largest_dim(view, window_w, window_h)
                 self.darknet_detection_requested.emit(self.p, resized)
                 print("Panel " + str(self.p) + " emitting signal: darknet_detection_requested")

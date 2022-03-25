@@ -148,13 +148,13 @@
                 <number>3</number>
                </property>
                <property name="topMargin">
-                <number>3</number>
+                <number>1</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
                </property>
                <property name="bottomMargin">
-                <number>3</number>
+                <number>1</number>
                </property>
                <item>
                 <widget class="QLabel" name="lbl_static_zoom_0">
@@ -234,13 +234,13 @@
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>3</number>
+                <number>0</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
                </property>
                <property name="bottomMargin">
-                <number>3</number>
+                <number>0</number>
                </property>
                <item>
                 <spacer name="spacer_hrz_pause_right_0">
@@ -310,7 +310,7 @@
               <property name="frameShadow">
                <enum>QFrame::Plain</enum>
               </property>
-              <layout class="QVBoxLayout" name="layout_vrt_frme_rotate_image_0">
+              <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_0">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -318,27 +318,30 @@
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>3</number>
+                <number>0</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
                </property>
                <property name="bottomMargin">
-                <number>3</number>
+                <number>0</number>
                </property>
                <item>
-                <widget class="QLabel" name="lbl_static_rotate_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
+                <widget class="QLabel" name="lbl_static_icon_rotate_0">
+                 <property name="maximumSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="text">
-                  <string>Rotate (90)</string>
+                  <string/>
                  </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                 <property name="pixmap">
+                  <pixmap>Resources/rotate_cw.jpg</pixmap>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -386,8 +389,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>59</width>
-                 <height>425</height>
+                 <width>76</width>
+                 <height>452</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -1222,13 +1225,13 @@
               </property>
               <layout class="QGridLayout" name="layout_grid_frme_cap_res_0">
                <property name="leftMargin">
-                <number>3</number>
+                <number>1</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>3</number>
+                <number>1</number>
                </property>
                <property name="bottomMargin">
                 <number>1</number>
@@ -1236,7 +1239,7 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <item row="0" column="1">
+               <item row="0" column="0">
                 <widget class="QLabel" name="lbl_static_resolution_0">
                  <property name="text">
                   <string>Resolution</string>
@@ -1246,69 +1249,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="lbl_static_w_resolution_0">
-                 <property name="text">
-                  <string>W</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="ledit_cap_width_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>5000</string>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="0">
-                <widget class="QLabel" name="lbl_static_h_resolution_0">
-                 <property name="text">
-                  <string>H</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="ledit_cap_height_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>4000</string>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="lbl_static_c_resolution_0">
-                 <property name="text">
-                  <string>C</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
                 <widget class="QLineEdit" name="ledit_cap_channels_0">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1322,6 +1263,78 @@
                  <property name="readOnly">
                   <bool>true</bool>
                  </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QFrame" name="frme_width_height_0">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_0">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLineEdit" name="ledit_cap_width_0">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>5000</string>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lbl_static_x_resolution_0">
+                    <property name="text">
+                     <string> x </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="ledit_cap_height_0">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>4000</string>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -1460,6 +1473,25 @@
             <property name="spacing">
              <number>0</number>
             </property>
+            <item row="0" column="1">
+             <widget class="QScrollBar" name="sbar_vrt_cap_display_0">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>15</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="lbl_cap_display_pixmap_0">
               <property name="sizePolicy">
@@ -1479,25 +1511,6 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QScrollBar" name="sbar_vrt_cap_display_0">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>15</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
               </property>
              </widget>
             </item>
@@ -1573,6 +1586,14 @@ Camera View</string>
         </property>
         <property name="text">
          <string>Load darknet</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_detection_settings">
+        <property name="text">
+         <string>Detection
+Settings</string>
         </property>
        </widget>
       </item>
