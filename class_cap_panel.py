@@ -703,6 +703,15 @@ class CapturePanel(qtw.QFrame):
         self.layout_hrz_frme_start_stop_cap_0.addWidget(self.btn_stop_cap_0)
         self.layout_vrt_frme_cap_controls_0.addWidget(self.frme_start_stop_cap_0)
 
+        self.btn_panel_detection_settings_0 = qtw.QPushButton(self.frme_cap_controls_0)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_panel_detection_settings_0.sizePolicy().hasHeightForWidth())
+        self.btn_panel_detection_settings_0.setSizePolicy(sizePolicy)
+        self.btn_panel_detection_settings_0.setObjectName("btn_panel_detection_settings" + suffix)
+        self.layout_vrt_frme_cap_controls_0.addWidget(self.btn_panel_detection_settings_0)
+
         self.layout_hrz_frme_cap_panel_0.addWidget(self.frme_cap_controls_0)
         self.frme_cap_display_0 = qtw.QFrame(self.frme_cap_panel_0)
         sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Preferred)
@@ -793,6 +802,7 @@ class CapturePanel(qtw.QFrame):
         self.lbl_static_cam_index_0.setText("Cam Index")
         self.btn_start_cap_0.setText("Start")
         self.btn_stop_cap_0.setText("Stop")
+        self.btn_panel_detection_settings_0.setText("Detection")
 
     def _connect_signals_to_slots(self):
         self.btn_start_cap_0.clicked.connect(self._send_capture_request)
@@ -811,6 +821,12 @@ class CapturePanel(qtw.QFrame):
         self.spbx_cap_hue_0.valueChanged.connect(self._send_update_hue_request)
         self.spbx_cap_saturation_0.valueChanged.connect(self._send_update_saturation_request)
         self.spbx_cap_sharpness_0.valueChanged.connect(self._send_update_sharpness_request)
+        self.btn_panel_detection_settings_0.clicked.connect(self._toggle_obj_detection)
+
+    @qtc.pyqtSlot()
+    def _toggle_obj_detection(self):
+        self.obj_detection = not self.obj_detection
+        print("self.obj_detection toggled to: " + str(self.obj_detection))
 
     @qtc.pyqtSlot(int)
     @_if_cap_active
@@ -821,8 +837,12 @@ class CapturePanel(qtw.QFrame):
     @qtc.pyqtSlot(int)
     @_if_cap_active
     def _send_update_autofocus_request(self, x):
+        if x:
+            y = 1  # 1 = autofocus enabled for 16mp arducam
+        else:
+            y = 2  # 2 = autofocus disabled for 16mp arducam
         print("Emitting update_autofocus_requested. p:" + str(self.p))
-        self.update_autofocus_requested.emit(self.p, x)
+        self.update_autofocus_requested.emit(self.p, y)
 
     @qtc.pyqtSlot(int)
     @_if_cap_active

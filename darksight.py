@@ -54,7 +54,7 @@ class MainWindow(qtw.QWidget):
         self.showMaximized()
 
     def _load_detection_settings_window(self):
-        self.det_win = DetectionSettingsWindow()
+        self.det_win = DetectionSettings()
         self.det_win.show()
 
     def _load_darknet(self):
@@ -365,7 +365,6 @@ class CaptureStream(qtc.QObject):
             ret, frame = cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                print("Emitting signal: frame_captured")
                 self.frame_captured.emit(frame_rgb, cam_index)
                 if not autofocus == self.autofocus:
                     autofocus = self.autofocus

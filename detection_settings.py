@@ -12,4 +12,4 @@ class DetectionSettings(qtw.QWidget):
 
     def setupUi(self, panel):
         self.panel = panel
-        
+
