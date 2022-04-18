@@ -390,7 +390,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>76</width>
-                 <height>429</height>
+                 <height>426</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -1225,13 +1225,13 @@
               </property>
               <layout class="QGridLayout" name="layout_grid_frme_cap_res_0">
                <property name="leftMargin">
-                <number>1</number>
+                <number>0</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>1</number>
+                <number>0</number>
                </property>
                <property name="bottomMargin">
                 <number>1</number>
@@ -1242,26 +1242,10 @@
                <item row="0" column="0">
                 <widget class="QLabel" name="lbl_static_resolution_0">
                  <property name="text">
-                  <string>Resolution</string>
+                  <string> Res. (w,h,c)</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLineEdit" name="ledit_cap_channels_0">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1312,13 +1296,6 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="lbl_static_x_resolution_0">
-                    <property name="text">
-                     <string> x </string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
                    <widget class="QLineEdit" name="ledit_cap_height_0">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1328,6 +1305,34 @@
                     </property>
                     <property name="text">
                      <string>4000</string>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="ledit_cap_channels_0">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>14</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="text">
+                     <string>8</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                     <property name="readOnly">
                      <bool>true</bool>
@@ -1393,6 +1398,9 @@
                <enum>QFrame::Plain</enum>
               </property>
               <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_0">
+               <property name="spacing">
+                <number>0</number>
+               </property>
                <property name="leftMargin">
                 <number>0</number>
                </property>
@@ -1408,16 +1416,10 @@
                <item>
                 <widget class="QPushButton" name="btn_start_cap_0">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>35</width>
-                   <height>0</height>
-                  </size>
                  </property>
                  <property name="text">
                   <string>Start</string>
@@ -1438,6 +1440,19 @@
                 </widget>
                </item>
               </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_save_image_0">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Save Image</string>
+              </property>
              </widget>
             </item>
             <item>
@@ -1513,6 +1528,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="font">
+               <font>
+                <pointsize>24</pointsize>
+               </font>
+              </property>
               <property name="contextMenuPolicy">
                <enum>Qt::DefaultContextMenu</enum>
               </property>
@@ -1520,10 +1540,10 @@
                <enum>QFrame::Panel</enum>
               </property>
               <property name="text">
-               <string/>
+               <string>***PREVIEW PANEL***</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>

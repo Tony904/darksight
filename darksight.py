@@ -58,9 +58,9 @@ class MainWindow(qtw.QWidget):
         self.det_win.show()
 
     def _load_darknet(self):
-        cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp.cfg"
+        cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-alphanum.cfg"
         data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
-        weights_file = "D:/yolo_v4/darknet/build/darknet/x64/training_backup/yolov4-csp_last.weights"
+        weights_file = "D:/yolo_v4/darknet/build/darknet/x64/AlphaNum_Weights/yolov4-csp-alphanum_last.weights"
         batch_size = 1
         glb.network, glb.class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
         glb.darknet_w = darknet.network_width(glb.network)
@@ -103,10 +103,10 @@ class MainWindow(qtw.QWidget):
 
     @qtc.pyqtSlot(int, np.ndarray)
     def relay_img_to_manager(self, p, ndarr):
-        print("relay_img_to_manager executing.")
+        # print("relay_img_to_manager executing.")
         if glb.darknet_loaded:
             self.send_img_to_manager.emit(p, ndarr, self.emitters[p])
-            print("Emitted signal: send_img_to_manager")
+            # print("Emitted signal: send_img_to_manager")
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -304,7 +304,7 @@ class CaptureStream(qtc.QObject):
         self.width = 5000
         self.height = 4000
         self.focus = 300.
-        self.autofocus = 0
+        self.autofocus = 1  # 2 = disabled, 1 = enabled
         self.brightness = 0
         self.contrast = 32
         self.hue = 0
@@ -345,7 +345,7 @@ class CaptureStream(qtc.QObject):
         autoexposure = self.autoexposure
 
         cap.set(cv2.CAP_PROP_AUTOFOCUS, autofocus)
-        if not autofocus:
+        if not autofocus == 1:
             cap.set(cv2.CAP_PROP_FOCUS, focus)
         cap.set(cv2.CAP_PROP_BRIGHTNESS, brightness)
         cap.set(cv2.CAP_PROP_CONTRAST, contrast)
@@ -373,7 +373,7 @@ class CaptureStream(qtc.QObject):
                     print("Auto-focus is: " + str(cap.get(cv2.CAP_PROP_AUTOFOCUS)))
                 elif abs(focus - self.focus) >= 1:
                     focus = self.focus
-                    if not autofocus:
+                    if not autofocus == 1:
                         cap.set(cv2.CAP_PROP_FOCUS, focus)
                         print("Focus set to: " + str(focus))
                         print("Focus is: " + str(cap.get(cv2.CAP_PROP_FOCUS)))
@@ -502,28 +502,28 @@ class Inference(qtc.QObject):
 
     @qtc.pyqtSlot()
     def run(self):
-        print("Inference.run() executing.")
+        # print("Inference.run() executing.")
         for p, ndarr, emitter in self.panel_imgs:
             scaled = imut.scale_by_largest_dim(ndarr, glb.darknet_w, glb.darknet_h)
             padded, _, _ = imut.pad_image_to_square(scaled)
-            print(str(padded.shape[1]) + " " + str(padded.shape[0]))
+            # print(str(padded.shape[1]) + " " + str(padded.shape[0]))
             img = darknet.make_image(glb.darknet_w, glb.darknet_h, 3)
             darknet.copy_image_from_bytes(img, padded.tobytes())
-            print("Performing object detection. p=" + str(p))
+            # print("Performing object detection. p=" + str(p))
             detections = darknet.detect_image(glb.network, glb.class_names, img, self.thresh)
             emitter.emitter_signal.emit((p, detections, ndarr, scaled))
             darknet.free_image(img)
         self.inference_complete.emit()
-        print("Inference complete")
+        # print("Inference complete")
 
     @qtc.pyqtSlot()
     def initiate(self):
-        print("Initating inference.")
+        # print("Initating inference.")
         self.request_inference_list.emit()
 
     @qtc.pyqtSlot(list)
     def update_list(self, lst):
-        print("Updating inference list")
+        # print("Updating inference list")
         self.panel_imgs = list(lst)
         self.inference_list_received.emit()
 

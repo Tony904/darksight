@@ -1,6 +1,7 @@
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
+import time
 import globals as glb
 import cv2
 import numpy as np
@@ -33,6 +34,7 @@ class CapturePanel(qtw.QFrame):
         self.obj_detection = False
         self.c = -1  # camera index
         self.s = -1  # MainWindow.streams index of the linked stream
+        self.save_next_img = False
 
     def _if_cap_active(func):
         @functools.wraps(func)
@@ -703,6 +705,15 @@ class CapturePanel(qtw.QFrame):
         self.layout_hrz_frme_start_stop_cap_0.addWidget(self.btn_stop_cap_0)
         self.layout_vrt_frme_cap_controls_0.addWidget(self.frme_start_stop_cap_0)
 
+        self.btn_save_image_0 = qtw.QPushButton(self.frme_cap_controls_0)
+        sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_save_image_0.sizePolicy().hasHeightForWidth())
+        self.btn_save_image_0.setSizePolicy(sizePolicy)
+        self.btn_save_image_0.setObjectName("btn_save_image" + suffix)
+        self.layout_vrt_frme_cap_controls_0.addWidget(self.btn_save_image_0)
+
         self.btn_panel_detection_settings_0 = qtw.QPushButton(self.frme_cap_controls_0)
         sizePolicy = qtw.QSizePolicy(qtw.QSizePolicy.Preferred, qtw.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -802,6 +813,7 @@ class CapturePanel(qtw.QFrame):
         self.lbl_static_cam_index_0.setText("Cam Index")
         self.btn_start_cap_0.setText("Start")
         self.btn_stop_cap_0.setText("Stop")
+        self.btn_save_image_0.setText("Save Image")
         self.btn_panel_detection_settings_0.setText("Detection")
 
     def _connect_signals_to_slots(self):
@@ -821,7 +833,12 @@ class CapturePanel(qtw.QFrame):
         self.spbx_cap_hue_0.valueChanged.connect(self._send_update_hue_request)
         self.spbx_cap_saturation_0.valueChanged.connect(self._send_update_saturation_request)
         self.spbx_cap_sharpness_0.valueChanged.connect(self._send_update_sharpness_request)
+        self.btn_save_image_0.clicked.connect(self._save_image)
         self.btn_panel_detection_settings_0.clicked.connect(self._toggle_obj_detection)
+
+    @qtc.pyqtSlot()
+    def _save_image(self):
+        self.save_next_img = True
 
     @qtc.pyqtSlot()
     def _toggle_obj_detection(self):
@@ -940,6 +957,11 @@ class CapturePanel(qtw.QFrame):
 
     @qtc.pyqtSlot(np.ndarray)
     def display_capture(self, img):
+        if self.save_next_img:
+            self.save_next_img = False
+            timestr = time.strftime("%Y%m%d-%H%M%S.jpg")
+            write_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            cv2.imwrite(timestr, write_img)
         h, w, ch = img.shape
         self.ledit_cap_width_0.setText(str(w))
         self.ledit_cap_height_0.setText(str(h))
