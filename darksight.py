@@ -13,7 +13,6 @@ import my_utils as mut
 from class_emitter import Emitter
 from class_cap_panel import CapturePanel
 from class_inference_manager import InferenceManager
-from detection_settings import DetectionSettings
 from darksight_designer import Ui_FormMain
 
 
@@ -52,10 +51,6 @@ class MainWindow(qtw.QWidget):
         self.ui.btn_detection_settings.clicked.connect(self._load_detection_settings_window)
 
         self.showMaximized()
-
-    def _load_detection_settings_window(self):
-        self.det_win = DetectionSettings()
-        self.det_win.show()
 
     def _load_darknet(self):
         cfg_file = "D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-alphanum.cfg"

@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabw_main">
      <property name="currentIndex">
@@ -32,7 +32,7 @@
       <attribute name="title">
        <string>Main</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="layout_hrz_tab_main">
        <property name="leftMargin">
         <number>6</number>
        </property>
@@ -51,7 +51,7 @@
           <attribute name="title">
            <string>Recipe Builder</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="layout_vrt_tab_recipe_builder">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -72,7 +72,7 @@
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <layout class="QHBoxLayout" name="layout_hrz_frme_det_tabs">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -103,7 +103,7 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="tab_det0">
                  <attribute name="title">
@@ -147,7 +147,7 @@
              <property name="frameShadow">
               <enum>QFrame::Plain</enum>
              </property>
-             <layout class="QVBoxLayout" name="layout_vrt_frme_recipe_builder_p0_2">
+             <layout class="QVBoxLayout" name="layout_vrt_frme_det_panel">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -171,7 +171,7 @@
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <layout class="QHBoxLayout" name="layout_hrz_frme_det_type_select">
                  <property name="topMargin">
                   <number>0</number>
                  </property>
@@ -235,7 +235,7 @@
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <layout class="QHBoxLayout" name="layout_hrz_frme_det_controls">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -265,7 +265,7 @@
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_16">
+                   <layout class="QVBoxLayout" name="layout_vrt_frme_det_def">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -299,7 +299,7 @@
                        <number>0</number>
                       </property>
                       <widget class="QWidget" name="stkw_det_text_page">
-                       <layout class="QVBoxLayout" name="verticalLayout_19">
+                       <layout class="QVBoxLayout" name="layout_hrz_stkw_det_text_page">
                         <property name="spacing">
                          <number>3</number>
                         </property>
@@ -368,7 +368,7 @@
                       <property name="frameShadow">
                        <enum>QFrame::Plain</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_3">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_det_zone_controls">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -385,7 +385,7 @@
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QFrame" name="det_zone_shape_and_pos">
+                        <widget class="QFrame" name="frme_det_zone_shape_pos">
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                            <horstretch>0</horstretch>
@@ -404,7 +404,7 @@
                          <property name="frameShadow">
                           <enum>QFrame::Plain</enum>
                          </property>
-                         <layout class="QVBoxLayout" name="verticalLayout">
+                         <layout class="QVBoxLayout" name="layout_vrt_frme_det_zone_shape_pos">
                           <property name="spacing">
                            <number>0</number>
                           </property>
@@ -445,7 +445,7 @@ Detection Zone</string>
                             <property name="frameShape">
                              <enum>QFrame::StyledPanel</enum>
                             </property>
-                            <layout class="QGridLayout" name="layout_grid_2">
+                            <layout class="QGridLayout" name="layout_grid_frme_zone_edges">
                              <property name="leftMargin">
                               <number>3</number>
                              </property>
@@ -484,7 +484,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_cstm_spbx_right_page0_det0_p0_3">
+                               <layout class="QHBoxLayout" name="layout_hrz_cstm_spbx_right">
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
@@ -538,7 +538,7 @@ Detection Zone</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Plain</enum>
                                   </property>
-                                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                                  <layout class="QHBoxLayout" name="layout_frme_btns_right">
                                    <property name="spacing">
                                     <number>1</number>
                                    </property>
@@ -623,7 +623,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_bottom_page0_det0_p0_3">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_bottom">
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
@@ -677,7 +677,7 @@ Detection Zone</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Plain</enum>
                                   </property>
-                                  <layout class="QVBoxLayout" name="verticalLayout_17">
+                                  <layout class="QVBoxLayout" name="layout_vrt_frme_btns_bottom">
                                    <property name="spacing">
                                     <number>0</number>
                                    </property>
@@ -762,7 +762,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_top_page0_det0_p0_3">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_top">
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
@@ -819,7 +819,7 @@ Detection Zone</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Plain</enum>
                                   </property>
-                                  <layout class="QVBoxLayout" name="verticalLayout_18">
+                                  <layout class="QVBoxLayout" name="layout_vrt_frme_btns_top">
                                    <property name="spacing">
                                     <number>0</number>
                                    </property>
@@ -904,7 +904,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_left_page0_det0_p0_3">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_cstm_spbx_left">
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
@@ -958,7 +958,7 @@ Detection Zone</string>
                                   <property name="frameShadow">
                                    <enum>QFrame::Plain</enum>
                                   </property>
-                                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                                  <layout class="QHBoxLayout" name="layout_hrz_frme_btns_left">
                                    <property name="spacing">
                                     <number>1</number>
                                    </property>
@@ -1031,7 +1031,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="horizontalLayout_20">
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_det_zone_rotation">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -1381,6 +1381,13 @@ Detection Zone</string>
                               <number>3</number>
                              </property>
                              <item>
+                              <widget class="QCheckBox" name="chbx_combine_caps">
+                               <property name="text">
+                                <string>Combine Captures</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
                               <widget class="QCheckBox" name="chbx_stitch_image">
                                <property name="sizePolicy">
                                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -1419,7 +1426,7 @@ Detection Zone</string>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <layout class="QVBoxLayout" name="layout_frme_cam_settings_panel">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -1450,7 +1457,7 @@ Detection Zone</string>
                        </size>
                       </property>
                       <property name="currentIndex">
-                       <number>0</number>
+                       <number>3</number>
                       </property>
                       <widget class="QWidget" name="tab_cam0">
                        <property name="sizePolicy">
@@ -1462,7 +1469,7 @@ Detection Zone</string>
                        <attribute name="title">
                         <string>C1</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_21">
+                       <layout class="QVBoxLayout" name="layout_vrt_tab_cam0">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -1490,7 +1497,7 @@ Detection Zone</string>
                        <attribute name="title">
                         <string>C2</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_15">
+                       <layout class="QVBoxLayout" name="layout_vrt_tab_cam1">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -1518,7 +1525,7 @@ Detection Zone</string>
                        <attribute name="title">
                         <string>C3</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_14">
+                       <layout class="QVBoxLayout" name="layout_vrt_tab_cam2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -1546,7 +1553,7 @@ Detection Zone</string>
                        <attribute name="title">
                         <string>C4</string>
                        </attribute>
-                       <layout class="QVBoxLayout" name="verticalLayout_13">
+                       <layout class="QVBoxLayout" name="layout_vrt_tab_cam3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -1580,7 +1587,7 @@ Detection Zone</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_2">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_cam_settings">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -1616,7 +1623,7 @@ Detection Zone</string>
                          <property name="frameShadow">
                           <enum>QFrame::Plain</enum>
                          </property>
-                         <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_0">
+                         <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls">
                           <property name="spacing">
                            <number>0</number>
                           </property>
@@ -1646,7 +1653,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_0">
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_cap">
                              <property name="spacing">
                               <number>3</number>
                              </property>
@@ -1732,7 +1739,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_pause_0">
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_pause">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -1816,7 +1823,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_0">
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -1905,7 +1912,7 @@ Detection Zone</string>
                                <verstretch>0</verstretch>
                               </sizepolicy>
                              </property>
-                             <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_0">
+                             <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props">
                               <property name="spacing">
                                <number>0</number>
                               </property>
@@ -1935,7 +1942,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_1">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2022,7 +2029,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2109,7 +2116,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2177,7 +2184,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2245,7 +2252,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2310,7 +2317,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2375,7 +2382,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2443,7 +2450,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2508,7 +2515,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2579,7 +2586,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2647,7 +2654,7 @@ Detection Zone</string>
                                 <property name="frameShadow">
                                  <enum>QFrame::Plain</enum>
                                 </property>
-                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_0">
+                                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white">
                                  <property name="spacing">
                                   <number>0</number>
                                  </property>
@@ -2729,7 +2736,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QGridLayout" name="layout_grid_frme_cap_res_0">
+                            <layout class="QGridLayout" name="layout_grid_frme_cap_res">
                              <property name="leftMargin">
                               <number>0</number>
                              </property>
@@ -2769,7 +2776,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Raised</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_0">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_whc">
                                 <property name="spacing">
                                  <number>0</number>
                                 </property>
@@ -2859,7 +2866,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_cam_index_0">
+                            <layout class="QHBoxLayout" name="layout_hrz_cam_index">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -2903,7 +2910,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_0">
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -2994,7 +3001,7 @@ Detection Zone</string>
                          <property name="frameShadow">
                           <enum>QFrame::Plain</enum>
                          </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_2">
+                         <layout class="QVBoxLayout" name="layout_vrt_frme_cam_view">
                           <property name="spacing">
                            <number>9</number>
                           </property>
@@ -3033,7 +3040,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QGridLayout" name="gridLayout_4">
+                            <layout class="QGridLayout" name="layout_grid_frme_pan_buttons">
                              <property name="leftMargin">
                               <number>0</number>
                              </property>
@@ -3152,7 +3159,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_3">
+                            <layout class="QVBoxLayout" name="layout_vrt_frme_crop_buttons">
                              <property name="spacing">
                               <number>3</number>
                              </property>
@@ -3176,7 +3183,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QGridLayout" name="gridLayout_5">
+                               <layout class="QGridLayout" name="layout_grid_frme_crop_up_down">
                                 <property name="leftMargin">
                                  <number>0</number>
                                 </property>
@@ -3261,7 +3268,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_crop_left_right">
                                 <property name="spacing">
                                  <number>3</number>
                                 </property>
@@ -3377,7 +3384,7 @@ Detection Zone</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_20">
+                   <layout class="QVBoxLayout" name="layout_vrt_frme_pass_criteria">
                     <property name="leftMargin">
                      <number>3</number>
                     </property>
@@ -3548,7 +3555,7 @@ Detections   </string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QFrame" name="frame_8">
+                     <widget class="QFrame" name="frme_pass_criteria_other_options">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
                         <horstretch>0</horstretch>
@@ -3561,7 +3568,7 @@ Detections   </string>
                       <property name="frameShadow">
                        <enum>QFrame::Plain</enum>
                       </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_6">
+                      <layout class="QVBoxLayout" name="layout_vrt_frme_pass_criteria_other_options">
                        <property name="leftMargin">
                         <number>3</number>
                        </property>
@@ -3594,7 +3601,7 @@ Detections   </string>
                          <property name="frameShadow">
                           <enum>QFrame::Plain</enum>
                          </property>
-                         <layout class="QHBoxLayout" name="horizontalLayout_15">
+                         <layout class="QHBoxLayout" name="layout_hrz_frme_min_confidence">
                           <property name="spacing">
                            <number>6</number>
                           </property>
@@ -3643,7 +3650,7 @@ Confidence</string>
                         </widget>
                        </item>
                        <item>
-                        <spacer name="verticalSpacer_5">
+                        <spacer name="spacer_vrt_frme_pass_criteria_other_options">
                          <property name="orientation">
                           <enum>Qt::Vertical</enum>
                          </property>
@@ -3684,7 +3691,7 @@ After It's Achieved</string>
           <attribute name="title">
            <string>Darknet Settings</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_22">
+          <layout class="QVBoxLayout" name="layout_vrt_tab_darknet_settings">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -3702,7 +3709,7 @@ After It's Achieved</string>
              <property name="frameShadow">
               <enum>QFrame::Plain</enum>
              </property>
-             <layout class="QGridLayout" name="gridLayout_3">
+             <layout class="QGridLayout" name="layout_grid_frme_darknet_settings">
               <item row="0" column="0">
                <widget class="QLabel" name="lbl_static_weights">
                 <property name="text">
@@ -3771,7 +3778,7 @@ Network Size:</string>
           <attribute name="title">
            <string>Camera Calibration</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QVBoxLayout" name="layout_vrt_tab_cam_calib">
            <item>
             <widget class="QFrame" name="frme_cam_calib">
              <property name="frameShape">
@@ -3780,7 +3787,7 @@ Network Size:</string>
              <property name="frameShadow">
               <enum>QFrame::Plain</enum>
              </property>
-             <layout class="QGridLayout" name="gridLayout">
+             <layout class="QGridLayout" name="layout_grid_frme_cam_calib">
               <item row="0" column="0">
                <widget class="QPushButton" name="btn_calib_cam">
                 <property name="text">
@@ -3808,7 +3815,7 @@ Network Size:</string>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_1">
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_2">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -3838,7 +3845,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_1">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_2">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -3924,7 +3931,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_1">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -4008,7 +4015,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_1">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -4097,7 +4104,7 @@ Network Size:</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_1">
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_2">
                      <property name="spacing">
                       <number>0</number>
                      </property>
@@ -4127,7 +4134,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4214,7 +4221,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4301,7 +4308,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4369,7 +4376,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4437,7 +4444,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4502,7 +4509,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4567,7 +4574,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4635,7 +4642,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4700,7 +4707,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4771,7 +4778,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4839,7 +4846,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_1">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -4921,7 +4928,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_1">
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_2">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -4948,7 +4955,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_ledits_2">
+                     <widget class="QFrame" name="frme_whc_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -4961,7 +4968,7 @@ Network Size:</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_1">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_2">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -5051,7 +5058,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_1">
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -5095,7 +5102,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_1">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -5163,7 +5170,7 @@ Network Size:</string>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_2">
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_3">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -5193,7 +5200,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_2">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_3">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -5279,7 +5286,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_2">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_3">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -5363,7 +5370,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_2">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_3">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -5452,7 +5459,7 @@ Network Size:</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_2">
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_3">
                      <property name="spacing">
                       <number>0</number>
                      </property>
@@ -5482,7 +5489,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5569,7 +5576,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5656,7 +5663,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5724,7 +5731,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5792,7 +5799,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5857,7 +5864,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5922,7 +5929,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -5990,7 +5997,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6055,7 +6062,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_5">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6126,7 +6133,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6194,7 +6201,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_2">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_3">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6276,7 +6283,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_2">
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_3">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -6303,7 +6310,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_ledits_3">
+                     <widget class="QFrame" name="frme_whc_3">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -6316,7 +6323,7 @@ Network Size:</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_2">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_3">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -6406,7 +6413,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_2">
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_3">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6450,7 +6457,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_2">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_3">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6518,7 +6525,7 @@ Network Size:</string>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_3">
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_4">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -6548,7 +6555,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_3">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_4">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -6634,7 +6641,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_3">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_4">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6718,7 +6725,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_3">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_4">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6807,7 +6814,7 @@ Network Size:</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_3">
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_4">
                      <property name="spacing">
                       <number>0</number>
                      </property>
@@ -6837,7 +6844,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_6">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6924,7 +6931,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7011,7 +7018,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7079,7 +7086,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7147,7 +7154,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7212,7 +7219,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7277,7 +7284,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7345,7 +7352,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7410,7 +7417,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_7">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7481,7 +7488,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7549,7 +7556,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_3">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_4">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7631,7 +7638,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_3">
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_4">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -7658,7 +7665,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_ledits_4">
+                     <widget class="QFrame" name="frme_whc_4">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -7671,7 +7678,7 @@ Network Size:</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_3">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_4">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -7761,7 +7768,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_3">
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_4">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -7805,7 +7812,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_3">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_4">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -7873,7 +7880,7 @@ Network Size:</string>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_4">
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_5">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -7903,7 +7910,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_5">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -7989,7 +7996,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_5">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -8073,7 +8080,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_image_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_5">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -8162,7 +8169,7 @@ Network Size:</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_4">
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_5">
                      <property name="spacing">
                       <number>0</number>
                      </property>
@@ -8192,7 +8199,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_8">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8279,7 +8286,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8366,7 +8373,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8434,7 +8441,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8502,7 +8509,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8567,7 +8574,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8632,7 +8639,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8700,7 +8707,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8765,7 +8772,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_9">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8836,7 +8843,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8904,7 +8911,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_5">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -8986,7 +8993,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_4">
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_5">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -9013,7 +9020,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_ledits_5">
+                     <widget class="QFrame" name="frme_whc_5">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -9026,7 +9033,7 @@ Network Size:</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_width_height_4">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_5">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -9116,7 +9123,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_5">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -9160,7 +9167,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_5">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -9229,7 +9236,7 @@ Network Size:</string>
          <property name="frameShadow">
           <enum>QFrame::Plain</enum>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QVBoxLayout" name="layout_vrt_frme_main_pixmap">
           <item>
            <widget class="QLabel" name="lbl_main_pixmap">
             <property name="sizePolicy">
