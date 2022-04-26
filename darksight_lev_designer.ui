@@ -13,12 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout_vrt_form_main">
    <item>
     <widget class="QTabWidget" name="tabw_main">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <property name="iconSize">
       <size>
        <width>16</width>
@@ -27,6 +24,9 @@
      </property>
      <widget class="QWidget" name="tab_main">
       <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="autoFillBackground">
        <bool>true</bool>
       </property>
       <attribute name="title">
@@ -103,7 +103,7 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <widget class="QWidget" name="tab_det0">
                  <attribute name="title">
@@ -1114,7 +1114,7 @@ Detection Zone</string>
                          <property name="frameShadow">
                           <enum>QFrame::Plain</enum>
                          </property>
-                         <layout class="QVBoxLayout" name="verticalLayout_23">
+                         <layout class="QVBoxLayout" name="layout_vrt_frme_det_options">
                           <property name="spacing">
                            <number>9</number>
                           </property>
@@ -1144,7 +1144,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_24">
+                            <layout class="QVBoxLayout" name="layout_vrt_frme_locator">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -1174,7 +1174,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QHBoxLayout" name="horizontalLayout">
+                               <layout class="QHBoxLayout" name="layout_hrz_frme_locator_def">
                                 <property name="spacing">
                                  <number>3</number>
                                 </property>
@@ -1305,7 +1305,7 @@ Detection Zone</string>
                                <property name="frameShadow">
                                 <enum>QFrame::Plain</enum>
                                </property>
-                               <layout class="QVBoxLayout" name="verticalLayout_25">
+                               <layout class="QVBoxLayout" name="layout_vrt_frme_locator_options">
                                 <property name="spacing">
                                  <number>3</number>
                                 </property>
@@ -1373,7 +1373,7 @@ Detection Zone</string>
                             <property name="frameShadow">
                              <enum>QFrame::Plain</enum>
                             </property>
-                            <layout class="QVBoxLayout" name="verticalLayout_26">
+                            <layout class="QVBoxLayout" name="layout_vrt_frme_other_options">
                              <property name="topMargin">
                               <number>3</number>
                              </property>
@@ -1457,7 +1457,7 @@ Detection Zone</string>
                        </size>
                       </property>
                       <property name="currentIndex">
-                       <number>3</number>
+                       <number>0</number>
                       </property>
                       <widget class="QWidget" name="tab_cam0">
                        <property name="sizePolicy">
@@ -1605,6 +1605,9 @@ Detection Zone</string>
                        </property>
                        <item>
                         <widget class="QFrame" name="frme_cap_controls">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
                          <property name="minimumSize">
                           <size>
                            <width>0</width>
@@ -2897,6 +2900,9 @@ Detection Zone</string>
                                  <height>16777215</height>
                                 </size>
                                </property>
+                               <property name="readOnly">
+                                <bool>true</bool>
+                               </property>
                               </widget>
                              </item>
                             </layout>
@@ -3432,7 +3438,7 @@ Detection Zone</string>
                       <property name="frameShadow">
                        <enum>QFrame::Plain</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_consec_dets">
                        <property name="spacing">
                         <number>3</number>
                        </property>
@@ -3488,7 +3494,7 @@ Detections   </string>
                       <property name="frameShadow">
                        <enum>QFrame::Plain</enum>
                       </property>
-                      <layout class="QGridLayout" name="gridLayout_2">
+                      <layout class="QGridLayout" name="layout_grid_frme_bbox_limits">
                        <property name="leftMargin">
                         <number>3</number>
                        </property>
@@ -3718,7 +3724,11 @@ After It's Achieved</string>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="ledit_weights_file"/>
+               <widget class="QLineEdit" name="ledit_weights_file">
+                <property name="text">
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/AlphaNum_Weights/yolov4-csp-alphanum_last.weights</string>
+                </property>
+               </widget>
               </item>
               <item row="0" column="2" rowspan="3">
                <widget class="QPlainTextEdit" name="ptxt_network_details">
@@ -3737,7 +3747,11 @@ Network Size:</string>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLineEdit" name="ledit_cfg_file"/>
+               <widget class="QLineEdit" name="ledit_cfg_file">
+                <property name="text">
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-alphanum.cfg</string>
+                </property>
+               </widget>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="lbl_static_meta_data">
@@ -3747,7 +3761,11 @@ Network Size:</string>
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLineEdit" name="lbl_static_meta_data_file"/>
+               <widget class="QLineEdit" name="ledit_meta_data_file">
+                <property name="text">
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/obj.data</string>
+                </property>
+               </widget>
               </item>
               <item row="3" column="1">
                <widget class="QPushButton" name="btn_load_darknet">
@@ -3765,7 +3783,7 @@ Network Size:</string>
                  </sizepolicy>
                 </property>
                 <property name="plainText">
-                 <string>[darknet output]</string>
+                 <string>[darknet console output]</string>
                 </property>
                </widget>
               </item>
@@ -3788,1369 +3806,7 @@ Network Size:</string>
               <enum>QFrame::Plain</enum>
              </property>
              <layout class="QGridLayout" name="layout_grid_frme_cam_calib">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="btn_calib_cam">
-                <property name="text">
-                 <string>Calibrate Cameras</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QFrame" name="frme_cap_controls_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>300</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_2">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QFrame" name="frme_zoom_cap_2">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_2">
-                    <property name="spacing">
-                     <number>3</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>3</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>1</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>1</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="lbl_static_zoom_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Zoom</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_cap_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>1000</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="decimals">
-                       <number>2</number>
-                      </property>
-                      <property name="minimum">
-                       <double>0.010000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>3.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>0.100000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>1.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frme_pause_2">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_2">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <spacer name="spacer_hrz_pause_right_2">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Expanding</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QCheckBox" name="chbx_pause_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="layoutDirection">
-                       <enum>Qt::LeftToRight</enum>
-                      </property>
-                      <property name="text">
-                       <string>Pause</string>
-                      </property>
-                      <property name="tristate">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="spacer_hrz_pause_left_2">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Expanding</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>38</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frme_rotate_cap_2">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_2">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="lbl_static_icon_rotate_2">
-                      <property name="maximumSize">
-                       <size>
-                        <width>24</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="pixmap">
-                       <pixmap>Resources/rotate_cw.jpg</pixmap>
-                      </property>
-                      <property name="scaledContents">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spbx_rotate_cap_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximum">
-                       <number>270</number>
-                      </property>
-                      <property name="singleStep">
-                       <number>90</number>
-                      </property>
-                      <property name="value">
-                       <number>0</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QScrollArea" name="scar_cap_props_2">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="horizontalScrollBarPolicy">
-                    <enum>Qt::ScrollBarAlwaysOff</enum>
-                   </property>
-                   <property name="sizeAdjustPolicy">
-                    <enum>QAbstractScrollArea::AdjustIgnored</enum>
-                   </property>
-                   <property name="widgetResizable">
-                    <bool>true</bool>
-                   </property>
-                   <widget class="QWidget" name="scar_con_cap_props_2">
-                    <property name="geometry">
-                     <rect>
-                      <x>0</x>
-                      <y>0</y>
-                      <width>59</width>
-                      <height>425</height>
-                     </rect>
-                    </property>
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_2">
-                     <property name="spacing">
-                      <number>0</number>
-                     </property>
-                     <property name="leftMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="topMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="rightMargin">
-                      <number>0</number>
-                     </property>
-                     <property name="bottomMargin">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_focus_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_focus_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Focus</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_focus_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                          </property>
-                          <property name="minimum">
-                           <number>0</number>
-                          </property>
-                          <property name="maximum">
-                           <number>1100</number>
-                          </property>
-                          <property name="value">
-                           <number>550</number>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QCheckBox" name="chbx_cap_autofocus_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="layoutDirection">
-                           <enum>Qt::LeftToRight</enum>
-                          </property>
-                          <property name="text">
-                           <string>Auto</string>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_exposure_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_exposure_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Exposure</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_exposure_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-20</number>
-                          </property>
-                          <property name="maximum">
-                           <number>20</number>
-                          </property>
-                          <property name="value">
-                           <number>-6</number>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QCheckBox" name="chbx_cap_autoexposure_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="layoutDirection">
-                           <enum>Qt::LeftToRight</enum>
-                          </property>
-                          <property name="text">
-                           <string>Auto</string>
-                          </property>
-                          <property name="checked">
-                           <bool>true</bool>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_backlight_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_backlight_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Backlight</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_backlight_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-10</number>
-                          </property>
-                          <property name="maximum">
-                           <number>10</number>
-                          </property>
-                          <property name="value">
-                           <number>1</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_sharpness_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_sharpness_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Sharpness</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_sharpness_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-100</number>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>3</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_gamma_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_gamma_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Gamma</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_gamma_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximum">
-                           <number>1000</number>
-                          </property>
-                          <property name="value">
-                           <number>100</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_gain_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_gain_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Gain</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_gain_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximum">
-                           <number>1000</number>
-                          </property>
-                          <property name="value">
-                           <number>0</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_contrast_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_contrast_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Contrast</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_contrast_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-100</number>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>32</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_saturation_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_saturation_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Saturation</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_saturation_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-200</number>
-                          </property>
-                          <property name="maximum">
-                           <number>200</number>
-                          </property>
-                          <property name="value">
-                           <number>64</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_brightness_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_brightness_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Brightness</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_brightness_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                          </property>
-                          <property name="minimum">
-                           <number>-100</number>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>0</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_hue_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_hue_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>Hue</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_hue_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="minimum">
-                           <number>-100</number>
-                          </property>
-                          <property name="maximum">
-                           <number>100</number>
-                          </property>
-                          <property name="value">
-                           <number>0</number>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QFrame" name="frme_cap_white_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="layoutDirection">
-                        <enum>Qt::LeftToRight</enum>
-                       </property>
-                       <property name="frameShape">
-                        <enum>QFrame::StyledPanel</enum>
-                       </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_2">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <property name="leftMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>3</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lbl_static_white_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="text">
-                           <string>White Bal.</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QSpinBox" name="spbx_cap_white_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximum">
-                           <number>10000</number>
-                          </property>
-                          <property name="singleStep">
-                           <number>10</number>
-                          </property>
-                          <property name="value">
-                           <number>4600</number>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QCheckBox" name="chbx_cap_autowhite_2">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="layoutDirection">
-                           <enum>Qt::LeftToRight</enum>
-                          </property>
-                          <property name="text">
-                           <string>Auto</string>
-                          </property>
-                          <property name="checked">
-                           <bool>true</bool>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frme_cap_resolution_2">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_2">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>1</number>
-                    </property>
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="lbl_static_resolution_2">
-                      <property name="text">
-                       <string> Res. (w,h,c)</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::StyledPanel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Raised</enum>
-                      </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_2">
-                       <property name="spacing">
-                        <number>0</number>
-                       </property>
-                       <property name="leftMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="topMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="rightMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="bottomMargin">
-                        <number>0</number>
-                       </property>
-                       <item>
-                        <widget class="QLineEdit" name="ledit_cap_width_2">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="text">
-                          <string>5000</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="ledit_cap_height_2">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="text">
-                          <string>4000</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="ledit_cap_channels_2">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>14</width>
-                           <height>16777215</height>
-                          </size>
-                         </property>
-                         <property name="layoutDirection">
-                          <enum>Qt::LeftToRight</enum>
-                         </property>
-                         <property name="text">
-                          <string>8</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frme_cam_index_2">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_2">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>2</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="lbl_static_cam_index_2">
-                      <property name="text">
-                       <string>Cam Index</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="ledit_cam_index_2">
-                      <property name="maximumSize">
-                       <size>
-                        <width>20</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QFrame" name="frme_start_stop_cap_2">
-                   <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_2">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QPushButton" name="btn_start_cap_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string>Start</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="btn_stop_cap_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="text">
-                       <string>Stop</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QFrame" name="frme_cap_controls_3">
                 <property name="minimumSize">
                  <size>
@@ -6505,8 +5161,8 @@ Network Size:</string>
                 </layout>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QFrame" name="frme_cap_controls_4">
+              <item row="2" column="0">
+               <widget class="QFrame" name="frme_cap_controls_2">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -6525,7 +5181,7 @@ Network Size:</string>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
-                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_4">
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_2">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -6542,7 +5198,7 @@ Network Size:</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QFrame" name="frme_zoom_cap_4">
+                  <widget class="QFrame" name="frme_zoom_cap_2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -6555,7 +5211,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_2">
                     <property name="spacing">
                      <number>3</number>
                     </property>
@@ -6572,7 +5228,7 @@ Network Size:</string>
                      <number>1</number>
                     </property>
                     <item>
-                     <widget class="QLabel" name="lbl_static_zoom_4">
+                     <widget class="QLabel" name="lbl_static_zoom_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -6594,7 +5250,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_cap_4">
+                     <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_cap_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -6628,7 +5284,7 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frme_pause_4">
+                  <widget class="QFrame" name="frme_pause_2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -6641,7 +5297,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6658,7 +5314,7 @@ Network Size:</string>
                      <number>0</number>
                     </property>
                     <item>
-                     <spacer name="spacer_hrz_pause_right_4">
+                     <spacer name="spacer_hrz_pause_right_2">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -6674,7 +5330,7 @@ Network Size:</string>
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QCheckBox" name="chbx_pause_4">
+                     <widget class="QCheckBox" name="chbx_pause_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -6693,7 +5349,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item>
-                     <spacer name="spacer_hrz_pause_left_4">
+                     <spacer name="spacer_hrz_pause_left_2">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -6712,7 +5368,7 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frme_rotate_cap_4">
+                  <widget class="QFrame" name="frme_rotate_cap_2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -6725,7 +5381,7 @@ Network Size:</string>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -6742,7 +5398,7 @@ Network Size:</string>
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QLabel" name="lbl_static_icon_rotate_4">
+                     <widget class="QLabel" name="lbl_static_icon_rotate_2">
                       <property name="maximumSize">
                        <size>
                         <width>24</width>
@@ -6761,7 +5417,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QSpinBox" name="spbx_rotate_cap_4">
+                     <widget class="QSpinBox" name="spbx_rotate_cap_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -6783,7 +5439,7 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QScrollArea" name="scar_cap_props_4">
+                  <widget class="QScrollArea" name="scar_cap_props_2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
                      <horstretch>0</horstretch>
@@ -6799,7 +5455,7 @@ Network Size:</string>
                    <property name="widgetResizable">
                     <bool>true</bool>
                    </property>
-                   <widget class="QWidget" name="scar_con_cap_props_4">
+                   <widget class="QWidget" name="scar_con_cap_props_2">
                     <property name="geometry">
                      <rect>
                       <x>0</x>
@@ -6814,7 +5470,7 @@ Network Size:</string>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_4">
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_2">
                      <property name="spacing">
                       <number>0</number>
                      </property>
@@ -6831,7 +5487,7 @@ Network Size:</string>
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QFrame" name="frme_cap_focus_4">
+                      <widget class="QFrame" name="frme_cap_focus_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -6844,7 +5500,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6861,7 +5517,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_focus_4">
+                         <widget class="QLabel" name="lbl_static_focus_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -6874,7 +5530,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_focus_4">
+                         <widget class="QSpinBox" name="spbx_cap_focus_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -6896,7 +5552,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QCheckBox" name="chbx_cap_autofocus_4">
+                         <widget class="QCheckBox" name="chbx_cap_autofocus_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -6915,7 +5571,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_exposure_4">
+                      <widget class="QFrame" name="frme_cap_exposure_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -6931,7 +5587,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -6948,7 +5604,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_exposure_4">
+                         <widget class="QLabel" name="lbl_static_exposure_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -6961,7 +5617,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_exposure_4">
+                         <widget class="QSpinBox" name="spbx_cap_exposure_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -6980,7 +5636,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QCheckBox" name="chbx_cap_autoexposure_4">
+                         <widget class="QCheckBox" name="chbx_cap_autoexposure_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7002,7 +5658,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_backlight_4">
+                      <widget class="QFrame" name="frme_cap_backlight_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7018,7 +5674,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7035,7 +5691,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_backlight_4">
+                         <widget class="QLabel" name="lbl_static_backlight_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7048,7 +5704,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_backlight_4">
+                         <widget class="QSpinBox" name="spbx_cap_backlight_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7070,7 +5726,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_sharpness_4">
+                      <widget class="QFrame" name="frme_cap_sharpness_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7086,7 +5742,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7103,7 +5759,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_sharpness_4">
+                         <widget class="QLabel" name="lbl_static_sharpness_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7116,7 +5772,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_sharpness_4">
+                         <widget class="QSpinBox" name="spbx_cap_sharpness_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7138,7 +5794,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_gamma_4">
+                      <widget class="QFrame" name="frme_cap_gamma_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7154,7 +5810,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7171,7 +5827,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_gamma_4">
+                         <widget class="QLabel" name="lbl_static_gamma_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7184,7 +5840,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_gamma_4">
+                         <widget class="QSpinBox" name="spbx_cap_gamma_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7203,7 +5859,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_gain_4">
+                      <widget class="QFrame" name="frme_cap_gain_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7219,7 +5875,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7236,7 +5892,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_gain_4">
+                         <widget class="QLabel" name="lbl_static_gain_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7249,7 +5905,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_gain_4">
+                         <widget class="QSpinBox" name="spbx_cap_gain_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7268,7 +5924,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_contrast_4">
+                      <widget class="QFrame" name="frme_cap_contrast_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7284,7 +5940,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7301,7 +5957,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_contrast_4">
+                         <widget class="QLabel" name="lbl_static_contrast_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7314,7 +5970,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_contrast_4">
+                         <widget class="QSpinBox" name="spbx_cap_contrast_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7336,7 +5992,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_saturation_4">
+                      <widget class="QFrame" name="frme_cap_saturation_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7352,7 +6008,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7369,7 +6025,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_saturation_4">
+                         <widget class="QLabel" name="lbl_static_saturation_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7382,7 +6038,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_saturation_4">
+                         <widget class="QSpinBox" name="spbx_cap_saturation_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7404,7 +6060,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_brightness_4">
+                      <widget class="QFrame" name="frme_cap_brightness_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7417,7 +6073,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7434,7 +6090,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_brightness_4">
+                         <widget class="QLabel" name="lbl_static_brightness_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7447,7 +6103,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_brightness_4">
+                         <widget class="QSpinBox" name="spbx_cap_brightness_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7472,7 +6128,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_hue_4">
+                      <widget class="QFrame" name="frme_cap_hue_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7488,7 +6144,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7505,7 +6161,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_hue_4">
+                         <widget class="QLabel" name="lbl_static_hue_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7518,7 +6174,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_hue_4">
+                         <widget class="QSpinBox" name="spbx_cap_hue_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7540,7 +6196,7 @@ Network Size:</string>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QFrame" name="frme_cap_white_4">
+                      <widget class="QFrame" name="frme_cap_white_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                          <horstretch>0</horstretch>
@@ -7556,7 +6212,7 @@ Network Size:</string>
                        <property name="frameShadow">
                         <enum>QFrame::Plain</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_4">
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_2">
                         <property name="spacing">
                          <number>0</number>
                         </property>
@@ -7573,7 +6229,7 @@ Network Size:</string>
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="lbl_static_white_4">
+                         <widget class="QLabel" name="lbl_static_white_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7586,7 +6242,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QSpinBox" name="spbx_cap_white_4">
+                         <widget class="QSpinBox" name="spbx_cap_white_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7605,7 +6261,7 @@ Network Size:</string>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QCheckBox" name="chbx_cap_autowhite_4">
+                         <widget class="QCheckBox" name="chbx_cap_autowhite_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -7631,14 +6287,14 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frme_cap_resolution_4">
+                  <widget class="QFrame" name="frme_cap_resolution_2">
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_4">
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_2">
                     <property name="leftMargin">
                      <number>0</number>
                     </property>
@@ -7655,7 +6311,7 @@ Network Size:</string>
                      <number>0</number>
                     </property>
                     <item row="0" column="0">
-                     <widget class="QLabel" name="lbl_static_resolution_4">
+                     <widget class="QLabel" name="lbl_static_resolution_2">
                       <property name="text">
                        <string> Res. (w,h,c)</string>
                       </property>
@@ -7665,7 +6321,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QFrame" name="frme_whc_4">
+                     <widget class="QFrame" name="frme_whc_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -7678,7 +6334,7 @@ Network Size:</string>
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_4">
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_2">
                        <property name="spacing">
                         <number>0</number>
                        </property>
@@ -7695,7 +6351,7 @@ Network Size:</string>
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QLineEdit" name="ledit_cap_width_4">
+                        <widget class="QLineEdit" name="ledit_cap_width_2">
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                            <horstretch>0</horstretch>
@@ -7711,7 +6367,7 @@ Network Size:</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="ledit_cap_height_4">
+                        <widget class="QLineEdit" name="ledit_cap_height_2">
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                            <horstretch>0</horstretch>
@@ -7727,7 +6383,7 @@ Network Size:</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QLineEdit" name="ledit_cap_channels_4">
+                        <widget class="QLineEdit" name="ledit_cap_channels_2">
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                            <horstretch>0</horstretch>
@@ -7761,14 +6417,14 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frme_cam_index_4">
+                  <widget class="QFrame" name="frme_cam_index_2">
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -7785,14 +6441,14 @@ Network Size:</string>
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QLabel" name="lbl_static_cam_index_4">
+                     <widget class="QLabel" name="lbl_static_cam_index_2">
                       <property name="text">
                        <string>Cam Index</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="ledit_cam_index_4">
+                     <widget class="QLineEdit" name="ledit_cam_index_2">
                       <property name="maximumSize">
                        <size>
                         <width>20</width>
@@ -7805,14 +6461,14 @@ Network Size:</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frme_start_stop_cap_4">
+                  <widget class="QFrame" name="frme_start_stop_cap_2">
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Plain</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_4">
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_2">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -7829,7 +6485,7 @@ Network Size:</string>
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="btn_start_cap_4">
+                     <widget class="QPushButton" name="btn_start_cap_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -7842,7 +6498,7 @@ Network Size:</string>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="btn_stop_cap_4">
+                     <widget class="QPushButton" name="btn_stop_cap_2">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                         <horstretch>0</horstretch>
@@ -7860,7 +6516,7 @@ Network Size:</string>
                 </layout>
                </widget>
               </item>
-              <item row="1" column="3">
+              <item row="2" column="3">
                <widget class="QFrame" name="frme_cap_controls_5">
                 <property name="minimumSize">
                  <size>
@@ -9215,6 +7871,1422 @@ Network Size:</string>
                 </layout>
                </widget>
               </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="btn_calib_cam">
+                <property name="text">
+                 <string>Calibrate Cameras</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QFrame" name="frme_cap_controls_4">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>300</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <layout class="QVBoxLayout" name="layout_vrt_frme_cap_controls_4">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QFrame" name="frme_zoom_cap_4">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_4">
+                    <property name="spacing">
+                     <number>3</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>3</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>1</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>1</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="lbl_static_zoom_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Zoom</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_cap_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>1000</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="decimals">
+                       <number>2</number>
+                      </property>
+                      <property name="minimum">
+                       <double>0.010000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>3.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>0.100000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>1.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frme_pause_4">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_pause_4">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <spacer name="spacer_hrz_pause_right_4">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Expanding</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="chbx_pause_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="layoutDirection">
+                       <enum>Qt::LeftToRight</enum>
+                      </property>
+                      <property name="text">
+                       <string>Pause</string>
+                      </property>
+                      <property name="tristate">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="spacer_hrz_pause_left_4">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Expanding</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>38</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frme_rotate_cap_4">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap_4">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="lbl_static_icon_rotate_4">
+                      <property name="maximumSize">
+                       <size>
+                        <width>24</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="pixmap">
+                       <pixmap>Resources/rotate_cw.jpg</pixmap>
+                      </property>
+                      <property name="scaledContents">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="spbx_rotate_cap_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximum">
+                       <number>270</number>
+                      </property>
+                      <property name="singleStep">
+                       <number>90</number>
+                      </property>
+                      <property name="value">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QScrollArea" name="scar_cap_props_4">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="sizeAdjustPolicy">
+                    <enum>QAbstractScrollArea::AdjustIgnored</enum>
+                   </property>
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="scar_con_cap_props_4">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>59</width>
+                      <height>425</height>
+                     </rect>
+                    </property>
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <layout class="QVBoxLayout" name="layout_vrt_scar_con_cap_props_4">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_focus_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_focus_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_focus_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Focus</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_focus_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                          </property>
+                          <property name="minimum">
+                           <number>0</number>
+                          </property>
+                          <property name="maximum">
+                           <number>1100</number>
+                          </property>
+                          <property name="value">
+                           <number>550</number>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QCheckBox" name="chbx_cap_autofocus_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="layoutDirection">
+                           <enum>Qt::LeftToRight</enum>
+                          </property>
+                          <property name="text">
+                           <string>Auto</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_exposure_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_exposure_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_exposure_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Exposure</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_exposure_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-20</number>
+                          </property>
+                          <property name="maximum">
+                           <number>20</number>
+                          </property>
+                          <property name="value">
+                           <number>-6</number>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QCheckBox" name="chbx_cap_autoexposure_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="layoutDirection">
+                           <enum>Qt::LeftToRight</enum>
+                          </property>
+                          <property name="text">
+                           <string>Auto</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_backlight_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_backlight_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_backlight_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Backlight</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_backlight_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-10</number>
+                          </property>
+                          <property name="maximum">
+                           <number>10</number>
+                          </property>
+                          <property name="value">
+                           <number>1</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_sharpness_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_sharpness_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_sharpness_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Sharpness</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_sharpness_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-100</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
+                          <property name="value">
+                           <number>3</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_gamma_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gamma_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_gamma_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Gamma</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_gamma_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="maximum">
+                           <number>1000</number>
+                          </property>
+                          <property name="value">
+                           <number>100</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_gain_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_gain_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_gain_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Gain</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_gain_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="maximum">
+                           <number>1000</number>
+                          </property>
+                          <property name="value">
+                           <number>0</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_contrast_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_contrast_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_contrast_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Contrast</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_contrast_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-100</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
+                          <property name="value">
+                           <number>32</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_saturation_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_saturation_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_saturation_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Saturation</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_saturation_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-200</number>
+                          </property>
+                          <property name="maximum">
+                           <number>200</number>
+                          </property>
+                          <property name="value">
+                           <number>64</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_brightness_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_brightness_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_brightness_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Brightness</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_brightness_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                          </property>
+                          <property name="minimum">
+                           <number>-100</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
+                          <property name="value">
+                           <number>0</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_hue_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_hue_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_hue_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>Hue</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_hue_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="minimum">
+                           <number>-100</number>
+                          </property>
+                          <property name="maximum">
+                           <number>100</number>
+                          </property>
+                          <property name="value">
+                           <number>0</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QFrame" name="frme_cap_white_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <layout class="QVBoxLayout" name="layout_vrt_frme_cap_white_4">
+                        <property name="spacing">
+                         <number>0</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>3</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="lbl_static_white_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="text">
+                           <string>White Bal.</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QSpinBox" name="spbx_cap_white_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="maximum">
+                           <number>10000</number>
+                          </property>
+                          <property name="singleStep">
+                           <number>10</number>
+                          </property>
+                          <property name="value">
+                           <number>4600</number>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QCheckBox" name="chbx_cap_autowhite_4">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="layoutDirection">
+                           <enum>Qt::LeftToRight</enum>
+                          </property>
+                          <property name="text">
+                           <string>Auto</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frme_cap_resolution_4">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QGridLayout" name="layout_grid_frme_cap_res_4">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>1</number>
+                    </property>
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="lbl_static_resolution_4">
+                      <property name="text">
+                       <string> Res. (w,h,c)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QFrame" name="frme_whc_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::StyledPanel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <layout class="QHBoxLayout" name="layout_hrz_frme_whc_4">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLineEdit" name="ledit_cap_width_4">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>5000</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="ledit_cap_height_4">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>4000</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="ledit_cap_channels_4">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>14</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="layoutDirection">
+                          <enum>Qt::LeftToRight</enum>
+                         </property>
+                         <property name="text">
+                          <string>8</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frme_cam_index_4">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="layout_hrz_cam_index_4">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>2</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="lbl_static_cam_index_4">
+                      <property name="text">
+                       <string>Cam Index</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="ledit_cam_index_4">
+                      <property name="maximumSize">
+                       <size>
+                        <width>20</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frme_start_stop_cap_4">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="layout_hrz_frme_start_stop_cap_4">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="btn_start_cap_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Start</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_stop_cap_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Stop</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>C1</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="label_2">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>C2</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_3">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>C3</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QLabel" name="label_4">
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>C4</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -9240,10 +9312,22 @@ Network Size:</string>
           <item>
            <widget class="QLabel" name="lbl_main_pixmap">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>536</width>
+              <height>536</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>536</width>
+              <height>536</height>
+             </size>
             </property>
             <property name="text">
              <string/>

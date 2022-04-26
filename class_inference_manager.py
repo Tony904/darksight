@@ -5,7 +5,7 @@ from class_emitter import Emitter
 
 class InferenceManager(qtc.QObject):
     run_inference = qtc.pyqtSignal()
-    emit_inference_list = qtc.pyqtSignal(list)
+    emit_inference_packages = qtc.pyqtSignal(list)
     inference_initiation_requested = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
@@ -28,10 +28,10 @@ class InferenceManager(qtc.QObject):
             self.inference_queue.append((p, img_ndarr.copy(), emitter))
 
     @qtc.pyqtSlot()
-    def send_inference_list(self):
+    def send_inference_packages(self):
         if not self.inference_active:
-            self.emit_inference_list.emit(self.inference_queue)
-            print("Inference Manager emitted: emit_inference_list")
+            self.emit_inference_packages.emit(self.inference_queue)
+            print("Inference Manager emitted: emit_inference_packages")
         else:
             print("Inference list request denied. self.inference_active=True")
 

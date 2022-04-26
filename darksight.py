@@ -3,7 +3,7 @@ import time
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtWidgets as qtw
-import globals as glb
+import globals as gbs
 import darknet
 import cv2
 import numpy as np
@@ -57,9 +57,9 @@ class MainWindow(qtw.QWidget):
         data_file = "D:/yolo_v4/darknet/build/darknet/x64/data/obj.data"
         weights_file = "D:/yolo_v4/darknet/build/darknet/x64/AlphaNum_Weights/yolov4-csp-alphanum_last.weights"
         batch_size = 1
-        glb.network, glb.class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
-        glb.darknet_w = darknet.network_width(glb.network)
-        glb.darknet_h = darknet.network_height(glb.network)
+        gbs.network, gbs.class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
+        gbs.darknet_w = darknet.network_width(gbs.network)
+        gbs.darknet_h = darknet.network_height(gbs.network)
 
         for p in range(len(self.panels)):
             drawer = DrawDetections()
@@ -93,13 +93,13 @@ class MainWindow(qtw.QWidget):
 
         self.initiate_inference.connect(self.inference.initiate)
         self.initiate_inference.emit()
-        glb.darknet_loaded = True
+        gbs.darknet_loaded = True
         print("darknet loaded.")
 
     @qtc.pyqtSlot(int, np.ndarray)
     def relay_img_to_manager(self, p, ndarr):
         # print("relay_img_to_manager executing.")
-        if glb.darknet_loaded:
+        if gbs.darknet_loaded:
             self.send_img_to_manager.emit(p, ndarr, self.emitters[p])
             # print("Emitted signal: send_img_to_manager")
 
@@ -136,7 +136,7 @@ class MainWindow(qtw.QWidget):
 
         panel.darknet_detection_requested.connect(self.relay_img_to_manager)
 
-        if glb.darknet_loaded:
+        if gbs.darknet_loaded:
             drawer = DrawDetections()
             drawer_qthread = qtc.QThread()
             drawer.moveToThread(drawer_qthread)
@@ -499,13 +499,13 @@ class Inference(qtc.QObject):
     def run(self):
         # print("Inference.run() executing.")
         for p, ndarr, emitter in self.panel_imgs:
-            scaled = imut.scale_by_largest_dim(ndarr, glb.darknet_w, glb.darknet_h)
+            scaled = imut.scale_by_largest_dim(ndarr, gbs.darknet_w, gbs.darknet_h)
             padded, _, _ = imut.pad_image_to_square(scaled)
             # print(str(padded.shape[1]) + " " + str(padded.shape[0]))
-            img = darknet.make_image(glb.darknet_w, glb.darknet_h, 3)
+            img = darknet.make_image(gbs.darknet_w, gbs.darknet_h, 3)
             darknet.copy_image_from_bytes(img, padded.tobytes())
             # print("Performing object detection. p=" + str(p))
-            detections = darknet.detect_image(glb.network, glb.class_names, img, self.thresh)
+            detections = darknet.detect_image(gbs.network, gbs.class_names, img, self.thresh)
             emitter.emitter_signal.emit((p, detections, ndarr, scaled))
             darknet.free_image(img)
         self.inference_complete.emit()

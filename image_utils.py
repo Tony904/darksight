@@ -38,6 +38,7 @@ def pad_image_to_square(src):
     bottom_pad = 0
     left_pad = 0
     right_pad = 0
+    padded = None
     if w < h:
         right_pad = h - w
         print("Padding right: " + str(right_pad))
