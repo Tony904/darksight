@@ -5,7 +5,7 @@ from class_emitter import Emitter
 
 class InferenceManager(qtc.QObject):
     run_inference = qtc.pyqtSignal()
-    emit_inference_packages = qtc.pyqtSignal(list)
+    inference_queue_emitted = qtc.pyqtSignal(list)
     inference_initiation_requested = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
@@ -18,22 +18,22 @@ class InferenceManager(qtc.QObject):
         new_entry = True
         for i in range(len(self.inference_queue)):
             if self.inference_queue[i][0] == p:
-                print("Updating img queue in panel: " + str(p))
+                print("Updating img queue. index: " + str(i))
                 new_entry = False
                 tpl = (self.inference_queue[i][0], img_ndarr.copy(), self.inference_queue[i][2])
                 self.inference_queue[i] = tpl
                 break
         if new_entry:
-            print("Adding new entry into inference_queue. p=" + str(p))
+            print("Adding new entry into inference_queue")
             self.inference_queue.append((p, img_ndarr.copy(), emitter))
 
     @qtc.pyqtSlot()
-    def send_inference_packages(self):
+    def send_inference_queue(self):
         if not self.inference_active:
-            self.emit_inference_packages.emit(self.inference_queue)
+            self.inference_queue_emitted.emit(self.inference_queue)
             print("Inference Manager emitted: emit_inference_packages")
         else:
-            print("Inference list request denied. self.inference_active=True")
+            print("Inference queue request denied. self.inference_active=True")
 
     @qtc.pyqtSlot()
     def request_inference_start(self):

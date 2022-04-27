@@ -32,6 +32,9 @@ class MainWindow(qtw.QWidget):
     send_det_to_manager = qtc.pyqtSignal(int, list)
     send_inf_state_to_manager = qtc.pyqtSignal(bool)
     send_draw_state_to_manager = qtc.pyqtSignal(bool)
+    display_pixmap_set = qtc.pyqtSignal()
+    send_window_size_to_display_manager = qtc.pyqtSignal(int, int)
+    send_uid_order_to_display_manager = qtc.pyqtSignal(list)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,9 +49,17 @@ class MainWindow(qtw.QWidget):
         self.emitters = []
 
         self._init_connect_signals_to_slots()
-        self.pixmap_ndarr = None
 
         self.showMaximized()
+
+        self.display_manager = DisplayManager()
+        self.display_processor = DisplayProcessor()
+        self.display_processor_qthread = qtc.QThread()
+        self.display_processor.moveToThread(self.display_processor_qthread)
+        self.display_processor_qthread.start()
+
+        self.establish_display_loop_connections()
+        self.start_display_loop()
 
     def _init_connect_signals_to_slots(self):
         self.ui.btn_start_cap_2.clicked.connect(
@@ -104,7 +115,6 @@ class MainWindow(qtw.QWidget):
 
     def create_capture(self, cstr, uid):
         c = None
-        print("ledit_cam_index_2.text() = " + self.ui.ledit_cam_index_2.text())
         try:
             c = int(cstr)
             valid = True
@@ -131,7 +141,8 @@ class MainWindow(qtw.QWidget):
                 self.cap_qthreads.append(cap_thread)
                 cap.uid = uid
                 cap.props.c = c
-                cap.frame_captured.connect(self.display_handler)
+                cap.frame_captured.connect(self.display_manager.update_queue)
+                self.ui.spbx_cap_brightness_2.valueChanged.connect(lambda val: cap.update_prop('brightness', val))
 
                 self.run_capture.connect(cap.run)
                 self.run_capture.emit()
@@ -147,36 +158,121 @@ class MainWindow(qtw.QWidget):
                 self.cap_qthreads[n].quit()
                 del self.cap_qthreads[n]
 
-    def display_handler(self, ndarr, uid):
-        pix_w = self.ui.lbl_main_pixmap.height()
-        pix_h = self.ui.lbl_main_pixmap.width()
-        w = pix_w // 2
-        h = pix_h // 2
-        img = cv2.resize(ndarr, (w, h), interpolation=cv2.INTER_LINEAR)
-        if self.pixmap_ndarr is None:
-            self.pixmap_ndarr = np.zeros((pix_h, pix_w, 3), dtype=ndarr.dtype)
-        else:
-            self.pixmap_ndarr = cv2.resize(self.pixmap_ndarr, (pix_w, pix_h), interpolation=cv2.INTER_LINEAR)
-        if 0 <= uid <= 3:
-            top, bottom, left, right = None, None, None, None
-            if uid == 0:
-                top, bottom, left, right = 0, h, 0, w
-                self.pixmap_ndarr[top:bottom, left:right] = img.copy()
-            elif uid == 1:
-                top, bottom, left, right = 0, h, w, pix_w
-                self.pixmap_ndarr[top:bottom, left:right] = img.copy()
-            elif uid == 2:
-                top, bottom, left, right = h, pix_h, 0, w
-                self.pixmap_ndarr[top:bottom, left:right] = img.copy()
-            elif uid == 3:
-                top, bottom, left, right = h, pix_h, w, pix_w
-                self.pixmap_ndarr[top:bottom, left:right] = img.copy()
-            qimg = qtg.QImage(self.pixmap_ndarr.data, self.pixmap_ndarr.shape[1], self.pixmap_ndarr.shape[0],
-                              self.pixmap_ndarr.strides[0], qtg.QImage.Format_RGB888)
+    def establish_display_loop_connections(self):
+        self.display_pixmap_set.connect(self.display_manager.send_update_to_processor)
+        self.display_manager.update_data_emitted.connect(self.display_processor.apply_update)
+        self.display_processor.update_applied.connect(self.display_processor.run)
+        self.display_processor.qimg_completed.connect(self.set_pixmap)
+
+        self.send_window_size_to_display_manager.connect(self.display_manager.update_window_size)
+        self.send_uid_order_to_display_manager.connect(self.display_manager.update_uid_order)
+
+    def start_display_loop(self):
+        self.set_pixmap(None)
+
+    def set_pixmap(self, qimg):
+        if qimg is not None:
             qpix = qtg.QPixmap.fromImage(qimg)
             self.ui.lbl_main_pixmap.setPixmap(qpix)
-        else:
-            print("Unexpected uid value.")
+        w = self.ui.lbl_main_pixmap.width()
+        h = self.ui.lbl_main_pixmap.height()
+        self.send_window_size_to_display_manager.emit(w, h)
+        uid_order = [0, 1, 2, 3]
+        self.send_uid_order_to_display_manager.emit(uid_order)
+        self.display_pixmap_set.emit()
+
+
+class DisplayProcessor(qtc.QObject):
+    update_applied = qtc.pyqtSignal()
+    qimg_completed = qtc.pyqtSignal(qtg.QImage)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.parts = []  # part=(ndarray, uid)
+        self.window_w = None
+        self.window_h = None
+        self.uid_order = []  # element=int
+
+        self.ndarray_dtype = np.uint8
+        self.display_ndarray = None
+        self.display_qimg = None
+
+    @qtc.pyqtSlot()
+    def run(self):
+        for part in self.parts:
+            uid = part[1]
+            resized = imut.scale_by_largest_dim(part[0], self.window_w // 2, self.window_h // 2)
+            w = resized.shape[1]
+            h = resized.shape[0]
+            if uid == self.uid_order[0]:
+                # put part in top left
+                top, bottom, left, right = 0, h, 0, w
+                self.display_ndarray[top:bottom, left:right] = resized
+            elif uid == self.uid_order[1]:
+                # put part in top right
+                top, bottom, left, right = 0, h, w, self.window_w
+                self.display_ndarray[top:bottom, left:right] = resized
+            elif uid == self.uid_order[2]:
+                # put part in bottom left
+                top, bottom, left, right = h, self.window_h, 0, w
+                self.display_ndarray[top:bottom, left:right] = resized
+            elif uid == self.uid_order[3]:
+                # put part in bottom right
+                top, bottom, left, right = h, self.window_h, w, self.window_w
+                self.display_ndarray[top:bottom, left:right] = resized
+        data = self.display_ndarray.data
+        cols = self.display_ndarray.shape[1]
+        rows = self.display_ndarray.shape[0]
+        stride = self.display_ndarray.strides[0]
+        self.display_qimg = qtg.QImage(data, cols, rows, stride, qtg.QImage.Format_RGB888)
+        self.qimg_completed.emit(self.display_qimg)
+
+    @qtc.pyqtSlot(list, int, int, list)
+    def apply_update(self, parts, window_w, window_h, uid_order):
+        self.parts = list(parts)
+        self.window_w = window_w
+        self.window_h = window_h
+        self.display_ndarray = np.zeros((window_h, window_w, 3), dtype=self.ndarray_dtype)
+        self.uid_order = list(uid_order)
+        self.update_applied.emit()
+
+
+class DisplayManager(qtc.QObject):
+    update_data_emitted = qtc.pyqtSignal(list, int, int, list)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.queue = []  # element=(ndarray, uid)
+        self.window_w = None
+        self.window_h = None
+        self.uid_order = [0, 1, 2, 3]
+
+    @qtc.pyqtSlot(np.ndarray, int)
+    def update_queue(self, ndarr, uid):
+        new_entry = True
+        for i in range(len(self.queue)):
+            if self.queue[i][1] == uid:
+                print("Updating ndarray in DisplayManager queue. index: " + str(i) + ", uid: " + str(uid))
+                new_entry = False
+                tpl = (ndarr, uid)
+                self.queue[i] = tpl
+                break
+        if new_entry:
+            print("Adding new entry into DisplayManager queue. uid: " + str(uid))
+            self.queue.append((ndarr, uid))
+
+    @qtc.pyqtSlot(int, int)
+    def update_window_size(self, window_w, window_h):
+        self.window_w = window_w
+        self.window_h = window_h
+
+    @qtc.pyqtSlot(list)
+    def update_uid_order(self, uid_order):
+        self.uid_order = list(uid_order)
+
+    @qtc.pyqtSlot()
+    def send_update_to_processor(self):
+        self.update_data_emitted.emit(self.queue, self.window_w, self.window_h, self.uid_order)
 
 
 class CaptureStream(qtc.QObject):
