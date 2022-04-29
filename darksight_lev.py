@@ -53,24 +53,27 @@ class MainWindow(qtw.QWidget):
         self.showMaximized()
 
         self.display_manager = DisplayManager()
+        self.display_manager_qthread = qtc.QThread()
+        self.display_manager.moveToThread(self.display_manager_qthread)
+        self.display_manager_qthread.start()
         self.display_processor = DisplayProcessor()
         self.display_processor_qthread = qtc.QThread()
         self.display_processor.moveToThread(self.display_processor_qthread)
         self.display_processor_qthread.start()
 
-        self.establish_display_loop_connections()
+        self.set_det_controls_connections()
+        self.set_display_loop_connections()
         self.start_display_loop()
 
     def _init_connect_signals_to_slots(self):
-        self.ui.btn_start_cap_2.clicked.connect(
-            lambda state: self.create_capture(self.ui.ledit_cam_index_2.text(), 0))
-        self.ui.btn_start_cap_3.clicked.connect(
-            lambda state: self.create_capture(self.ui.ledit_cam_index_3.text(), 1))
-        self.ui.btn_start_cap_4.clicked.connect(
-            lambda state: self.create_capture(self.ui.ledit_cam_index_4.text(), 2))
-        self.ui.btn_start_cap_5.clicked.connect(
-            lambda state: self.create_capture(self.ui.ledit_cam_index_5.text(), 3))
-        print("Successfully connected _init_ signals and slots.")
+        self.ui.btn_start_cap_2.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_2.text(), 0))
+        self.ui.btn_start_cap_3.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_3.text(), 1))
+        self.ui.btn_start_cap_4.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_4.text(), 2))
+        self.ui.btn_start_cap_5.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_5.text(), 3))
+        self.ui.btn_stop_cap_2.clicked.connect(lambda s: self.stop_capture(0))
+        self.ui.btn_stop_cap_3.clicked.connect(lambda s: self.stop_capture(1))
+        self.ui.btn_stop_cap_4.clicked.connect(lambda s: self.stop_capture(2))
+        self.ui.btn_stop_cap_5.clicked.connect(lambda s: self.stop_capture(3))
 
     def _load_darknet(self):
         cfg_file = self.ui.ledit_cfg_file
@@ -136,30 +139,66 @@ class MainWindow(qtw.QWidget):
                 cap_thread = qtc.QThread()
                 cap.moveToThread(cap_thread)
                 cap_thread.start()
-
                 self.caps.append(cap)
                 self.cap_qthreads.append(cap_thread)
+
                 cap.uid = uid
                 cap.props.c = c
                 cap.frame_captured.connect(self.display_manager.update_queue)
-                self.ui.spbx_cap_brightness_2.valueChanged.connect(lambda val: cap.update_prop('brightness', val))
+                cap.read_failed.connect(self.stop_capture)
+                cap.read_failed.connect(self.display_manager.clear_queue_index)
+                self.connect_calib_controls_to_cap(cap)
 
                 self.run_capture.connect(cap.run)
                 self.run_capture.emit()
                 self.run_capture.disconnect(cap.run)
+
+    def connect_calib_controls_to_cap(self, cap):
+        offset = 2
+        props = ['backlight', 'brightness', 'contrast', 'exposure', 'focus', 'gain', 'gamma', 'hue', 'saturation',
+                 'sharpness', 'white']
+        s = '_' + str(cap.uid + offset)
+        scar = self.ui.frme_cam_calib.findChild(qtw.QWidget, 'scar_con_cap_props' + s)
+        prefix = 'spbx_cap_'
+        for p in props:
+            print("prefix + p + s = " + prefix + p + s)
+            w = scar.findChild(qtw.QSpinBox, prefix + p + s)
+            w.valueChanged.connect(lambda x, i=p: cap.update_prop(i, x))
+        print("Completed connecting panel to cap.")
 
     def stop_capture(self, uid):
         print("Attempting to stop CaptureStream uid=" + str(uid))
         for n in range(len(self.caps)):
             if uid == self.caps[n].uid:
                 self.caps[n].stop()
-                self.caps[n].frame_captured.disconnect(self.display_handler)
+                self.caps[n].frame_captured.disconnect(self.display_manager.update_queue)
                 del self.caps[n]
                 self.cap_qthreads[n].quit()
                 del self.cap_qthreads[n]
 
-    def establish_display_loop_connections(self):
-        self.display_pixmap_set.connect(self.display_manager.send_update_to_processor)
+    def set_det_controls_connections(self):
+        # self.ui.chbx_pause.stateChanged.connect(self.active_cap_pause)
+        # self.ui.spbx_rotate_cap.valueChanged.connect(self.active_cap_rotate)
+        # self.ui.spbx_dbl_zoom_cap.connect(self.active_cap_zoom)
+
+        self.ui.spbx_cap_backlight.valueChanged.connect(lambda x: self.update_active_cap_prop('backlight', x))
+        self.ui.spbx_cap_brightness.valueChanged.connect(lambda x: self.update_active_cap_prop('brightness', x))
+        self.ui.spbx_cap_contrast.valueChanged.connect(lambda x: self.update_active_cap_prop('contrast', x))
+        self.ui.spbx_cap_exposure.valueChanged.connect(lambda x: self.update_active_cap_prop('exposure', x))
+        self.ui.spbx_cap_focus.valueChanged.connect(lambda x: self.update_active_cap_prop('focus', x))
+        self.ui.spbx_cap_gain.valueChanged.connect(lambda x: self.update_active_cap_prop('gain', x))
+        self.ui.spbx_cap_gamma.valueChanged.connect(lambda x: self.update_active_cap_prop('gamma', x))
+        self.ui.spbx_cap_hue.valueChanged.connect(lambda x: self.update_active_cap_prop('hue', x))
+        self.ui.spbx_cap_saturation.valueChanged.connect(lambda x: self.update_active_cap_prop('satruation', x))
+        self.ui.spbx_cap_sharpness.valueChanged.connect(lambda x: self.update_active_cap_prop('sharpness', x))
+        self.ui.spbx_cap_white.valueChanged.connect(lambda x: self.update_active_cap_prop('white', x))
+
+    def update_active_cap_prop(self, prop, x):
+        i = self.ui.tabw_cam_settings.currentIndex()
+        self.caps[i].update_prop(prop, x)
+
+    def set_display_loop_connections(self):
+        self.display_pixmap_set.connect(self.display_manager.send_update_to_display_processor)
         self.display_manager.update_data_emitted.connect(self.display_processor.apply_update)
         self.display_processor.update_applied.connect(self.display_processor.run)
         self.display_processor.qimg_completed.connect(self.set_pixmap)
@@ -188,7 +227,7 @@ class DisplayProcessor(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.parts = []  # part=(ndarray, uid)
+        self.parts = []  # part=(ndarray, uid, CaptureProperties)
         self.window_w = None
         self.window_h = None
         self.uid_order = []  # element=int
@@ -200,26 +239,29 @@ class DisplayProcessor(qtc.QObject):
     @qtc.pyqtSlot()
     def run(self):
         for part in self.parts:
-            uid = part[1]
-            resized = imut.scale_by_largest_dim(part[0], self.window_w // 2, self.window_h // 2)
-            w = resized.shape[1]
-            h = resized.shape[0]
-            if uid == self.uid_order[0]:
-                # put part in top left
-                top, bottom, left, right = 0, h, 0, w
-                self.display_ndarray[top:bottom, left:right] = resized
-            elif uid == self.uid_order[1]:
-                # put part in top right
-                top, bottom, left, right = 0, h, w, self.window_w
-                self.display_ndarray[top:bottom, left:right] = resized
-            elif uid == self.uid_order[2]:
-                # put part in bottom left
-                top, bottom, left, right = h, self.window_h, 0, w
-                self.display_ndarray[top:bottom, left:right] = resized
-            elif uid == self.uid_order[3]:
-                # put part in bottom right
-                top, bottom, left, right = h, self.window_h, w, self.window_w
-                self.display_ndarray[top:bottom, left:right] = resized
+            if part is not None:
+                uid = part[1]
+                wd2 = self.window_w // 2
+                hd2 = self.window_h // 2
+                resized = imut.scale_by_largest_dim(part[0], wd2, hd2)
+                pw = resized.shape[1]
+                ph = resized.shape[0]
+                if uid == self.uid_order[0]:
+                    # put part in top left
+                    top, bottom, left, right = 0, ph, 0, pw
+                    self.display_ndarray[top:bottom, left:right] = resized
+                elif uid == self.uid_order[1]:
+                    # put part in top right
+                    top, bottom, left, right = 0, ph, wd2, wd2 + pw
+                    self.display_ndarray[top:bottom, left:right] = resized
+                elif uid == self.uid_order[2]:
+                    # put part in bottom left
+                    top, bottom, left, right = hd2, hd2 + ph, 0, pw
+                    self.display_ndarray[top:bottom, left:right] = resized
+                elif uid == self.uid_order[3]:
+                    # put part in bottom right
+                    top, bottom, left, right = hd2, hd2 + ph, pw, self.window_w
+                    self.display_ndarray[top:bottom, left:right] = resized
         data = self.display_ndarray.data
         cols = self.display_ndarray.shape[1]
         rows = self.display_ndarray.shape[0]
@@ -242,24 +284,20 @@ class DisplayManager(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.queue = []  # element=(ndarray, uid)
+        self.queue = [None, None, None, None]  # element=(ndarray, uid, CaptureProperties)
         self.window_w = None
         self.window_h = None
-        self.uid_order = [0, 1, 2, 3]
+        self.uid_order = [0, 1, 2, 3]  # top-left, top-right, bottom-left, bottom-right
 
-    @qtc.pyqtSlot(np.ndarray, int)
-    def update_queue(self, ndarr, uid):
-        new_entry = True
-        for i in range(len(self.queue)):
-            if self.queue[i][1] == uid:
-                print("Updating ndarray in DisplayManager queue. index: " + str(i) + ", uid: " + str(uid))
-                new_entry = False
-                tpl = (ndarr, uid)
-                self.queue[i] = tpl
-                break
-        if new_entry:
-            print("Adding new entry into DisplayManager queue. uid: " + str(uid))
-            self.queue.append((ndarr, uid))
+    @qtc.pyqtSlot(np.ndarray, int, qtc.QObject)
+    def update_queue(self, ndarr, uid, props):
+        tpl = (ndarr, uid, props)
+        self.queue[uid] = tpl
+
+    @qtc.pyqtSlot(int)
+    def clear_queue_index(self, uid):
+        self.queue[uid] = None
+        print("Queue index cleared: uid=" + str(uid))
 
     @qtc.pyqtSlot(int, int)
     def update_window_size(self, window_w, window_h):
@@ -271,12 +309,13 @@ class DisplayManager(qtc.QObject):
         self.uid_order = list(uid_order)
 
     @qtc.pyqtSlot()
-    def send_update_to_processor(self):
+    def send_update_to_display_processor(self):
         self.update_data_emitted.emit(self.queue, self.window_w, self.window_h, self.uid_order)
 
 
 class CaptureStream(qtc.QObject):
-    frame_captured = qtc.pyqtSignal(np.ndarray, int)
+    frame_captured = qtc.pyqtSignal(np.ndarray, int, qtc.QObject)
+    read_failed = qtc.pyqtSignal(int)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -295,7 +334,12 @@ class CaptureStream(qtc.QObject):
             ret, frame = self.cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.frame_captured.emit(frame_rgb, self.uid)
+                self.frame_captured.emit(frame_rgb, self.uid, self.props)
+            else:
+                print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
+                self.read_failed.emit(self.uid)
+                self.cap_active = False
+                break
         self.cap.release()
 
     @qtc.pyqtSlot()
