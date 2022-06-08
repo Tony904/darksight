@@ -44,10 +44,16 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
          <widget class="QWidget" name="tab_recipe_builder">
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
           <attribute name="title">
            <string>Recipe Builder</string>
           </attribute>
@@ -1344,20 +1350,14 @@ Detection Zone</string>
                            </widget>
                           </item>
                           <item>
-                           <spacer name="spacer_vrt_frme_det_options">
-                            <property name="orientation">
-                             <enum>Qt::Vertical</enum>
+                           <widget class="QFrame" name="frame_2">
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
                             </property>
-                            <property name="sizeType">
-                             <enum>QSizePolicy::Minimum</enum>
+                            <property name="frameShadow">
+                             <enum>QFrame::Plain</enum>
                             </property>
-                            <property name="sizeHint" stdset="0">
-                             <size>
-                              <width>20</width>
-                              <height>40</height>
-                             </size>
-                            </property>
-                           </spacer>
+                           </widget>
                           </item>
                           <item>
                            <widget class="QFrame" name="frme_other_options">
@@ -1380,13 +1380,6 @@ Detection Zone</string>
                              <property name="bottomMargin">
                               <number>3</number>
                              </property>
-                             <item>
-                              <widget class="QCheckBox" name="chbx_combine_caps">
-                               <property name="text">
-                                <string>Combine Captures</string>
-                               </property>
-                              </widget>
-                             </item>
                              <item>
                               <widget class="QCheckBox" name="chbx_stitch_image">
                                <property name="sizePolicy">
@@ -1576,7 +1569,7 @@ Detection Zone</string>
                     <item>
                      <widget class="QFrame" name="frme_cam_settings">
                       <property name="sizePolicy">
-                       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
                         <horstretch>0</horstretch>
                         <verstretch>0</verstretch>
                        </sizepolicy>
@@ -1642,92 +1635,6 @@ Detection Zone</string>
                           <property name="bottomMargin">
                            <number>0</number>
                           </property>
-                          <item>
-                           <widget class="QFrame" name="frme_zoom_cap">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
-                            </property>
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Plain</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_cap">
-                             <property name="spacing">
-                              <number>3</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>3</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>1</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>1</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="lbl_static_zoom">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
-                               <property name="maximumSize">
-                                <size>
-                                 <width>16777215</width>
-                                 <height>20</height>
-                                </size>
-                               </property>
-                               <property name="text">
-                                <string>Zoom</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_cap">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
-                               <property name="maximumSize">
-                                <size>
-                                 <width>1000</width>
-                                 <height>20</height>
-                                </size>
-                               </property>
-                               <property name="decimals">
-                                <number>2</number>
-                               </property>
-                               <property name="minimum">
-                                <double>0.010000000000000</double>
-                               </property>
-                               <property name="maximum">
-                                <double>3.000000000000000</double>
-                               </property>
-                               <property name="singleStep">
-                                <double>0.100000000000000</double>
-                               </property>
-                               <property name="value">
-                                <double>1.000000000000000</double>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
                           <item>
                            <widget class="QFrame" name="frme_pause">
                             <property name="sizePolicy">
@@ -1808,77 +1715,6 @@ Detection Zone</string>
                                 </size>
                                </property>
                               </spacer>
-                             </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="frme_rotate_cap">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
-                            </property>
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Plain</enum>
-                            </property>
-                            <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap">
-                             <property name="spacing">
-                              <number>0</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QLabel" name="lbl_static_icon_rotate">
-                               <property name="maximumSize">
-                                <size>
-                                 <width>24</width>
-                                 <height>24</height>
-                                </size>
-                               </property>
-                               <property name="text">
-                                <string/>
-                               </property>
-                               <property name="pixmap">
-                                <pixmap>Resources/rotate_cw.jpg</pixmap>
-                               </property>
-                               <property name="scaledContents">
-                                <bool>true</bool>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QSpinBox" name="spbx_rotate_cap">
-                               <property name="sizePolicy">
-                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                 <horstretch>0</horstretch>
-                                 <verstretch>0</verstretch>
-                                </sizepolicy>
-                               </property>
-                               <property name="maximum">
-                                <number>270</number>
-                               </property>
-                               <property name="singleStep">
-                                <number>90</number>
-                               </property>
-                               <property name="value">
-                                <number>0</number>
-                               </property>
-                              </widget>
                              </item>
                             </layout>
                            </widget>
@@ -2974,33 +2810,11 @@ Detection Zone</string>
                             </property>
                            </widget>
                           </item>
-                          <item>
-                           <widget class="QCheckBox" name="chbx_enable_det">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
-                            </property>
-                            <property name="text">
-                             <string>Detection</string>
-                            </property>
-                            <property name="checked">
-                             <bool>true</bool>
-                            </property>
-                           </widget>
-                          </item>
                          </layout>
                         </widget>
                        </item>
                        <item>
                         <widget class="QFrame" name="frme_cam_view">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
                          <property name="frameShape">
                           <enum>QFrame::StyledPanel</enum>
                          </property>
@@ -3009,13 +2823,13 @@ Detection Zone</string>
                          </property>
                          <layout class="QVBoxLayout" name="layout_vrt_frme_cam_view">
                           <property name="spacing">
-                           <number>9</number>
+                           <number>1</number>
                           </property>
                           <property name="leftMargin">
                            <number>0</number>
                           </property>
                           <property name="topMargin">
-                           <number>9</number>
+                           <number>3</number>
                           </property>
                           <property name="rightMargin">
                            <number>0</number>
@@ -3024,7 +2838,173 @@ Detection Zone</string>
                            <number>0</number>
                           </property>
                           <item>
+                           <widget class="QFrame" name="frme_zoom_cap">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Plain</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_zoom_cap">
+                             <property name="spacing">
+                              <number>3</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>3</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>1</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>1</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="lbl_static_zoom">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>16777215</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>Zoom</string>
+                               </property>
+                               <property name="alignment">
+                                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QDoubleSpinBox" name="spbx_dbl_zoom_img">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>1000</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                               <property name="decimals">
+                                <number>2</number>
+                               </property>
+                               <property name="minimum">
+                                <double>0.010000000000000</double>
+                               </property>
+                               <property name="maximum">
+                                <double>3.000000000000000</double>
+                               </property>
+                               <property name="singleStep">
+                                <double>0.100000000000000</double>
+                               </property>
+                               <property name="value">
+                                <double>1.000000000000000</double>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="frme_rotate_cap">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Plain</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="layout_hrz_frme_rotate_cap">
+                             <property name="spacing">
+                              <number>0</number>
+                             </property>
+                             <property name="leftMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="topMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="rightMargin">
+                              <number>0</number>
+                             </property>
+                             <property name="bottomMargin">
+                              <number>0</number>
+                             </property>
+                             <item>
+                              <widget class="QLabel" name="lbl_static_icon_rotate">
+                               <property name="maximumSize">
+                                <size>
+                                 <width>24</width>
+                                 <height>24</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="pixmap">
+                                <pixmap>Resources/rotate_cw.jpg</pixmap>
+                               </property>
+                               <property name="scaledContents">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QSpinBox" name="spbx_rotate_img">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
+                               <property name="wrapping">
+                                <bool>true</bool>
+                               </property>
+                               <property name="maximum">
+                                <number>359</number>
+                               </property>
+                               <property name="singleStep">
+                                <number>1</number>
+                               </property>
+                               <property name="value">
+                                <number>0</number>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QLabel" name="lbl_static_pan">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <property name="font">
                              <font>
                               <pointsize>10</pointsize>
@@ -3064,6 +3044,12 @@ Detection Zone</string>
                              </property>
                              <item row="0" column="1">
                               <widget class="QPushButton" name="btn_pan_up">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>33</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
                                <property name="text">
                                 <string/>
                                </property>
@@ -3081,6 +3067,12 @@ Detection Zone</string>
                              </item>
                              <item row="1" column="0">
                               <widget class="QPushButton" name="btn_pan_left">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>0</width>
+                                 <height>24</height>
+                                </size>
+                               </property>
                                <property name="text">
                                 <string/>
                                </property>
@@ -3098,6 +3090,12 @@ Detection Zone</string>
                              </item>
                              <item row="1" column="2">
                               <widget class="QPushButton" name="btn_pan_right">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>0</width>
+                                 <height>24</height>
+                                </size>
+                               </property>
                                <property name="text">
                                 <string/>
                                </property>
@@ -3115,6 +3113,12 @@ Detection Zone</string>
                              </item>
                              <item row="2" column="1">
                               <widget class="QPushButton" name="btn_pan_down">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>33</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
                                <property name="text">
                                 <string/>
                                </property>
@@ -3130,225 +3134,11 @@ Detection Zone</string>
                                </property>
                               </widget>
                              </item>
-                            </layout>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QLabel" name="lbl_static_crop">
-                            <property name="font">
-                             <font>
-                              <pointsize>10</pointsize>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string>Crop</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignCenter</set>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QFrame" name="frme_crop_buttons">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
-                            </property>
-                            <property name="layoutDirection">
-                             <enum>Qt::LeftToRight</enum>
-                            </property>
-                            <property name="frameShape">
-                             <enum>QFrame::StyledPanel</enum>
-                            </property>
-                            <property name="frameShadow">
-                             <enum>QFrame::Plain</enum>
-                            </property>
-                            <layout class="QVBoxLayout" name="layout_vrt_frme_crop_buttons">
-                             <property name="spacing">
-                              <number>3</number>
-                             </property>
-                             <property name="leftMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="topMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="rightMargin">
-                              <number>0</number>
-                             </property>
-                             <property name="bottomMargin">
-                              <number>0</number>
-                             </property>
-                             <item>
-                              <widget class="QFrame" name="frme_crop_up_down">
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
+                             <item row="1" column="1">
+                              <widget class="QSpinBox" name="spbx_pan_inc">
+                               <property name="minimum">
+                                <number>1</number>
                                </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Plain</enum>
-                               </property>
-                               <layout class="QGridLayout" name="layout_grid_frme_crop_up_down">
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="verticalSpacing">
-                                 <number>0</number>
-                                </property>
-                                <item row="0" column="0">
-                                 <widget class="QPushButton" name="btn_crop_up">
-                                  <property name="minimumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>Resources/up_arrow.jpg</normaloff>Resources/up_arrow.jpg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="1" column="0">
-                                 <widget class="QPushButton" name="btn_crop_down">
-                                  <property name="minimumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>Resources/down_arrow.jpg</normaloff>Resources/down_arrow.jpg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
-                              </widget>
-                             </item>
-                             <item>
-                              <widget class="QFrame" name="frme_crop_left_right">
-                               <property name="frameShape">
-                                <enum>QFrame::StyledPanel</enum>
-                               </property>
-                               <property name="frameShadow">
-                                <enum>QFrame::Plain</enum>
-                               </property>
-                               <layout class="QHBoxLayout" name="layout_hrz_frme_crop_left_right">
-                                <property name="spacing">
-                                 <number>3</number>
-                                </property>
-                                <property name="leftMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="topMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="rightMargin">
-                                 <number>0</number>
-                                </property>
-                                <property name="bottomMargin">
-                                 <number>0</number>
-                                </property>
-                                <item>
-                                 <widget class="QPushButton" name="btn_crop_left">
-                                  <property name="minimumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>Resources/left_arrow.jpg</normaloff>Resources/left_arrow.jpg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item>
-                                 <widget class="QPushButton" name="btn_crop_right">
-                                  <property name="minimumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>30</width>
-                                    <height>30</height>
-                                   </size>
-                                  </property>
-                                  <property name="text">
-                                   <string/>
-                                  </property>
-                                  <property name="icon">
-                                   <iconset>
-                                    <normaloff>Resources/right_arrow.jpg</normaloff>Resources/right_arrow.jpg</iconset>
-                                  </property>
-                                  <property name="iconSize">
-                                   <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                   </size>
-                                  </property>
-                                 </widget>
-                                </item>
-                               </layout>
                               </widget>
                              </item>
                             </layout>
@@ -3358,6 +3148,9 @@ Detection Zone</string>
                            <spacer name="spacer_vrt_frme_cam_view">
                             <property name="orientation">
                              <enum>Qt::Vertical</enum>
+                            </property>
+                            <property name="sizeType">
+                             <enum>QSizePolicy::MinimumExpanding</enum>
                             </property>
                             <property name="sizeHint" stdset="0">
                              <size>
@@ -3793,6 +3586,9 @@ Network Size:</string>
           </layout>
          </widget>
          <widget class="QWidget" name="tab_cam_calib">
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
           <attribute name="title">
            <string>Camera Calibration</string>
           </attribute>
@@ -9234,7 +9030,7 @@ Network Size:</string>
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QLabel" name="label">
+               <widget class="QLabel" name="lbl_static_c1_cam_calib">
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
@@ -9246,7 +9042,7 @@ Network Size:</string>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="label_2">
+               <widget class="QLabel" name="lbl_static_c2_cam_calib">
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
@@ -9260,7 +9056,7 @@ Network Size:</string>
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QLabel" name="label_3">
+               <widget class="QLabel" name="lbl_static_c3_cam_calib">
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
@@ -9274,7 +9070,7 @@ Network Size:</string>
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QLabel" name="label_4">
+               <widget class="QLabel" name="lbl_static_c4_cam_calib">
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
@@ -9297,7 +9093,7 @@ Network Size:</string>
        <item>
         <widget class="QFrame" name="frme_main_pixmap">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -9309,29 +9105,122 @@ Network Size:</string>
           <enum>QFrame::Plain</enum>
          </property>
          <layout class="QVBoxLayout" name="layout_vrt_frme_main_pixmap">
+          <property name="spacing">
+           <number>9</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <widget class="QLabel" name="lbl_main_pixmap">
+           <widget class="QFrame" name="frme_main_pixmap_controls">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Ignored" vsizetype="Maximum">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>536</width>
-              <height>536</height>
-             </size>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>536</width>
-              <height>536</height>
-             </size>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
             </property>
-            <property name="text">
-             <string/>
+            <layout class="QHBoxLayout" name="layout_hrz_frme_pixmap_controls">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="chbx_show_full_image_inference">
+               <property name="text">
+                <string>Show Full Image Inference</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="spacer_hrz_main_pixmap_controls">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QScrollArea" name="scar_main_pixmap">
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOn</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOn</enum>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>602</width>
+               <height>510</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="layout_vrt_scar_main_pixmap">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lbl_main_pixmap">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap>../wip_watcher_project/bin_pictures/IMG_4721.JPG</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
