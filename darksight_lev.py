@@ -66,6 +66,26 @@ class MainWindow(qtw.QWidget):
         self._set_display_loop_connections()
         self._start_display_loop()
 
+    def _block_signals(func):
+        @functools.wraps(func)
+        def wrapper(*args):
+            print('Entered decator: _block_signals()')
+            args[0].blockSignals(True)
+            func(*args)
+            args[0].blockSignals(False)
+        return wrapper
+
+    def _set_event_handlers(self):
+        self.ui.lbl_main_pixmap.mouseMoveEvent = self.lbl_main_pixmap_mouseMoveEvent_handler
+        self.ui.lbl_main_pixmap.mouseReleaseEvent = self.lbl_main_pixmap_mouseReleaseEvent_handler
+
+    def lbl_main_pixmap_mouseMoveEvent_handler(self, e):
+        # print(e.pos())
+        pass
+
+    def lbl_main_pixmap_mouseReleaseEvent_handler(self, e):
+        pass
+
     def _init_connect_signals_to_slots(self):
         self.ui.btn_start_cap_2.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_2.text(), 0))
         self.ui.btn_start_cap_3.clicked.connect(lambda s: self.create_capture(self.ui.ledit_cam_index_3.text(), 1))
@@ -75,6 +95,78 @@ class MainWindow(qtw.QWidget):
         self.ui.btn_stop_cap_3.clicked.connect(lambda s: self.stop_capture(1))
         self.ui.btn_stop_cap_4.clicked.connect(lambda s: self.stop_capture(2))
         self.ui.btn_stop_cap_5.clicked.connect(lambda s: self.stop_capture(3))
+
+        self.ui.btn_pan_up.clicked.connect(
+            lambda s: self.update_active_cap_prop('pan', (0, -self.ui.spbx_pan_inc.value())))
+        self.ui.btn_pan_down.clicked.connect(
+            lambda s: self.update_active_cap_prop('pan', (0, self.ui.spbx_pan_inc.value())))
+        self.ui.btn_pan_left.clicked.connect(
+            lambda s: self.update_active_cap_prop('pan', (-self.ui.spbx_pan_inc.value(), 0)))
+        self.ui.btn_pan_right.clicked.connect(
+            lambda s: self.update_active_cap_prop('pan', (self.ui.spbx_pan_inc.value(), 0)))
+
+        self.ui.tabw_cam_settings.currentChanged.connect(self.cam_tab_changed)
+        self.ui.tabw_recipe_builder.currentChanged.connect(self.recipe_builder_tab_changed)
+
+    def cam_tab_changed(self, i):
+        for n in range(len(self.caps)):
+            if i == self.caps[n].uid:
+                self._load_cap_props_to_ui(i)
+                return 0
+        self.ui.ledit_cam_index.setText('')
+
+    def _load_cap_props_to_ui(self, uid):
+        for n in range(len(self.caps)):
+            if uid == self.caps[n].uid:
+                self._setText_no_signal(self.ui.ledit_cam_index, self.caps[n].props.c)
+                self._setValue_no_signal(self.ui.spbx_cap_focus, self.caps[n].props.focus)
+                if self.caps[n].props.autofocus == 1:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autofocus, True)
+                else:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autofocus, False)
+                self._setValue_no_signal(self.ui.spbx_cap_brightness, self.caps[n].props.brightness)
+                self._setValue_no_signal(self.ui.spbx_cap_contrast, self.caps[n].props.contrast)
+                self._setValue_no_signal(self.ui.spbx_cap_hue, self.caps[n].props.hue)
+                self._setValue_no_signal(self.ui.spbx_cap_saturation, self.caps[n].props.saturation)
+                self._setValue_no_signal(self.ui.spbx_cap_sharpness, self.caps[n].props.sharpness)
+                self._setValue_no_signal(self.ui.spbx_cap_gamma, self.caps[n].props.gamma)
+                self._setValue_no_signal(self.ui.spbx_cap_white, self.caps[n].props.white)
+                if self.caps[n].props.autowhite == 1:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autowhite, True)
+                else:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autowhite, False)
+                self._setValue_no_signal(self.ui.spbx_cap_backlight, self.caps[n].props.backlight)
+                self._setValue_no_signal(self.ui.spbx_cap_gain, self.caps[n].props.gain)
+                self._setValue_no_signal(self.ui.spbx_cap_exposure, self.caps[n].props.exposure)
+                if self.caps[n].props.autoexposure == 1:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, True)
+                else:
+                    self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, False)
+                self._setValue_no_signal(self.ui.spbx_dbl_zoom_img, self.caps[n].props.zoom)
+                self._setValue_no_signal(self.ui.spbx_rotate_img, self.caps[n].props.rotate)
+                self._setText_no_signal(self.ui.ledit_cap_width, self.caps[n].props.width)
+                self._setText_no_signal(self.ui.ledit_cap_height, self.caps[n].props.height)
+            break
+
+    @staticmethod
+    @_block_signals
+    def _setValue_no_signal(widget, value):
+        widget.setValue(value)
+
+    @staticmethod
+    @_block_signals
+    def _setChecked_no_signal(widget, state):
+        widget.setChecked(state)
+
+    @staticmethod
+    @_block_signals
+    def _setText_no_signal(widget, text):
+        widget.setText(str(text))
+
+    @qtc.pyqtSlot(int)
+    def recipe_builder_tab_changed(self, i):
+        if i == 0:  # tab_recipe_builder is at tab index 0
+            self.cam_tab_changed(self.ui.tabw_cam_settings.currentIndex())
 
     def _load_darknet(self):
         cfg_file = self.ui.ledit_cfg_file
@@ -146,6 +238,7 @@ class MainWindow(qtw.QWidget):
         self.ui.spbx_cap_saturation.valueChanged.connect(lambda x: self.update_active_cap_prop('satruation', x))
         self.ui.spbx_cap_sharpness.valueChanged.connect(lambda x: self.update_active_cap_prop('sharpness', x))
         self.ui.spbx_cap_white.valueChanged.connect(lambda x: self.update_active_cap_prop('white', x))
+        self.ui.spbx_dbl_zoom_img.valueChanged.connect(lambda x: self.update_active_cap_prop('zoom', x))
 
     def _set_display_loop_connections(self):
         self.display_pixmap_set.connect(self.display_manager.request_display_params)
@@ -219,8 +312,11 @@ class MainWindow(qtw.QWidget):
                 break
 
     def update_active_cap_prop(self, prop, x):
-        i = self.ui.tabw_cam_settings.currentIndex()
-        self.caps[i].update_prop(prop, x)
+        uid = self.ui.tabw_cam_settings.currentIndex()
+        for n in range(len(self.caps)):
+            if uid == self.caps[n].uid:
+                self.caps[n].update_prop(prop, x)
+                break
 
     def set_pixmap(self, qimg):
         if qimg is not None:
@@ -258,27 +354,30 @@ class DisplayDrawer(qtc.QObject):
         for part in self.parts:
             if part is not None:
                 uid = part[1]
-                wd2 = self.window_w // 2
-                hd2 = self.window_h // 2
-                resized = imut.scale_by_largest_dim(part[0], wd2, hd2)
-                pw = resized.shape[1]
-                ph = resized.shape[0]
+                max_pw = self.window_w // 2
+                max_ph = self.window_h // 2
+                pimg = imut.scale_by_largest_dim(part[0], max_pw, max_ph)
+                pw = pimg.shape[1]
+                ph = pimg.shape[0]
+                pimg = cv2.resize(pimg, (0, 0), fx=part[2].zoom, fy=part[2].zoom, interpolation=cv2.INTER_LINEAR)
+                pimg = imut.crop_image_centered(pimg, pw, ph, x_offset=part[2].pan[0], y_offset=part[2].pan[1])
+                ph, pw, _ = pimg.shape
                 if uid == self.uid_order[0]:
                     # put part in top left
                     top, bottom, left, right = 0, ph, 0, pw
-                    self.display_ndarray[top:bottom, left:right] = resized
+                    self.display_ndarray[top:bottom, left:right] = pimg
                 elif uid == self.uid_order[1]:
                     # put part in top right
-                    top, bottom, left, right = 0, ph, wd2, wd2 + pw
-                    self.display_ndarray[top:bottom, left:right] = resized
+                    top, bottom, left, right = 0, ph, max_pw, max_pw + pw
+                    self.display_ndarray[top:bottom, left:right] = pimg
                 elif uid == self.uid_order[2]:
                     # put part in bottom left
-                    top, bottom, left, right = hd2, hd2 + ph, 0, pw
-                    self.display_ndarray[top:bottom, left:right] = resized
+                    top, bottom, left, right = max_ph, max_ph + ph, 0, pw
+                    self.display_ndarray[top:bottom, left:right] = pimg
                 elif uid == self.uid_order[3]:
                     # put part in bottom right
-                    top, bottom, left, right = hd2, hd2 + ph, pw, self.window_w
-                    self.display_ndarray[top:bottom, left:right] = resized
+                    top, bottom, left, right = max_ph, max_ph + ph, max_pw, max_pw + pw
+                    self.display_ndarray[top:bottom, left:right] = pimg
         data = self.display_ndarray.data
         cols = self.display_ndarray.shape[1]
         rows = self.display_ndarray.shape[0]
@@ -429,7 +528,9 @@ class CaptureStream(qtc.QObject):
         elif prop == 'crop':
             self.props.crop = x
         elif prop == 'pan':
-            self.props.pan = x
+            pan_x = x[0] + self.props.pan[0]
+            pan_y = x[1] + self.props.pan[1]
+            self.props.pan = (pan_x, pan_y)
 
     def stop(self):
         print("Stopped CaptureStream: " + str(self.uid))
@@ -445,7 +546,7 @@ class CaptureProperties(qtc.QObject):
         self.height = 4000
         self.focus = 300.
         self.autofocus = 1  # 2 = disabled, 1 = enabled
-        self.brightness = 0
+        self.brightness = 50
         self.contrast = 32
         self.hue = 0
         self.saturation = 64
@@ -460,7 +561,7 @@ class CaptureProperties(qtc.QObject):
 
         self.zoom = 1.
         self.rotate = 0
-        self.pan = (0, 0)  # (row, col) center of output view
+        self.pan = (0, 0)  # (x, y) offset from center of output view
 
 
 if __name__ == "__main__":

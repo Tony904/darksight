@@ -2681,7 +2681,7 @@ Detection Zone</string>
                                    <enum>Qt::LeftToRight</enum>
                                   </property>
                                   <property name="text">
-                                   <string>8</string>
+                                   <string>3</string>
                                   </property>
                                   <property name="alignment">
                                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -9208,14 +9208,14 @@ Network Size:</string>
               </property>
               <item>
                <widget class="QLabel" name="lbl_main_pixmap">
+                <property name="mouseTracking">
+                 <bool>true</bool>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
                 <property name="pixmap">
                  <pixmap>../wip_watcher_project/bin_pictures/IMG_4721.JPG</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
                 </property>
                </widget>
               </item>
