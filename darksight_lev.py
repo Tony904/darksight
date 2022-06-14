@@ -10,7 +10,6 @@ import functools
 import image_utils as imut
 import my_utils as mut
 from class_inference_manager import InferenceManager
-from class_emitter import Emitter
 from class_inference import Inference
 from class_detections_drawer import DetectionsDrawer
 from darksight_lev_designer import Ui_form_main_lev
@@ -28,7 +27,7 @@ class MainApp(qtw.QApplication):
 class MainWindow(qtw.QWidget):
     run_capture = qtc.pyqtSignal()
     initiate_inference = qtc.pyqtSignal()
-    send_img_to_manager = qtc.pyqtSignal(int, np.ndarray, Emitter)
+    # send_img_to_manager = qtc.pyqtSignal(int, np.ndarray, Emitter)
     send_det_to_manager = qtc.pyqtSignal(int, list)
     send_inf_state_to_manager = qtc.pyqtSignal(bool)
     send_draw_state_to_manager = qtc.pyqtSignal(bool)
@@ -47,7 +46,7 @@ class MainWindow(qtw.QWidget):
         self.cap_qthreads = []
         self.det_drawers = []
         self.drawer_qthreads = []
-        self.emitters = []
+        # self.emitters = []
 
         self._init_connect_signals_to_slots()
 
@@ -69,7 +68,6 @@ class MainWindow(qtw.QWidget):
     def _block_signals(func):
         @functools.wraps(func)
         def wrapper(*args):
-            print('Entered decator: _block_signals()')
             args[0].blockSignals(True)
             func(*args)
             args[0].blockSignals(False)
@@ -182,10 +180,10 @@ class MainWindow(qtw.QWidget):
             drawer_qthread = qtc.QThread()
             drawer.moveToThread(drawer_qthread)
             drawer_qthread.start()
-            emitter = Emitter()
-            emitter.emitter_signal.connect(drawer.run)
+            # emitter = Emitter()
+            # emitter.emitter_signal.connect(drawer.run)
             drawer.detections_drawn.connect(self.display_handler)
-            self.emitters.append(emitter)
+            # self.emitters.append(emitter)
             self.det_drawers.append(drawer)
             self.drawer_qthreads.append(drawer_qthread)
 
@@ -416,21 +414,11 @@ class DisplayManager(qtc.QObject):
         self.queue[uid] = None
         print("Queue index cleared: uid=" + str(uid))
 
-    # @qtc.pyqtSlot(int, int)
-    # def update_window_size(self, window_w, window_h):
-    #     self.window_w = window_w
-    #     self.window_h = window_h
-    #
-    # @qtc.pyqtSlot(list)
-    # def update_uid_order(self, uid_order):
-    #     self.uid_order = list(uid_order)
-
     @qtc.pyqtSlot(int, int, list)
     def set_display_params(self, w, h, uid_order):
         self.window_w = w
         self.window_h = h
         self.uid_order = list(uid_order)
-
         self._send_display_params_to_drawer()
 
     @qtc.pyqtSlot()
