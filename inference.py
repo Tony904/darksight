@@ -11,8 +11,9 @@ class InferenceQueue(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.queue = []
+        self.queue = []  # element = (uid, ndarray)
         self.stop = False
+        self.thresh = .5
 
     @qtc.pyqtSlot(int, np.ndarray)
     def update_queue(self, uid, ndarr):
@@ -21,7 +22,7 @@ class InferenceQueue(qtc.QObject):
             if self.queue[i][0] == uid:
                 print("Updating img queue. index: " + str(i))
                 new_entry = False
-                tpl = (self.queue[i][0], ndarr.copy(), self.queue[i][2])
+                tpl = (self.queue[i][0], ndarr.copy())
                 self.queue[i] = tpl
                 break
         if new_entry:
@@ -40,16 +41,19 @@ class InferenceQueue(qtc.QObject):
     def stop_inference(self):
         self.stop = True
 
+    def update_param(self, param, x):
+        if param == 'thresh':
+            self.thresh = x
+
 
 class Inference(qtc.QObject):
     completed = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.thresh = 0.5
 
     @qtc.pyqtSlot()
-    def run(self, queue):
+    def run(self, queue, thresh):
         queue = list(queue)
         outputs = []  # element = tuple(uid, ndarr, detections)
         for uid, ndarr in queue:
@@ -57,7 +61,7 @@ class Inference(qtc.QObject):
             padded, pad_bottom, pad_right = imut.pad_image_to_square(scaled)
             img = darknet.make_image(gbs.darknet_w, gbs.darknet_h, 3)
             darknet.copy_image_from_bytes(img, padded.tobytes())
-            detections = darknet.detect_image(gbs.network, gbs.class_names, img, self.thresh)
+            detections = darknet.detect_image(gbs.network, gbs.class_names, img, thresh)
             detections = self._get_relative_unpadded_detections(detections, pad_bottom, pad_right)
             outputs.append((uid, ndarr, detections))
             darknet.free_image(img)
@@ -79,19 +83,12 @@ class Inference(qtc.QObject):
             adjusted_detections.append(adjusted_detection)
         return adjusted_detections
 
-    # not used at the moment
-    def update_param(self, param, x):
-        if param == 'thresh':
-            self.thresh = x
-
 
 class InferenceDrawer(qtc.QObject):
     completed = qtc.pyqtSignal(np.ndarray)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.dst_h = None
-        self.dst_w = None
 
     @qtc.pyqtSlot(tuple)
     def run(self, inference_output):
@@ -99,23 +96,24 @@ class InferenceDrawer(qtc.QObject):
         outputs = []
         for element in inference_output:
             uid, ndarr, detections = element
-            self.dst_h, self.dst_w, _ = ndarr.shape
+            dst_h, dst_w, _ = ndarr.shape
             color = (0, 0, 255)
             for label, confidence, bbox in detections:
                 print(str(label) + ": " + str(confidence))
-                left, top, right, bottom = self._relative_to_abs_rect(bbox)
+                left, top, right, bottom = self._relative_to_abs_rect(bbox, dst_w, dst_h)
                 cv2.rectangle(ndarr, (left, top), (right, bottom), color, 1)
                 cv2.putText(ndarr, "{} [{:.0f}]".format(label, float(confidence)), (left, top - 5),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
             outputs.append((uid, ndarr, detections))
         self.completed.emit(outputs)
 
-    def _relative_to_abs_rect(self, bbox):
+    @staticmethod
+    def _relative_to_abs_rect(bbox, dst_w, dst_h):
         x, y, w, h = bbox
-        abs_x = x * self.dst_w
-        abs_y = y * self.dst_h
-        abs_w = w * self.dst_w
-        abs_h = h * self.dst_h
+        abs_x = x * dst_w
+        abs_y = y * dst_h
+        abs_w = w * dst_w
+        abs_h = h * dst_h
         left = int(abs_x - (abs_w / 2))
         top = int(abs_y - (abs_h / 2))
         right = int(abs_x + (abs_w / 2))

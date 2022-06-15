@@ -11,27 +11,23 @@ class DisplayManager(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.queue = [None, None, None, None]  # element = (ndarray, uid, CaptureProperties)
+        self.queue = [None, None, None, None]  # element = (ndarray, CaptureProperties)
         self.window_w = None
         self.window_h = None
 
     @qtc.pyqtSlot(np.ndarray, int, qtc.QObject)
     def update_queue(self, uid, ndarr, props):
         if ndarr is not None:
-            tpl = (uid, ndarr, props)
+            tpl = (ndarr, props)
             self.queue[uid] = tpl
         else:
             self.queue[uid] = None
-            print("DisplayerManager queue index cleared: uid=" + str(uid))
+            print("DisplayerManager queue index cleared: uid = " + str(uid))
 
     @qtc.pyqtSlot(int, int, list)
     def update_params(self, w, h):
         self.window_w = w
         self.window_h = h
-
-    @qtc.pyqtSlot()
-    def request_display_params(self):
-        self.display_params_update_requested.emit()
 
 
 class DisplayDrawer(qtc.QObject):
@@ -39,7 +35,6 @@ class DisplayDrawer(qtc.QObject):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.caps = []  # element = (ndarray, uid, CaptureProperties)
         self.ndarray_dtype = np.uint8
 
     @qtc.pyqtSlot(list, int, int)
