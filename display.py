@@ -15,16 +15,28 @@ class DisplayManager(qtc.QObject):
         self.window_w = None
         self.window_h = None
 
-    @qtc.pyqtSlot(np.ndarray, int, qtc.QObject)
-    def update_queue(self, uid, ndarr, props):
+    @qtc.pyqtSlot()
+    def run_drawer(self):
+        self.run_drawer.emit(self.queue, self.window_w, self.window_h)
+
+    @qtc.pyqtSlot(int, np.ndarray, qtc.QObject)
+    def update_queue_by_index(self, uid, ndarr, props):
+        self._update_queue((uid, ndarr, props))
+
+    @qtc.pyqtSlot(list)
+    def update_queue_by_list(self, inference_output):
+        for i in inference_output:
+            self._update_queue(i)
+
+    def _update_queue(self, tpl):
+        uid, ndarr, obj = tpl
         if ndarr is not None:
-            tpl = (ndarr, props)
-            self.queue[uid] = tpl
+            t = (ndarr, obj)
+            self.queue[uid] = t
         else:
             self.queue[uid] = None
-            print("DisplayerManager queue index cleared: uid = " + str(uid))
 
-    @qtc.pyqtSlot(int, int, list)
+    @qtc.pyqtSlot(int, int)
     def update_params(self, w, h):
         self.window_w = w
         self.window_h = h

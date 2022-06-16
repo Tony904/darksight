@@ -9,9 +9,9 @@ import numpy as np
 import functools
 import image_utils as imut
 import my_utils as mut
-from class_inference_manager import InferenceManager
-from class_inference import Inference
-from class_detections_drawer import DetectionsDrawer
+from capture import CaptureStream, CaptureProperties
+from inference import Inference, InferenceManager, InferenceDrawer
+from display import DisplayManager, DisplayDrawer
 from darksight_lev_designer import Ui_form_main_lev
 
 
@@ -27,13 +27,10 @@ class MainApp(qtw.QApplication):
 class MainWindow(qtw.QWidget):
     run_capture = qtc.pyqtSignal()
     initiate_inference = qtc.pyqtSignal()
-    # send_img_to_manager = qtc.pyqtSignal(int, np.ndarray, Emitter)
     send_det_to_manager = qtc.pyqtSignal(int, list)
     send_inf_state_to_manager = qtc.pyqtSignal(bool)
     send_draw_state_to_manager = qtc.pyqtSignal(bool)
     display_pixmap_set = qtc.pyqtSignal()
-    # send_window_size_to_display_manager = qtc.pyqtSignal(int, int)
-    # send_uid_order_to_display_manager = qtc.pyqtSignal(list)
     display_params_emitted = qtc.pyqtSignal(int, int, list)
 
     def __init__(self, *args, **kwargs):
@@ -46,7 +43,6 @@ class MainWindow(qtw.QWidget):
         self.cap_qthreads = []
         self.det_drawers = []
         self.drawer_qthreads = []
-        # self.emitters = []
 
         self._init_connect_signals_to_slots()
 
@@ -176,31 +172,28 @@ class MainWindow(qtw.QWidget):
         gbs.darknet_h = darknet.network_height(gbs.network)
 
         for n in range(len(self.caps)):
-            drawer = DetectionsDrawer()
-            drawer_qthread = qtc.QThread()
-            drawer.moveToThread(drawer_qthread)
-            drawer_qthread.start()
-            # emitter = Emitter()
-            # emitter.emitter_signal.connect(drawer.run)
-            drawer.detections_drawn.connect(self.display_handler)
-            # self.emitters.append(emitter)
-            self.det_drawers.append(drawer)
-            self.drawer_qthreads.append(drawer_qthread)
+            inf_drawer = InferenceDrawer()
+            inf_drawer_qthread = qtc.QThread()
+            inf_drawer.moveToThread(inf_drawer_qthread)
+            inf_drawer_qthread.start()
+            inf_drawer.completed.connect(self.display_handler)
+            self.det_drawers.append(inf_drawer)
+            self.drawer_qthreads.append(inf_drawer_qthread)
 
         self.inference = Inference()
         self.inference_qthread = qtc.QThread()
         self.inference.moveToThread(self.inference_qthread)
         self.inference_qthread.start()
 
-        self.infer_manager = InferenceManager()
-        self.infer_manager.run_inference.connect(self.inference.run)
-        self.infer_manager.emit_inference_packages.connect(self.inference.update_packages)
-        self.infer_manager.inference_initiation_requested.connect(self.inference.initiate)
-        self.inference.inference_packages_update_requested.connect(self.infer_manager.send_inference_packages)
-        self.inference.inference_packages_updated.connect(self.infer_manager.request_inference_start)
-        self.inference.inference_complete.connect(self.infer_manager.inference_completed)
+        self.inf_manager = InferenceManager()
+        self.inf_manager.run_inference.connect(self.inference.run)
+        self.inf_manager.emit_inference_packages.connect(self.inference.update_packages)
+        self.inf_manager.inference_initiation_requested.connect(self.inference.initiate)
+        self.inference.inference_packages_update_requested.connect(self.inf_manager.send_inference_packages)
+        self.inference.inference_packages_updated.connect(self.inf_manager.request_inference_start)
+        self.inference.inference_complete.connect(self.inf_manager.inference_completed)
 
-        self.send_inf_package_to_manager.connect(self.infer_manager.update_inference_queue)
+        self.send_inf_package_to_manager.connect(self.inf_manager.update_inference_queue)
 
         self.initiate_inference.connect(self.inference.initiate)
         self.initiate_inference.emit()
@@ -330,226 +323,6 @@ class MainWindow(qtw.QWidget):
         uid_order = [0, 1, 2, 3]
         # self.send_uid_order_to_display_manager.emit(uid_order)
         self.display_params_emitted.emit(w, h, uid_order)
-
-
-class DisplayDrawer(qtc.QObject):
-    updated = qtc.pyqtSignal()
-    qimg_completed = qtc.pyqtSignal(qtg.QImage)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.parts = []  # part=(ndarray, uid, CaptureProperties)
-        self.window_w = None
-        self.window_h = None
-        self.uid_order = []  # element=int
-
-        self.ndarray_dtype = np.uint8
-        self.display_ndarray = None
-        self.display_qimg = None
-
-    @qtc.pyqtSlot()
-    def run(self):
-        for part in self.parts:
-            if part is not None:
-                uid = part[1]
-                max_pw = self.window_w // 2
-                max_ph = self.window_h // 2
-                pimg = imut.scale_by_largest_dim(part[0], max_pw, max_ph)
-                pw = pimg.shape[1]
-                ph = pimg.shape[0]
-                pimg = cv2.resize(pimg, (0, 0), fx=part[2].zoom, fy=part[2].zoom, interpolation=cv2.INTER_LINEAR)
-                pimg = imut.crop_image_centered(pimg, pw, ph, x_offset=part[2].pan[0], y_offset=part[2].pan[1])
-                ph, pw, _ = pimg.shape
-                if uid == self.uid_order[0]:
-                    # put part in top left
-                    top, bottom, left, right = 0, ph, 0, pw
-                    self.display_ndarray[top:bottom, left:right] = pimg
-                elif uid == self.uid_order[1]:
-                    # put part in top right
-                    top, bottom, left, right = 0, ph, max_pw, max_pw + pw
-                    self.display_ndarray[top:bottom, left:right] = pimg
-                elif uid == self.uid_order[2]:
-                    # put part in bottom left
-                    top, bottom, left, right = max_ph, max_ph + ph, 0, pw
-                    self.display_ndarray[top:bottom, left:right] = pimg
-                elif uid == self.uid_order[3]:
-                    # put part in bottom right
-                    top, bottom, left, right = max_ph, max_ph + ph, max_pw, max_pw + pw
-                    self.display_ndarray[top:bottom, left:right] = pimg
-        data = self.display_ndarray.data
-        cols = self.display_ndarray.shape[1]
-        rows = self.display_ndarray.shape[0]
-        stride = self.display_ndarray.strides[0]
-        self.display_qimg = qtg.QImage(data, cols, rows, stride, qtg.QImage.Format_RGB888)
-        self.qimg_completed.emit(self.display_qimg)
-
-    @qtc.pyqtSlot(list, int, int, list)
-    def apply_update(self, parts, window_w, window_h, uid_order):
-        self.parts = list(parts)
-        self.window_w = window_w
-        self.window_h = window_h
-        self.display_ndarray = np.zeros((window_h, window_w, 3), dtype=self.ndarray_dtype)
-        self.uid_order = list(uid_order)
-        self.updated.emit()
-
-
-class DisplayManager(qtc.QObject):
-    display_drawer_update_emitted = qtc.pyqtSignal(list, int, int, list)
-    display_params_update_requested = qtc.pyqtSignal()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.queue = [None, None, None, None]  # element=(ndarray, uid, CaptureProperties)
-        self.window_w = None
-        self.window_h = None
-        self.uid_order = [0, 1, 2, 3]  # top-left, top-right, bottom-left, bottom-right
-
-    @qtc.pyqtSlot(np.ndarray, int, qtc.QObject)
-    def update_queue(self, ndarr, uid, props):
-        tpl = (ndarr, uid, props)
-        self.queue[uid] = tpl
-
-    @qtc.pyqtSlot(int)
-    def clear_queue_index(self, uid):
-        self.queue[uid] = None
-        print("Queue index cleared: uid=" + str(uid))
-
-    @qtc.pyqtSlot(int, int, list)
-    def set_display_params(self, w, h, uid_order):
-        self.window_w = w
-        self.window_h = h
-        self.uid_order = list(uid_order)
-        self._send_display_params_to_drawer()
-
-    @qtc.pyqtSlot()
-    def request_display_params(self):
-        self.display_params_update_requested.emit()
-
-    def _send_display_params_to_drawer(self):
-        self.display_drawer_update_emitted.emit(self.queue, self.window_w, self.window_h, self.uid_order)
-
-
-class CaptureStream(qtc.QObject):
-    frame_captured = qtc.pyqtSignal(np.ndarray, int, qtc.QObject)
-    read_failed = qtc.pyqtSignal(int)
-    deletion_requested = qtc.pyqtSignal(int)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.props = CaptureProperties()
-        self.cap_active = False
-        self.cap = None
-        self.uid = None
-        print("New CaptureStream instance created.")
-
-    @qtc.pyqtSlot()
-    def run(self):
-        print("CaptureStream run() executed. uid=" + str(self.uid))
-        self.cap = cv2.VideoCapture(self.props.c, cv2.CAP_DSHOW)
-        self.cap_active = True
-        while self.cap.isOpened() and self.cap_active:
-            ret, frame = self.cap.read()
-            if ret:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.frame_captured.emit(frame_rgb, self.uid, self.props)
-            else:
-                print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
-                self.read_failed.emit(self.uid)
-                self.cap_active = False
-                break
-        self.cap.release()
-        if not self.cap_active:
-            self.deletion_requested.emit(self.uid)
-
-    @qtc.pyqtSlot()
-    def update_prop(self, prop, x):
-        print("Updating prop: " + prop + " x=" + str(x))
-        if prop == 'autofocus':
-            self.cap.set(cv2.CAP_PROP_AUTOFOCUS, x)
-            self.props.autofocus = self.cap.get(cv2.CAP_PROP_AUTOFOCUS)
-        elif prop == 'autoexposure':
-            self.cap.set(cv2.CAP_PROP_AUTOFOCUS, x)
-            self.props.autoexposure = self.cap.get(cv2.CAP_PROP_AUTO_EXPOSURE)
-        elif prop == 'autowhite':
-            self.cap.set(cv2.CAP_PROP_AUTO_WB, x)
-            self.props.autowhite = self.cap.get(cv2.CAP_PROP_AUTO_WB)
-        elif prop == 'focus':
-            self.cap.set(cv2.CAP_PROP_FOCUS, x)
-            self.props.focus = self.cap.get(cv2.CAP_PROP_FOCUS)
-        elif prop == 'exposure':
-            if not self.props.autoexposure:
-                self.cap.set(cv2.CAP_PROP_EXPOSURE, x)
-                self.props.exposure = self.cap.get(cv2.CAP_PROP_EXPOSURE)
-        elif prop == 'backlight':
-            self.cap.set(cv2.CAP_PROP_BACKLIGHT, x)
-            self.props.backlight = self.cap.get(cv2.CAP_PROP_BACKLIGHT)
-        elif prop == 'sharpness':
-            self.cap.set(cv2.CAP_PROP_SHARPNESS, x)
-            self.props.sharpness = self.cap.get(cv2.CAP_PROP_SHARPNESS)
-        elif prop == 'brightness':
-            self.cap.set(cv2.CAP_PROP_BRIGHTNESS, x)
-            self.props.brightness = self.cap.get(cv2.CAP_PROP_BRIGHTNESS)
-        elif prop == 'contrast':
-            self.cap.set(cv2.CAP_PROP_CONTRAST, x)
-            self.props.contrast = self.cap.get(cv2.CAP_PROP_CONTRAST)
-        elif prop == 'gain':
-            self.cap.set(cv2.CAP_PROP_GAIN, x)
-            self.props.gain = self.cap.get(cv2.CAP_PROP_GAIN)
-        elif prop == 'gamma':
-            self.cap.set(cv2.CAP_PROP_GAMMA, x)
-            self.props.gamma = self.cap.get(cv2.CAP_PROP_GAMMA)
-        elif prop == 'hue':
-            self.cap.set(cv2.CAP_PROP_HUE, x)
-            self.props.hue = self.cap.get(cv2.CAP_PROP_HUE)
-        elif prop == 'saturation':
-            self.cap.set(cv2.CAP_PROP_SATURATION, x)
-            self.props.saturation = self.cap.get(cv2.CAP_PROP_SATURATION)
-        elif prop == 'white':
-            if not self.props.autowhite:
-                self.cap.set(cv2.CAP_PROP_WHITE_BALANCE_BLUE_U, x)
-                self.cap.set(cv2.CAP_PROP_WHITE_BALANCE_RED_V, x)
-                self.props.white = self.cap.get(cv2.CAP_PROP_WHITE_BALANCE_RED_V)
-        elif prop == 'zoom':
-            self.props.zoom = x
-        elif prop == 'rotate':
-            self.props.rotate = x
-        elif prop == 'crop':
-            self.props.crop = x
-        elif prop == 'pan':
-            pan_x = x[0] + self.props.pan[0]
-            pan_y = x[1] + self.props.pan[1]
-            self.props.pan = (pan_x, pan_y)
-
-    def stop(self):
-        print("Stopped CaptureStream: " + str(self.uid))
-        self.cap_active = False
-
-
-class CaptureProperties(qtc.QObject):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.c = -1
-        self.width = 5000
-        self.height = 4000
-        self.focus = 300.
-        self.autofocus = 1  # 2 = disabled, 1 = enabled
-        self.brightness = 50
-        self.contrast = 32
-        self.hue = 0
-        self.saturation = 64
-        self.sharpness = 3
-        self.gamma = 100
-        self.white = 4600
-        self.autowhite = 1
-        self.backlight = 1
-        self.gain = 0
-        self.exposure = -6
-        self.autoexposure = 1  # if disabled, must be re-enabled in AMcap software
-
-        self.zoom = 1.
-        self.rotate = 0
-        self.pan = (0, 0)  # (x, y) offset from center of output view
 
 
 if __name__ == "__main__":

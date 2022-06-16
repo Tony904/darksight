@@ -6,7 +6,7 @@ import globals as gbs
 import cv2
 
 
-class InferenceQueue(qtc.QObject):
+class InferenceManager(qtc.QObject):
     run_inference = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
@@ -41,6 +41,7 @@ class InferenceQueue(qtc.QObject):
     def stop_inference(self):
         self.stop = True
 
+    @qtc.pyqtSlot()
     def update_param(self, param, x):
         if param == 'thresh':
             self.thresh = x
