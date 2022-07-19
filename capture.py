@@ -25,7 +25,7 @@ class CaptureStream(qtc.QObject):
             ret, frame = self.cap.read()
             if ret:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.frame_captured.emit(frame_rgb, self.uid, self.props)
+                self.frame_captured.emit(self.uid, frame_rgb, self.props.copy())
             else:
                 print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
                 self.read_failed.emit(self.uid)
@@ -124,3 +124,27 @@ class CaptureProperties(qtc.QObject):
         self.zoom = 1.
         self.rotate = 0
         self.pan = (0, 0)  # (x, y) offset from center of output view
+
+    def copy(self):
+        cpy = CaptureProperties()
+        cpy.c = self.c
+        cpy.width = self.width
+        cpy.height = self.height
+        cpy.focus = self.focus
+        cpy.autofocus = self.autofocus
+        cpy.brightness = self.brightness
+        cpy.contrast = self.contrast
+        cpy.hue = self.hue
+        cpy.saturation = self.saturation
+        cpy.sharpness = self.sharpness
+        cpy.gamma = self.gamma
+        cpy.white = self.white
+        cpy.autowhite = self.autowhite
+        cpy.backlight = self.backlight
+        cpy.gain = self.gain
+        cpy.exposure = self.exposure
+        cpy.autoexposure = self.autoexposure
+        cpy.zoom = self.zoom
+        cpy.rotate = self.rotate
+        cpy.pan = self.pan
+        return cpy

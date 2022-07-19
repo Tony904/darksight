@@ -6,47 +6,6 @@ import globals as gbs
 import cv2
 
 
-class InferenceManager(qtc.QObject):
-    run_inference = qtc.pyqtSignal()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.queue = []  # element = (uid, ndarray)
-        self.stop = False
-        self.thresh = .5
-
-    @qtc.pyqtSlot(int, np.ndarray)
-    def update_queue(self, uid, ndarr):
-        new_entry = True
-        for i in range(len(self.queue)):
-            if self.queue[i][0] == uid:
-                print("Updating img queue. index: " + str(i))
-                new_entry = False
-                tpl = (self.queue[i][0], ndarr.copy())
-                self.queue[i] = tpl
-                break
-        if new_entry:
-            print("Adding new entry into queue")
-            self.queue.append((uid, ndarr.copy()))
-
-    @qtc.pyqtSlot()
-    def run_inference(self):
-        if not self.stop:
-            self.run_inference.emit(self.queue)
-            print("InferenceManager emitted: run_inference")
-        else:
-            print('InferenceManager: Inference stopped.')
-
-    @qtc.pyqtSlot()
-    def stop_inference(self):
-        self.stop = True
-
-    @qtc.pyqtSlot()
-    def update_param(self, param, x):
-        if param == 'thresh':
-            self.thresh = x
-
-
 class Inference(qtc.QObject):
     completed = qtc.pyqtSignal()
 
@@ -54,18 +13,19 @@ class Inference(qtc.QObject):
         super().__init__(*args, **kwargs)
 
     @qtc.pyqtSlot()
-    def run(self, queue, thresh):
-        queue = list(queue)
-        outputs = []  # element = tuple(uid, ndarr, detections)
-        for uid, ndarr in queue:
-            scaled = imut.scale_by_largest_dim(ndarr, gbs.darknet_w, gbs.darknet_h)
-            padded, pad_bottom, pad_right = imut.pad_image_to_square(scaled)
-            img = darknet.make_image(gbs.darknet_w, gbs.darknet_h, 3)
-            darknet.copy_image_from_bytes(img, padded.tobytes())
-            detections = darknet.detect_image(gbs.network, gbs.class_names, img, thresh)
-            detections = self._get_relative_unpadded_detections(detections, pad_bottom, pad_right)
-            outputs.append((uid, ndarr, detections))
-            darknet.free_image(img)
+    def run(self, ndarrs, thresh):
+        outputs = []  # element = tuple(uid, detections)
+        for ndarr in ndarrs:
+            detections = None
+            if ndarr is not None:
+                scaled = imut.scale_by_largest_dim(ndarr, gbs.darknet_w, gbs.darknet_h)
+                padded, pad_bottom, pad_right = imut.pad_image_to_square(scaled)
+                img = darknet.make_image(gbs.darknet_w, gbs.darknet_h, 3)
+                darknet.copy_image_from_bytes(img, padded.tobytes())
+                detections = darknet.detect_image(gbs.network, gbs.class_names, img, thresh)
+                detections = self._get_relative_unpadded_detections(detections, pad_bottom, pad_right)
+                darknet.free_image(img)
+            outputs.append(detections)
         self.completed.emit(outputs)
 
     @staticmethod

@@ -10,8 +10,9 @@ import functools
 import image_utils as imut
 import my_utils as mut
 from capture import CaptureStream, CaptureProperties
-from inference import Inference, InferenceManager, InferenceDrawer
-from display import DisplayManager, DisplayDrawer
+from inference import Inference
+from display import DisplayDrawer
+from conductor import Conductor
 from darksight_lev_designer import Ui_form_main_lev
 
 
@@ -232,7 +233,7 @@ class MainWindow(qtw.QWidget):
         self.ui.spbx_dbl_zoom_img.valueChanged.connect(lambda x: self.update_active_cap_prop('zoom', x))
 
     def _set_display_loop_connections(self):
-        self.display_pixmap_set.connect(self.display_manager.request_display_params)
+        self.display_pixmap_set.connect(self.display_manager.)
         self.display_manager.display_params_update_requested.connect(self.send_display_params)
         self.display_params_emitted.connect(self.display_manager.set_display_params)
         self.display_manager.display_drawer_update_emitted.connect(self.display_drawer.apply_update)

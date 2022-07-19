@@ -3519,7 +3519,7 @@ After It's Achieved</string>
               <item row="0" column="1">
                <widget class="QLineEdit" name="ledit_weights_file">
                 <property name="text">
-                 <string>D:/yolo_v4/darknet/build/darknet/x64/AlphaNum_Weights/yolov4-csp-alphanum_last.weights</string>
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/yolov4-csp-coco.weights</string>
                 </property>
                </widget>
               </item>
@@ -3542,7 +3542,7 @@ Network Size:</string>
               <item row="1" column="1">
                <widget class="QLineEdit" name="ledit_cfg_file">
                 <property name="text">
-                 <string>D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-alphanum.cfg</string>
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-coco.cfg</string>
                 </property>
                </widget>
               </item>
@@ -3556,7 +3556,7 @@ Network Size:</string>
               <item row="2" column="1">
                <widget class="QLineEdit" name="ledit_meta_data_file">
                 <property name="text">
-                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/obj.data</string>
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/coco.data</string>
                 </property>
                </widget>
               </item>
