@@ -27,12 +27,8 @@ class MainApp(qtw.QApplication):
 
 class MainWindow(qtw.QWidget):
     run_capture = qtc.pyqtSignal()
-    initiate_inference = qtc.pyqtSignal()
-    send_det_to_manager = qtc.pyqtSignal(int, list)
-    send_inf_state_to_manager = qtc.pyqtSignal(bool)
-    send_draw_state_to_manager = qtc.pyqtSignal(bool)
+    run_conductor = qtc.pyqtSignal(int, int, float, list)
     display_pixmap_set = qtc.pyqtSignal()
-    display_params_emitted = qtc.pyqtSignal(int, int, list)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,22 +41,27 @@ class MainWindow(qtw.QWidget):
         self.det_drawers = []
         self.drawer_qthreads = []
 
+        self.display_loop_active = False
+
         self._init_connect_signals_to_slots()
 
         self.show()
 
-        self.display_manager = DisplayManager()
-        self.display_manager_qthread = qtc.QThread()
-        self.display_manager.moveToThread(self.display_manager_qthread)
-        self.display_manager_qthread.start()
+        self.conductor = Conductor()
+        self.conductor_qthread = qtc.QThread()
+        self.conductor.moveToThread(self.conductor_qthread)
+        self.conductor_qthread.start()
         self.display_drawer = DisplayDrawer()
         self.display_drawer_qthread = qtc.QThread()
         self.display_drawer.moveToThread(self.display_drawer_qthread)
         self.display_drawer_qthread.start()
+        self.inference = Inference()
+        self.inference_qthread = qtc.QThread()
+        self.inference.moveToThread(self.inference_qthread)
+        self.inference_qthread.start()
 
         self._set_det_controls_connections()
         self._set_display_loop_connections()
-        self._start_display_loop()
 
     def _block_signals(func):
         @functools.wraps(func)
@@ -172,32 +173,7 @@ class MainWindow(qtw.QWidget):
         gbs.darknet_w = darknet.network_width(gbs.network)
         gbs.darknet_h = darknet.network_height(gbs.network)
 
-        for n in range(len(self.caps)):
-            inf_drawer = InferenceDrawer()
-            inf_drawer_qthread = qtc.QThread()
-            inf_drawer.moveToThread(inf_drawer_qthread)
-            inf_drawer_qthread.start()
-            inf_drawer.completed.connect(self.display_handler)
-            self.det_drawers.append(inf_drawer)
-            self.drawer_qthreads.append(inf_drawer_qthread)
-
-        self.inference = Inference()
-        self.inference_qthread = qtc.QThread()
-        self.inference.moveToThread(self.inference_qthread)
-        self.inference_qthread.start()
-
-        self.inf_manager = InferenceManager()
-        self.inf_manager.run_inference.connect(self.inference.run)
-        self.inf_manager.emit_inference_packages.connect(self.inference.update_packages)
-        self.inf_manager.inference_initiation_requested.connect(self.inference.initiate)
-        self.inference.inference_packages_update_requested.connect(self.inf_manager.send_inference_packages)
-        self.inference.inference_packages_updated.connect(self.inf_manager.request_inference_start)
-        self.inference.inference_complete.connect(self.inf_manager.inference_completed)
-
-        self.send_inf_package_to_manager.connect(self.inf_manager.update_inference_queue)
-
-        self.initiate_inference.connect(self.inference.initiate)
-        self.initiate_inference.emit()
+        self.conductor.inference_enabled = True
         gbs.darknet_loaded = True
         print("Darknet loaded.")
 
@@ -233,18 +209,12 @@ class MainWindow(qtw.QWidget):
         self.ui.spbx_dbl_zoom_img.valueChanged.connect(lambda x: self.update_active_cap_prop('zoom', x))
 
     def _set_display_loop_connections(self):
-        self.display_pixmap_set.connect(self.display_manager.)
-        self.display_manager.display_params_update_requested.connect(self.send_display_params)
-        self.display_params_emitted.connect(self.display_manager.set_display_params)
-        self.display_manager.display_drawer_update_emitted.connect(self.display_drawer.apply_update)
-        self.display_drawer.updated.connect(self.display_drawer.run)
+        self.run_conductor.connect(self.conductor.run)
+        self.conductor.run_inference.connect(self.inference.run)
+        self.inference.completed.connect(self.conductor.run_drawer)
+        self.conductor.run_drawer.connect(self.display_drawer.run)
         self.display_drawer.qimg_completed.connect(self.set_pixmap)
-
-        # self.send_window_size_to_display_manager.connect(self.display_manager.update_window_size)
-        # self.send_uid_order_to_display_manager.connect(self.display_manager.update_uid_order)
-
-    def _start_display_loop(self):
-        self.set_pixmap(None)
+        self.display_pixmap_set.connect(self.start_next_display_cycle)
 
     def create_capture(self, cstr, uid):
         c = None
@@ -274,15 +244,18 @@ class MainWindow(qtw.QWidget):
 
                 cap.uid = uid
                 cap.props.c = c
-                cap.frame_captured.connect(self.display_manager.update_queue)
+                cap.frame_captured.connect(self.conductor.update_queue_from_cap_stream)
                 cap.read_failed.connect(self.stop_capture)
-                cap.read_failed.connect(self.display_manager.clear_queue_index)
+                cap.read_failed.connect(self.conductor.clear_queue_index)
                 cap.deletion_requested.connect(self.delete_capture)
                 self._connect_calib_controls_to_cap(cap)
 
                 self.run_capture.connect(cap.run)
                 self.run_capture.emit()
                 self.run_capture.disconnect(cap.run)
+                # if self.display_loop_active is False:
+                #     self.display_loop_active = True
+                #     self.start_next_display_cycle()
 
     def stop_capture(self, uid):
         print("Attempting to stop CaptureStream uid=" + str(uid))
@@ -295,7 +268,9 @@ class MainWindow(qtw.QWidget):
         print("Attempting to delete CaptureStream uid=" + str(uid))
         for n in range(len(self.caps)):
             if uid == self.caps[n].uid:
-                self.caps[n].frame_captured.disconnect(self.display_manager.update_queue)
+                self.caps[n].frame_captured.disconnect(self.conductor.update_queue_from_cap_stream)
+                self.caps[n].read_failed.emit(uid, None, None)
+                self.caps[n].read_failed.disconnect()
                 del self.caps[n]
                 self.cap_qthreads[n].quit()
                 self.cap_qthreads[n].wait()
@@ -304,6 +279,7 @@ class MainWindow(qtw.QWidget):
                 break
 
     def update_active_cap_prop(self, prop, x):
+        print('Updating active cap prop: ' + str(prop) + ' ' + str(x))
         uid = self.ui.tabw_cam_settings.currentIndex()
         for n in range(len(self.caps)):
             if uid == self.caps[n].uid:
@@ -311,19 +287,23 @@ class MainWindow(qtw.QWidget):
                 break
 
     def set_pixmap(self, qimg):
+        print('Setting pixmap.')
         if qimg is not None:
             qpix = qtg.QPixmap.fromImage(qimg)
             self.ui.lbl_main_pixmap.setPixmap(qpix)
+            print('Pixmap set.')
+        else:
+            print('qimg = None, therefore no new pixamp set.')
         self.display_pixmap_set.emit()
 
     @qtc.pyqtSlot()
-    def send_display_params(self):
+    def start_next_display_cycle(self):
+        print('Starting next display cycle.')
         w = self.ui.lbl_main_pixmap.width()
         h = self.ui.lbl_main_pixmap.height()
-        # self.send_window_size_to_display_manager.emit(w, h)
-        uid_order = [0, 1, 2, 3]
-        # self.send_uid_order_to_display_manager.emit(uid_order)
-        self.display_params_emitted.emit(w, h, uid_order)
+        # t = inference_thresh_input_widget
+        if len(self.caps) > 0:
+            self.run_conductor.emit(w, h, 0.5, self.caps)
 
 
 if __name__ == "__main__":

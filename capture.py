@@ -4,28 +4,31 @@ import numpy as np
 
 
 class CaptureStream(qtc.QObject):
-    frame_captured = qtc.pyqtSignal(np.ndarray, int, qtc.QObject)
-    read_failed = qtc.pyqtSignal(int)
+    data_emitted = qtc.pyqtSignal(int, np.ndarray, qtc.QObject)
+    read_failed = qtc.pyqtSignal(int, np.ndarray, qtc.QObject)
     deletion_requested = qtc.pyqtSignal(int)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.props = CaptureProperties()
-        self.cap_active = False
         self.cap = None
+        self.cap_active = False
         self.uid = None
+        self.frame = None
         print("New CaptureStream instance created.")
 
     @qtc.pyqtSlot()
     def run(self):
-        print("CaptureStream run() executed. uid=" + str(self.uid))
+        print("CaptureStream run() executed. uid=" + str(self.uid) + ', c=' + str(self.props.c))
         self.cap = cv2.VideoCapture(self.props.c, cv2.CAP_DSHOW)
+        print('1')
         self.cap_active = True
+        print('2')
         while self.cap.isOpened() and self.cap_active:
             ret, frame = self.cap.read()
             if ret:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self.frame_captured.emit(self.uid, frame_rgb, self.props.copy())
+                self.frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                print('Saved new frame: uid=' + str(self.uid))
             else:
                 print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
                 self.read_failed.emit(self.uid)
@@ -35,7 +38,10 @@ class CaptureStream(qtc.QObject):
         if not self.cap_active:
             self.deletion_requested.emit(self.uid)
 
-    @qtc.pyqtSlot()
+    def emit_ref(self):
+        self.data_emitted.emit(self)
+        print('Data emitted by cap stream: uid=' + str(self.uid))
+
     def update_prop(self, prop, x):
         print("Updating prop: " + prop + " x=" + str(x))
         if prop == 'autofocus':

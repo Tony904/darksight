@@ -15,7 +15,7 @@ def crop_image_centered(image, new_width, new_height, x_offset=0, y_offset=0):
     return image[y:yh, x:xw].copy()
 
 
-def scale_by_largest_dim(image, window_w, window_h):
+def scale_by_largest_dim(image, window_w, window_h, zoom=1.0):
     w = image.shape[1]
     h = image.shape[0]
     sw = window_w / w
@@ -24,9 +24,9 @@ def scale_by_largest_dim(image, window_w, window_h):
         s = sw
     else:
         s = sh
-    new_w = int(w * s)
-    new_h = int(h * s)
-    scaled_img = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
+    new_w = int(w * s * zoom)
+    new_h = int(h * s * zoom)
+    scaled_img = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
     return scaled_img
 
 
