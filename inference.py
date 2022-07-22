@@ -7,26 +7,28 @@ import cv2
 
 
 class Inference(qtc.QObject):
-    completed = qtc.pyqtSignal(list)
+    completed = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     @qtc.pyqtSlot(list, float)
     def run(self, caps, thresh):
-        print('Running inference.')
+        print('Running inference. Tresh = ' + str(thresh))
+        print('length of caps[] = ' + str(len(caps)))
         for state in caps:
             detections = None
-            frame = state.frame
+            frame = state.frame.copy()
             if frame is not None:
                 scaled = imut.scale_by_largest_dim(frame, gbs.darknet_w, gbs.darknet_h)
                 padded, pad_bottom, pad_right = imut.pad_image_to_square(scaled)
                 img = darknet.make_image(gbs.darknet_w, gbs.darknet_h, 3)
                 darknet.copy_image_from_bytes(img, padded.tobytes())
-                detections = darknet.detect_image(gbs.network, gbs.class_names, img, thresh)
+                detections = darknet.detect_image(gbs.network, gbs.class_names, img, thresh=thresh)
                 detections = self._get_relative_unpadded_detections(detections, pad_bottom, pad_right)
                 darknet.free_image(img)
             state.detections = detections
+            print('length of detections[] = ' + str(len(detections)))
         # self.completed.emit(caps)
         self.completed.emit()
         print('Inference complete.')

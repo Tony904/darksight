@@ -50,5 +50,5 @@ def pad_image_to_square(src):
     else:
         # image is already square
         print("No padding. Image is already square.")
-        pass
+        padded = image
     return padded, bottom_pad, right_pad

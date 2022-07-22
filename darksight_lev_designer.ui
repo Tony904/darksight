@@ -48,7 +48,7 @@
           <bool>true</bool>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_recipe_builder">
           <property name="autoFillBackground">
@@ -3519,7 +3519,7 @@ After It's Achieved</string>
               <item row="0" column="1">
                <widget class="QLineEdit" name="ledit_weights_file">
                 <property name="text">
-                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/yolov4-csp-coco.weights</string>
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/data/yolov4-csp_coco.weights</string>
                 </property>
                </widget>
               </item>
@@ -3542,7 +3542,7 @@ Network Size:</string>
               <item row="1" column="1">
                <widget class="QLineEdit" name="ledit_cfg_file">
                 <property name="text">
-                 <string>D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp-coco.cfg</string>
+                 <string>D:/yolo_v4/darknet/build/darknet/x64/cfg/yolov4-csp_coco.cfg</string>
                 </property>
                </widget>
               </item>

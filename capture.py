@@ -1,6 +1,7 @@
 from PyQt5 import QtCore as qtc
 import cv2
 import numpy as np
+import time
 
 
 class CaptureStream(qtc.QObject):
@@ -27,19 +28,16 @@ class CaptureStream(qtc.QObject):
             ret, frame = self.cap.read()
             if ret:
                 self.frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                print('Saved new frame: uid=' + str(self.uid))
+                # print('Saved new frame: uid=' + str(self.uid))
             else:
                 print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
                 self.read_failed.emit(self.uid)
                 self.cap_active = False
                 break
+            time.sleep(0.01)
         self.cap.release()
         if not self.cap_active:
             self.deletion_requested.emit(self.uid)
-
-    def emit_ref(self):
-        self.data_emitted.emit(self)
-        print('Data emitted by cap stream: uid=' + str(self.uid))
 
     def update_prop(self, prop, x):
         print("Updating prop: " + prop + " x=" + str(x))

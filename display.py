@@ -27,13 +27,16 @@ class DisplayDrawer(qtc.QObject):
             # pimg = cv2.resize(ndarr, (0, 0), fx=state.props.zoom, fy=state.props.zoom, interpolation=cv2.INTER_LINEAR)
             ph, pw, _ = pimg.shape
             if state.detections is not None:
+                print('state.detectios is not None')
                 color = (0, 0, 255)
                 for label, confidence, bbox in state.detections:
                     print(str(label) + ": " + str(confidence))
                     left, top, right, bottom = self._relative_to_abs_rect(bbox, pw, ph)
-                    cv2.rectangle(state.frame, (left, top), (right, bottom), color, 1)
-                    cv2.putText(state.frame, "{} [{:.0f}]".format(label, float(confidence)), (left, top - 5),
+                    cv2.rectangle(pimg, (left, top), (right, bottom), color, 1)
+                    cv2.putText(pimg, "{} [{:.0f}]".format(label, float(confidence)), (left, top - 5),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            else:
+                print('state.detections = None')
             pimg = imut.crop_image_centered(pimg, pw, ph, x_offset=state.props.pan[0], y_offset=state.props.pan[1])
             ph, pw, _ = pimg.shape
             if uid == 0:  # top-left

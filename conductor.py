@@ -12,19 +12,17 @@ class Conductor(qtc.QObject):
         self.canvas_w = 0
         self.canvas_h = 0
         self.inference_enabled = False
-        self.inference_thresh = 0.5
 
     @qtc.pyqtSlot(int, int, float, list)
     def run(self, w, h, inference_thresh, caps):
         print('conductor.run() executed.')
         self.canvas_w = w
         self.canvas_h = h
-        self.inference_thresh = inference_thresh
         self.caps = []
         for cap in caps:
             self.caps.append(CapState(cap))
         if self.inference_enabled:
-            self.sg_run_inference.emit(self.caps)
+            self.sg_run_inference.emit(self.caps, inference_thresh)
         else:
             self.run_drawer()
         print('conductor.caps[] length = ' + str(len(self.caps)))

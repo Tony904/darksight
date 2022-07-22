@@ -104,6 +104,8 @@ class MainWindow(qtw.QWidget):
         self.ui.tabw_cam_settings.currentChanged.connect(self.cam_tab_changed)
         self.ui.tabw_recipe_builder.currentChanged.connect(self.recipe_builder_tab_changed)
 
+        self.ui.btn_load_darknet.clicked.connect(self.load_darknet)
+
     def cam_tab_changed(self, i):
         for n in range(len(self.caps)):
             if i == self.caps[n].uid:
@@ -164,10 +166,11 @@ class MainWindow(qtw.QWidget):
         if i == 0:  # tab_recipe_builder is at tab index 0
             self.cam_tab_changed(self.ui.tabw_cam_settings.currentIndex())
 
-    def _load_darknet(self):
-        cfg_file = self.ui.ledit_cfg_file
-        data_file = self.ui.ledit_meta_data_file
-        weights_file = self.ui.ledit_weights_file
+    @qtc.pyqtSlot()
+    def load_darknet(self):
+        cfg_file = self.ui.ledit_cfg_file.text()
+        data_file = self.ui.ledit_meta_data_file.text()
+        weights_file = self.ui.ledit_weights_file.text()
         batch_size = 1
         gbs.network, gbs.class_names, _ = darknet.load_network(cfg_file, data_file, weights_file, batch_size)
         gbs.darknet_w = darknet.network_width(gbs.network)
@@ -175,7 +178,10 @@ class MainWindow(qtw.QWidget):
 
         self.conductor.inference_enabled = True
         gbs.darknet_loaded = True
+        self.ui.ptxt_darknet_output.setPlainText('Darknet loaded.')
         print("Darknet loaded.")
+        print('Net Width: ' + str(gbs.darknet_w))
+        print('Net Height: ' + str(gbs.darknet_h))
 
     def _connect_calib_controls_to_cap(self, cap):
         offset = 2
@@ -256,7 +262,6 @@ class MainWindow(qtw.QWidget):
                 if self.display_loop_active is False:
                     self.display_loop_active = True
                     self.sg_start_display_loop.emit()
-                    # qtc.QTimer.singleShot(1000, lambda: self.sg_start_display_loop.emit())
 
     def stop_capture(self, uid):
         print("Attempting to stop CaptureStream uid=" + str(uid))
