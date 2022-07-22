@@ -3,8 +3,8 @@ from capture import CaptureStream
 
 
 class Conductor(qtc.QObject):
-    run_drawer = qtc.pyqtSignal(list, int, int)
-    run_inference = qtc.pyqtSignal(list, float)
+    sg_run_drawer = qtc.pyqtSignal(list, int, int)
+    sg_run_inference = qtc.pyqtSignal(list, float)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,6 +16,7 @@ class Conductor(qtc.QObject):
 
     @qtc.pyqtSlot(int, int, float, list)
     def run(self, w, h, inference_thresh, caps):
+        print('conductor.run() executed.')
         self.canvas_w = w
         self.canvas_h = h
         self.inference_thresh = inference_thresh
@@ -23,13 +24,15 @@ class Conductor(qtc.QObject):
         for cap in caps:
             self.caps.append(CapState(cap))
         if self.inference_enabled:
-            self.run_inference.emit(self.caps)
+            self.sg_run_inference.emit(self.caps)
         else:
             self.run_drawer()
+        print('conductor.caps[] length = ' + str(len(self.caps)))
 
     @qtc.pyqtSlot()
     def run_drawer(self):
-        self.run_drawer.emit(self.caps, self.w, self.h)
+        print('conductor.run_drawer() executed.')
+        self.sg_run_drawer.emit(self.caps, self.canvas_w, self.canvas_h)
 
 
 class CapState(qtc.QObject):
@@ -39,3 +42,4 @@ class CapState(qtc.QObject):
         self.frame = cap.frame.copy()
         self.props = cap.props.copy()
         self.detections = None
+        print('New CapState created. uid=' + str(self.uid))

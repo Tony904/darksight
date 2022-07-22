@@ -11,10 +11,9 @@ class CaptureStream(qtc.QObject):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.props = CaptureProperties()
-        self.cap = None
         self.cap_active = False
         self.uid = None
-        self.frame = None
+        self.frame = np.zeros((100, 100, 3), np.uint8)
         print("New CaptureStream instance created.")
 
     @qtc.pyqtSlot()

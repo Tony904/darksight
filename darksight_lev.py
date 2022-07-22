@@ -14,6 +14,7 @@ from inference import Inference
 from display import DisplayDrawer
 from conductor import Conductor
 from darksight_lev_designer import Ui_form_main_lev
+import time
 
 
 class MainApp(qtw.QApplication):
@@ -29,6 +30,7 @@ class MainWindow(qtw.QWidget):
     run_capture = qtc.pyqtSignal()
     run_conductor = qtc.pyqtSignal(int, int, float, list)
     display_pixmap_set = qtc.pyqtSignal()
+    sg_start_display_loop = qtc.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -38,8 +40,6 @@ class MainWindow(qtw.QWidget):
 
         self.caps = []
         self.cap_qthreads = []
-        self.det_drawers = []
-        self.drawer_qthreads = []
 
         self.display_loop_active = False
 
@@ -209,10 +209,11 @@ class MainWindow(qtw.QWidget):
         self.ui.spbx_dbl_zoom_img.valueChanged.connect(lambda x: self.update_active_cap_prop('zoom', x))
 
     def _set_display_loop_connections(self):
+        self.sg_start_display_loop.connect(self.start_next_display_cycle)
         self.run_conductor.connect(self.conductor.run)
-        self.conductor.run_inference.connect(self.inference.run)
+        self.conductor.sg_run_inference.connect(self.inference.run)
         self.inference.completed.connect(self.conductor.run_drawer)
-        self.conductor.run_drawer.connect(self.display_drawer.run)
+        self.conductor.sg_run_drawer.connect(self.display_drawer.run)
         self.display_drawer.qimg_completed.connect(self.set_pixmap)
         self.display_pixmap_set.connect(self.start_next_display_cycle)
 
@@ -244,18 +245,18 @@ class MainWindow(qtw.QWidget):
 
                 cap.uid = uid
                 cap.props.c = c
-                cap.frame_captured.connect(self.conductor.update_queue_from_cap_stream)
                 cap.read_failed.connect(self.stop_capture)
-                cap.read_failed.connect(self.conductor.clear_queue_index)
                 cap.deletion_requested.connect(self.delete_capture)
                 self._connect_calib_controls_to_cap(cap)
 
                 self.run_capture.connect(cap.run)
                 self.run_capture.emit()
+                print('emitted run_capture')
                 self.run_capture.disconnect(cap.run)
-                # if self.display_loop_active is False:
-                #     self.display_loop_active = True
-                #     self.start_next_display_cycle()
+                if self.display_loop_active is False:
+                    self.display_loop_active = True
+                    self.sg_start_display_loop.emit()
+                    # qtc.QTimer.singleShot(1000, lambda: self.sg_start_display_loop.emit())
 
     def stop_capture(self, uid):
         print("Attempting to stop CaptureStream uid=" + str(uid))
@@ -268,8 +269,6 @@ class MainWindow(qtw.QWidget):
         print("Attempting to delete CaptureStream uid=" + str(uid))
         for n in range(len(self.caps)):
             if uid == self.caps[n].uid:
-                self.caps[n].frame_captured.disconnect(self.conductor.update_queue_from_cap_stream)
-                self.caps[n].read_failed.emit(uid, None, None)
                 self.caps[n].read_failed.disconnect()
                 del self.caps[n]
                 self.cap_qthreads[n].quit()
@@ -286,6 +285,7 @@ class MainWindow(qtw.QWidget):
                 self.caps[n].update_prop(prop, x)
                 break
 
+    @qtc.pyqtSlot(qtg.QImage)
     def set_pixmap(self, qimg):
         print('Setting pixmap.')
         if qimg is not None:
@@ -298,12 +298,16 @@ class MainWindow(qtw.QWidget):
 
     @qtc.pyqtSlot()
     def start_next_display_cycle(self):
-        print('Starting next display cycle.')
-        w = self.ui.lbl_main_pixmap.width()
-        h = self.ui.lbl_main_pixmap.height()
-        # t = inference_thresh_input_widget
-        if len(self.caps) > 0:
-            self.run_conductor.emit(w, h, 0.5, self.caps)
+        if self.display_loop_active:
+            print('Starting next display cycle.')
+            w = self.ui.lbl_main_pixmap.width()
+            h = self.ui.lbl_main_pixmap.height()
+            # t = inference_thresh_input_widget
+            if len(self.caps) > 0:
+                self.run_conductor.emit(w, h, 0.5, self.caps)
+            else:
+                self.display_loop_active = False
+                print('Cannot start next display cycle. No CaptureStreams exist.')
 
 
 if __name__ == "__main__":

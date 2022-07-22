@@ -16,7 +16,7 @@ class DisplayDrawer(qtc.QObject):
 
     @qtc.pyqtSlot(list, int, int)
     def run(self, caps, w, h):
-        print('Drawing canvas.')
+        print('display_drawer.run() executed.')
         caps = list(caps)
         canvas = np.zeros((h, w, 3), dtype=self.ndarray_dtype)
         uid = 0
@@ -55,7 +55,7 @@ class DisplayDrawer(qtc.QObject):
         stride = canvas.strides[0]
         display_qimg = qtg.QImage(data, cols, rows, stride, qtg.QImage.Format_RGB888)
         print('Emitting qimg_completed.')
-        self.qimg_completed.emit(display_qimg)
+        self.qimg_completed.emit(display_qimg.copy())
 
     @staticmethod
     def _relative_to_abs_rect(bbox, dst_w, dst_h):
