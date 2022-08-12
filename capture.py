@@ -21,14 +21,18 @@ class CaptureStream(qtc.QObject):
     def run(self):
         print("CaptureStream run() executed. uid=" + str(self.uid) + ', c=' + str(self.props.c))
         self.cap = cv2.VideoCapture(self.props.c, cv2.CAP_DSHOW)
-        print('1')
+        self._set_props()
         self.cap_active = True
-        print('2')
+        i = 0
         while self.cap.isOpened() and self.cap_active:
+            print(i)
             ret, frame = self.cap.read()
+            print(i)
+            print(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            print(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            i += 1
             if ret:
                 self.frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                # print('Saved new frame: uid=' + str(self.uid))
             else:
                 print("Error: Camera read fail. uid=" + str(self.uid) + ", cam index=" + str(self.props.c))
                 self.read_failed.emit(self.uid)
@@ -38,6 +42,27 @@ class CaptureStream(qtc.QObject):
         self.cap.release()
         if not self.cap_active:
             self.deletion_requested.emit(self.uid)
+
+    def _set_props(self):
+        self.update_prop('width', self.props.width)
+        self.update_prop('height', self.props.height)
+        self.update_prop('autofocus', self.props.autofocus)
+        self.update_prop('autoexposure', self.props.autoexposure)
+        self.update_prop('autowhite', self.props.autowhite)
+        self.update_prop('focus', self.props.focus)
+        self.update_prop('exposure', self.props.exposure)
+        self.update_prop('backlight', self.props.backlight)
+        self.update_prop('sharpness', self.props.sharpness)
+        self.update_prop('brightness', self.props.brightness)
+        self.update_prop('contrast', self.props.contrast)
+        self.update_prop('gain', self.props.gain)
+        self.update_prop('gamma', self.props.gamma)
+        self.update_prop('hue', self.props.hue)
+        self.update_prop('saturation', self.props.saturation)
+        self.update_prop('white', self.props.white)
+        self.update_prop('zoom', self.props.zoom)
+        self.update_prop('rotate', self.props.rotate)
+        self.update_prop('pan', self.props.pan)
 
     def update_prop(self, prop, x):
         print("Updating prop: " + prop + " x=" + str(x))
@@ -90,12 +115,20 @@ class CaptureStream(qtc.QObject):
             self.props.zoom = x
         elif prop == 'rotate':
             self.props.rotate = x
-        elif prop == 'crop':
-            self.props.crop = x
         elif prop == 'pan':
             pan_x = x[0] + self.props.pan[0]
             pan_y = x[1] + self.props.pan[1]
             self.props.pan = (pan_x, pan_y)
+        elif prop == 'width':
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, x)
+            self.props.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+            self.props.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        elif prop == 'height':
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, x)
+            self.props.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            self.props.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        else:
+            print('No capture property called: ' + str(prop))
 
     def stop(self):
         print("Stopped CaptureStream: " + str(self.uid))

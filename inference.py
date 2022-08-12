@@ -14,8 +14,6 @@ class Inference(qtc.QObject):
 
     @qtc.pyqtSlot(list, float)
     def run(self, caps, thresh):
-        print('Running inference. Tresh = ' + str(thresh))
-        print('length of caps[] = ' + str(len(caps)))
         for state in caps:
             detections = None
             frame = state.frame.copy()
@@ -28,10 +26,7 @@ class Inference(qtc.QObject):
                 detections = self._get_relative_unpadded_detections(detections, pad_bottom, pad_right)
                 darknet.free_image(img)
             state.detections = detections
-            print('length of detections[] = ' + str(len(detections)))
-        # self.completed.emit(caps)
         self.completed.emit()
-        print('Inference complete.')
 
     @staticmethod
     def _get_relative_unpadded_detections(detections, pad_bottom, pad_right):

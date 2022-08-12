@@ -109,42 +109,39 @@ class MainWindow(qtw.QWidget):
     def cam_tab_changed(self, i):
         for n in range(len(self.caps)):
             if i == self.caps[n].uid:
-                self._load_cap_props_to_ui(i)
+                self._load_cap_props_to_ui(i, n)
                 return 0
         self.ui.ledit_cam_index.setText('')
 
-    def _load_cap_props_to_ui(self, uid):
-        for n in range(len(self.caps)):
-            if uid == self.caps[n].uid:
-                self._setText_no_signal(self.ui.ledit_cam_index, self.caps[n].props.c)
-                self._setValue_no_signal(self.ui.spbx_cap_focus, self.caps[n].props.focus)
-                if self.caps[n].props.autofocus == 1:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autofocus, True)
-                else:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autofocus, False)
-                self._setValue_no_signal(self.ui.spbx_cap_brightness, self.caps[n].props.brightness)
-                self._setValue_no_signal(self.ui.spbx_cap_contrast, self.caps[n].props.contrast)
-                self._setValue_no_signal(self.ui.spbx_cap_hue, self.caps[n].props.hue)
-                self._setValue_no_signal(self.ui.spbx_cap_saturation, self.caps[n].props.saturation)
-                self._setValue_no_signal(self.ui.spbx_cap_sharpness, self.caps[n].props.sharpness)
-                self._setValue_no_signal(self.ui.spbx_cap_gamma, self.caps[n].props.gamma)
-                self._setValue_no_signal(self.ui.spbx_cap_white, self.caps[n].props.white)
-                if self.caps[n].props.autowhite == 1:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autowhite, True)
-                else:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autowhite, False)
-                self._setValue_no_signal(self.ui.spbx_cap_backlight, self.caps[n].props.backlight)
-                self._setValue_no_signal(self.ui.spbx_cap_gain, self.caps[n].props.gain)
-                self._setValue_no_signal(self.ui.spbx_cap_exposure, self.caps[n].props.exposure)
-                if self.caps[n].props.autoexposure == 1:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, True)
-                else:
-                    self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, False)
-                self._setValue_no_signal(self.ui.spbx_dbl_zoom_img, self.caps[n].props.zoom)
-                self._setValue_no_signal(self.ui.spbx_rotate_img, self.caps[n].props.rotate)
-                self._setText_no_signal(self.ui.ledit_cap_width, self.caps[n].props.width)
-                self._setText_no_signal(self.ui.ledit_cap_height, self.caps[n].props.height)
-            break
+    def _load_cap_props_to_ui(self, uid, n):
+        self._setText_no_signal(self.ui.ledit_cam_index, self.caps[n].props.c)
+        self._setValue_no_signal(self.ui.spbx_cap_focus, self.caps[n].props.focus)
+        if self.caps[n].props.autofocus == 1:
+            self._setChecked_no_signal(self.ui.chbx_cap_autofocus, True)
+        else:
+            self._setChecked_no_signal(self.ui.chbx_cap_autofocus, False)
+        self._setValue_no_signal(self.ui.spbx_cap_brightness, self.caps[n].props.brightness)
+        self._setValue_no_signal(self.ui.spbx_cap_contrast, self.caps[n].props.contrast)
+        self._setValue_no_signal(self.ui.spbx_cap_hue, self.caps[n].props.hue)
+        self._setValue_no_signal(self.ui.spbx_cap_saturation, self.caps[n].props.saturation)
+        self._setValue_no_signal(self.ui.spbx_cap_sharpness, self.caps[n].props.sharpness)
+        self._setValue_no_signal(self.ui.spbx_cap_gamma, self.caps[n].props.gamma)
+        self._setValue_no_signal(self.ui.spbx_cap_white, self.caps[n].props.white)
+        if self.caps[n].props.autowhite == 1:
+            self._setChecked_no_signal(self.ui.chbx_cap_autowhite, True)
+        else:
+            self._setChecked_no_signal(self.ui.chbx_cap_autowhite, False)
+        self._setValue_no_signal(self.ui.spbx_cap_backlight, self.caps[n].props.backlight)
+        self._setValue_no_signal(self.ui.spbx_cap_gain, self.caps[n].props.gain)
+        self._setValue_no_signal(self.ui.spbx_cap_exposure, self.caps[n].props.exposure)
+        if self.caps[n].props.autoexposure == 1:
+            self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, True)
+        else:
+            self._setChecked_no_signal(self.ui.chbx_cap_autoexposure, False)
+        self._setValue_no_signal(self.ui.spbx_dbl_zoom_img, self.caps[n].props.zoom)
+        self._setValue_no_signal(self.ui.spbx_rotate_img, self.caps[n].props.rotate)
+        self._setText_no_signal(self.ui.ledit_cap_width, int(self.caps[n].props.width))
+        self._setText_no_signal(self.ui.ledit_cap_height, int(self.caps[n].props.height))
 
     @staticmethod
     @_block_signals
@@ -292,11 +289,9 @@ class MainWindow(qtw.QWidget):
 
     @qtc.pyqtSlot(qtg.QImage)
     def set_pixmap(self, qimg):
-        print('Setting pixmap.')
         if qimg is not None:
             qpix = qtg.QPixmap.fromImage(qimg)
             self.ui.lbl_main_pixmap.setPixmap(qpix)
-            print('Pixmap set.')
         else:
             print('qimg = None, therefore no new pixamp set.')
         self.display_pixmap_set.emit()
@@ -304,7 +299,6 @@ class MainWindow(qtw.QWidget):
     @qtc.pyqtSlot()
     def start_next_display_cycle(self):
         if self.display_loop_active:
-            print('Starting next display cycle.')
             w = self.ui.lbl_main_pixmap.width()
             h = self.ui.lbl_main_pixmap.height()
             # t = inference_thresh_input_widget

@@ -15,7 +15,6 @@ class Conductor(qtc.QObject):
 
     @qtc.pyqtSlot(int, int, float, list)
     def run(self, w, h, inference_thresh, caps):
-        print('conductor.run() executed.')
         self.canvas_w = w
         self.canvas_h = h
         self.caps = []
@@ -25,11 +24,9 @@ class Conductor(qtc.QObject):
             self.sg_run_inference.emit(self.caps, inference_thresh)
         else:
             self.run_drawer()
-        print('conductor.caps[] length = ' + str(len(self.caps)))
 
     @qtc.pyqtSlot()
     def run_drawer(self):
-        print('conductor.run_drawer() executed.')
         self.sg_run_drawer.emit(self.caps, self.canvas_w, self.canvas_h)
 
 
@@ -40,4 +37,3 @@ class CapState(qtc.QObject):
         self.frame = cap.frame.copy()
         self.props = cap.props.copy()
         self.detections = None
-        print('New CapState created. uid=' + str(self.uid))
